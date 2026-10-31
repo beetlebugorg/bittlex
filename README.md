@@ -75,6 +75,12 @@ that clicks onto the platform.
 3. Keep your part out of `keepout.stl`.
 4. Print the plate face down on the bed.
 
+For a heavy add-on, use the screw mount of the Pi add-on (rev 0.26) in
+place of the keyholes. Start from
+`bittle_pi_addon/stl/print/starter_plate_screw.stl`. It has 4 bosses for
+M2.5 heat-set inserts, and 4 M2.5 x 4 screws hold it to
+`cover_screw.stl` from inside the cover.
+
 ## Repository
 
 | Folder | Content |

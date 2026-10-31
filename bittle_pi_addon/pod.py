@@ -895,6 +895,13 @@ def build_cover_screw():
     return C
 
 
+def build_starter_screw():
+    """The starter plate for the screw mount (robot frame): the platform starter base with an insert boss at each
+    peg place, as on the pod floor. It screws to the screw cover."""
+    from bittle_platform import build as BP
+    return (BP.to_m(BP.starter_base()) + screw_bosses()) - screw_holes()
+
+
 def panel_screw_bosses():
     """Bosses on the tops of the speaker posts, up to gap under the seam (design frame; the posts are symmetric)."""
     P, S = PANEL_SCREW, SCREW_MOUNT
@@ -973,6 +980,7 @@ def write_screw_parts():
     write_body_3mf(body, os.path.join(OUT, "print", "pod_body_screw.3mf"))
     save_stl(print_orient("pod_panel", parts["pod_panel"]), os.path.join(OUT, "print", "pod_panel_screw.stl"))
     save_stl(BP.print_orient("cover_pegs", parts["cover_screw"]), os.path.join(OUT, "print", "cover_screw.stl"))
+    save_stl(BP.print_orient("starter_plate", build_starter_screw()), os.path.join(OUT, "print", "starter_plate_screw.stl"))
     if not os.path.lexists(os.path.join(d, "models")):
         os.symlink(os.path.join("..", "models"), os.path.join(d, "models"))
     plan = {n: explode_robot(n) for n in ("pod_body", "pod_door", "pod_panel")}

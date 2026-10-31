@@ -29,6 +29,7 @@ Screw version (rev 0.26, for 0.10 mm layers; viewer: --stl bittle_pi_addon/stl/s
 | cover_screw.stl: stand on the rear end, tree supports, 14-line brim | 4 x M2.5 x 4 or x 5 button or pan head screws, up from inside the cover |
 | pod_body_screw.3mf (or .stl): floor on the bed | 4 x M2.5 x 4 inserts in the floor bosses, 2 x M2.5 x 4 inserts in the speaker post bosses (3.6 mm holes) |
 | pod_panel_screw.stl: top on the bed | 2 x M2.5 x 12 screws down through the panel top, over the speaker posts |
+| starter_plate_screw.stl: plate bottom on the bed | the starter plate for the screw mount: 4 x M2.5 x 4 inserts in the bosses, for an add-on of your own |
 
 1. Press the 6 inserts in flush with a soldering iron.
 2. Screw the body to the cover from inside the cover. Then put in the electronics.

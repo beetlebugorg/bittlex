@@ -35,6 +35,12 @@ parts:
     profile: taz-workhorse-se/pla-0.20-standard
     material: roll-4
     settings: {adhesion_type: brim}
+  - name: Starter plate (screw)
+    files: [bittle_pi_addon/stl/print/starter_plate_screw.stl]
+    printer: taz
+    profile: taz-workhorse-se/pla-0.10-fine
+    material: roll-4
+    settings: {adhesion_type: brim}
 
   # Platform, at 0.20 mm layers
   - name: Platform cover
@@ -43,17 +49,12 @@ parts:
     profile: taz-workhorse-se/pla-0.20-standard
     material: roll-4
     settings: {support_enable: true, support_structure: tree, adhesion_type: brim, brim_line_count: 14}
-  - name: Starter plate
-    files: [bittle_platform/stl/print/starter_plate.stl]
-    printer: taz
-    profile: taz-workhorse-se/pla-0.20-standard
-    material: roll-4
-    settings: {adhesion_type: brim}
 
   # Resin plate (keyhole version with the resin fit, the cover and two fit coupons)
   - name: Resin plate
     files: [bittle_pi_addon/stl/plates/resin_phenom_plate.stl]
     printer: phenom
-    material: Grey resin
+    material: Grey standard 80% + Tenacious Flex black 20%
+    # ChiTuBox profile: "Microcenter - ABS Like/Standard 50/50 Black" (0.05 mm, 18 s, bottom 95 s x 10)
     prebuilt: bittle_pi_addon/stl/plates/resin_phenom.cbddlp    # not made yet: a ChiTuBox slice goes here
     alone: true

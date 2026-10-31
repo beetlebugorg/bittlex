@@ -218,8 +218,8 @@ STARTER = dict(x=18.5, z=(-20.0, 25.5), r=3.0, rim_w=1.6, rim_top=31.5,
                holes=[(x, z) for x in (-5.0, 5.0) for z in (-10.0, 0.0, 10.0)], hole_d=3.2)
 
 
-def starter_plate():
-    """Minimal add-on: the mount plate with 4 keyholes, a stiffening rim and an M3 grid."""
+def starter_base():
+    """The starter plate with no mount: the plate, a stiffening rim and an M3 grid."""
     S = STARTER
     w, (z0, z1) = 2 * S["x"], S["z"]
     zc = (z0 + z1) / 2
@@ -232,6 +232,12 @@ def starter_plate():
     p += plate(0, I.MOUNT_Y1 - 0.01, S["rim_top"]) - plate(S["rim_w"], I.MOUNT_Y1 - 1, S["rim_top"] + 1)
     for x, z in S["holes"]:
         p -= cyl_y(x, z, I.MOUNT_Y0 - 1, I.MOUNT_Y1 + 1, S["hole_d"] / 2)
+    return p
+
+
+def starter_plate():
+    """Minimal add-on: the starter base with 4 keyholes and the click beams."""
+    p = starter_base()
     for px, pz in I.PEGS:
         p -= keyhole_cutter(px, pz)
     for px, pz in I.PEGS:
