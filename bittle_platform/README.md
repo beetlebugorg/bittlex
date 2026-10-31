@@ -1,8 +1,8 @@
-# Bittle X Platform v3.2 - Interface Specification
+# Bittle X Platform v3.3 - Interface Specification
 
-Version 3.2, 2026-10-18. The platform is the stock Petoi Bittle X back cover with 4 teardrop pegs on its top. An add-on has a plate with 4 keyholes. Put it on the pegs, slide it 7 mm forward, and it clicks. To remove it, slide it 7 mm rearward and lift it. It comes off closed: the head is not in the way. The keyholes have the shape of the pegs, so the add-on goes on in one direction only. No tools, glue or tape are necessary. interface.json has all the numbers in machine-readable form.
+Version 3.3, 2026-10-26. The platform is the stock Petoi Bittle X back cover with 4 teardrop pegs on its top. An add-on has a plate with 4 keyholes. Put it on the pegs, slide it 7 mm forward, and it clicks. To remove it, slide it 7 mm rearward and lift it. It comes off closed: the head is not in the way. The keyholes have the shape of the pegs, so the add-on goes on in one direction only. No tools, glue or tape are necessary. interface.json has all the numbers in machine-readable form.
 
-Version 3.0 is not compatible with earlier versions: the pegs have a new shape and place, and the slide goes the other way. Version 3.1 adds a notch in the front edge of the cover, left side, for the Grove plug on the BiBoard (the head camera cable). Version 3.2 turns the cover model 180 deg to match the robot: the Pi slot (the BiBoard header) is at the front left, and the notch is on the front left, as on the robot. Reprint the cover: the pegs and the keyholes are the same as in 3.0. Keep add-on parts out of the plug space (GROVE_PLUG, in keepout.stl).
+Version 3.0 is not compatible with earlier versions: the pegs have a new shape and place, and the slide goes the other way. Version 3.1 adds a notch in the front edge of the cover, left side, for the Grove plug on the BiBoard (the head camera cable). Version 3.2 turns the cover model 180 deg to match the robot: the Pi slot (the BiBoard header) is at the front left, and the notch is on the front left, as on the robot. Reprint the cover: the pegs and the keyholes are the same as in 3.0. Keep add-on parts out of the plug space (GROVE_PLUG, in keepout.stl). Version 3.3 cuts the Pi slot wider toward the center (7 mm, was 3.5 mm): the BiBoard Dupont plugs did not fit. It also makes the click travel smaller (0.2 mm, was 0.28 mm): the add-on slides on and off with less force. Reprint the cover and the add-on plate. The pegs do not change.
 
 ![The platform (white) on the robot, with the starter plate on the pegs.](doc/iso/platform-light.png)
 
@@ -17,8 +17,8 @@ Version 3.0 is not compatible with earlier versions: the pegs have a new shape a
 | Add-on plate | bottom at Y 26, 1.5 thick at the keyholes |
 | Keyhole | drop-in hole 7 mm in front of the peg = the head teardrop + 0.45; slot 4.7 wide back to a V stop at the peg; 0.4 lead-in chamfers top and bottom |
 | Fit | put the add-on on 7 mm behind its place, then slide it 7 mm forward until it clicks. Remove: slide it rearward and lift |
-| Click (detent) | two 1.2 wide spring beams, one on each side of each slot, freed by 0.8 U slits (fixed at the rear end only). Bumps R1.5 at 1.25 in front of the peg, 0.28 into the shaft path. They push the shaft point into the V stop, which centers it. |
-| Click force | about 3.2 N to slide on and 3.2 N to slide off (all 8 beams, PLA estimate); beam strain 0.9 % |
+| Click (detent) | two 1.2 wide spring beams, one on each side of each slot, freed by 0.8 U slits (fixed at the rear end only). Bumps R1.5 at 1.01 in front of the peg, 0.2 into the shaft path. They push the shaft point into the V stop, which centers it. |
+| Click force | about 2.2 N to slide on and 2.2 N to slide off (all 8 beams, PLA estimate); beam strain 0.64 % |
 | Keep clear | the peg heads as they slide; the BiBoard header in the cover slot (X -27.27..-24.73, Z -25.1..-12.4, top Y 29.1) |
 | Size | the pod fits in Z -37.8..56.2, \|X\| <= 29.6; outside that, check the legs and the head |
 
@@ -43,8 +43,8 @@ One Cura profile prints every part: "Bittle X" (cura/Bittle_X.curaprofile in the
 
 | Part | Orientation | Supports |
 |---|---|---|
-| cover_pegs_foot (recommended) | stand on the rear end, foot on the bed | none: the foot is the support. Snap it off after the print. |
-| cover_pegs (no foot) | stand on the rear end | turn on tree supports from the bed and a 14-line brim |
+| cover_pegs (no foot, recommended) | stand on the rear end | turn on tree supports from the bed and a 14-line brim |
+| cover_pegs_foot (alternative) | stand on the rear end, foot on the bed | none: the foot is the support. Snap it off after the print. |
 | starter_plate and add-ons | plate bottom on the bed | none |
 
 | Setting | Bittle X |
@@ -58,7 +58,7 @@ One Cura profile prints every part: "Bittle X" (cura/Bittle_X.curaprofile in the
 
 1. Material: PLA works. Use PETG for add-ons that you remove often or that get warm.
 2. Standing on its end, the cover prints the pegs with layers along their length. This makes them strong. The shaft and collar points are down, so they need no supports.
-3. The cover stands on a thin strip, and its center of mass is past that strip. The foot is a 3-layer plate with 7 fins under the leaning face. It increases the first layer from 53 to about 1000 mm². The fins touch the cover only at 21 small teeth, each one layer tall at 0.20 mm layers. Twist the foot off after the print.
+3. The cover stands on a thin strip, and its center of mass is past that strip. The foot is a 3-layer plate with 7 fins under the leaning face. It increases the first layer from 53 to about 1000 mm². The fins touch the cover only at 21 small teeth, each one layer tall at 0.20 mm layers. Twist the foot off after the print. The no-foot print is the recommended one: the foot teeth leave a spot on the cover where they break off.
 4. In add-ons, keep overhangs at 45 deg or less. Use chamfers, not round edges, on the bottom side.
 5. The fits use 0.35 (slot), 0.45 (drop-in hole) and 0.3 (under the heads) clearance. Calibrate your printer if the plate does not slide on.
 

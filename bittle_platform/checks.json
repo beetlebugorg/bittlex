@@ -3,7 +3,7 @@
   [
    "starter_plate locked",
    "cover_pegs",
-   0.205912447671991
+   0.21369940314775163
   ],
   [
    "starter_plate locked",
@@ -33,7 +33,7 @@
   [
    "starter_plate at detent bump",
    "cover_pegs",
-   3.0510653699177026
+   1.8462772214032823
   ],
   [
    "starter_plate at detent bump",
@@ -93,12 +93,12 @@
   [
    "starter_plate (body)",
    "keepout",
-   -7.85276791509526e-15
+   1.0318460495761794e-14
   ],
   [
    "starter_plate turned 180 (min, Z +-12)",
    "peg heads",
-   10.530183048958355
+   11.55289386388942
   ],
   [
    "starter_plate drop-on (lowered)",
@@ -122,13 +122,13 @@
   ]
  ],
  "overhang_mm2": {
-  "cover_pegs": 176.5054473876953,
+  "cover_pegs": 182.40103149414062,
   "starter_plate": 0.0,
-  "cover_pegs_foot": 201.1893768310547,
+  "cover_pegs_foot": 207.08497619628906,
   "cover_stock": 197.24368286132812
  },
  "mass_g_pla_solid": {
-  "cover_pegs": 11.1,
+  "cover_pegs": 11.0,
   "starter_plate": 3.5
  },
  "clearances": {
@@ -141,11 +141,11 @@
   "collar_to_flat_edge": 0.57
  },
  "detent": {
-  "lock_N": 3.2,
-  "unlock_N": 3.2,
+  "lock_N": 2.2,
+  "unlock_N": 2.2,
   "hold_N": 1.47,
-  "beam_travel": 0.28,
-  "strain_pct": 0.9,
+  "beam_travel": 0.2,
+  "strain_pct": 0.64,
   "k_N_per_mm": 3.69
  }
 }

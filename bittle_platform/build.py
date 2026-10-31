@@ -192,6 +192,25 @@ def detent_bump(px, pz):
         xa, xb = sorted((px + sx * (hw - 2.0), px + sx * (hw + D["beam_w"])))
         b &= box(xa, xb, I.MOUNT_Y0, I.MOUNT_Y1, pz - DET_DZ - D["free_end"], pz - DET_DZ + D["bump_r"])
         out = b if out is None else out + b
+    if D.get("pad", 0.0) > 0:
+        out += clamp_pads(px, pz)
+    return out
+
+
+def clamp_pads(px, pz):
+    """A pad with a ramp on the top of each detent beam, under the peg head at the locked place.
+    The pad is DET["pad"] higher than the head underside: the head climbs the ramp at the end of the slide
+    and pushes the beams down. This clamps the plate in Y (no lift or tilt on the 0.3 mm head gap)."""
+    D = I.DET
+    hw = I.KEY_SLOT_W / 2
+    top, y1 = I.PEG_HEAD_Y0 + D["pad"], I.MOUNT_Y1 - 0.01
+    prof = [(y1, pz - 2.6), (top, pz - 1.3), (top, pz + 1.8), (y1, pz + 1.8)]    # (Y, Z): the head comes from -Z
+    out = None
+    for sx in (1, -1):
+        xa, xb = sorted((px + sx * (hw + 0.05), px + sx * (hw + D["beam_w"] - 0.05)))
+        p = extrude(Plane.YZ.offset(xa) * Polygon(*prof, align=None), amount=xb - xa)
+        p &= cyl_y(px, pz, y1 - 0.1, top + 0.1, I.PEG_HEAD_D / 2 - 0.1)
+        out = p if out is None else out + p
     return out
 
 
@@ -235,8 +254,10 @@ def grove_plug():
 
 
 def cover_with_notch():
-    """The stock Petoi cover with the Grove notch."""
-    return MU.mesh_to_manifold(ref_tris(I.COVER_STL)) - to_m(grove_notch())
+    """The stock Petoi cover with the Grove notch and the Pi slot cut wider (SLOT_WIDE)."""
+    S = I.SLOT_WIDE
+    slot = box(S["x0"], S["x1"], S["y0"], S["y0"] + 12.0, S["z0"], S["z1"])
+    return MU.mesh_to_manifold(ref_tris(I.COVER_STL)) - to_m(grove_notch()) - to_m(slot)
 
 
 def header_keepout():

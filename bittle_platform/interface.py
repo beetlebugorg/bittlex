@@ -17,7 +17,7 @@ Frame (the Petoi reference STL frame), units mm:
   Origin: on the robot center line, at the middle of the cover length.
 """
 
-VERSION = "3.2"
+VERSION = "3.3"
 
 # --------------------------------------------------------------------------
 # Stock cover (measured from the Petoi STL)
@@ -30,6 +30,9 @@ COVER_END_Z = (-36.95, 36.95)
 LOGO = dict(x=(-9.14, 9.14), z=(-7.80, 7.85), top=25.59)  # raised Petoi logo, 0.3 high
 COVER_TURN = [[-1, 0, 0], [0, 1, 0], [0, 0, -1]]             # cover STL -> robot frame (180 deg about Y)
 SLOT = dict(x0=-27.75, x1=-24.25, y0=19.5, z0=-25.75, z1=-11.75)   # Pi slot in the cover top (front left)
+# v3.3: the slot is cut wider toward the center, to x1 of SLOT_WIDE (the user: the BiBoard Dupont plugs did not fit).
+# It is 7.0 wide, the same as the BiBoard notch in the floor of the Pi add-on.
+SLOT_WIDE = dict(SLOT, x1=-20.75)
 # BiBoard 5-pin female header in the slot (GND, +5V, TX2, RX2, ..). Height is a photo estimate.
 HDR = dict(x0=-27.27, x1=-24.73, z0=-25.1, z1=-12.4, top=29.1)
 PLUG_TOP = 48.0                 # Y of free space for straight Dupont plugs and wires on the header
@@ -89,8 +92,9 @@ KEY_LEAD = 0.4                  # 45 deg chamfer on the top and bottom edges of 
 # (fixed only at the root, behind the peg). Each beam has a round bump at its free end, in front of the peg.
 # The bumps push the shaft into the V stop: the add-on does not rattle.
 # Shaft between the bumps: beam travel = travel. With a 1.2 x 1.5 beam, arm 7.0, PLA (E 2400):
-# about 3.2 N peak to slide the add-on on or off (all 8 beams), strain 0.9 % (build.py: detent_force()).
-DET = dict(beam_w=1.2, slit_w=0.8, arm=7.5, bump_r=1.5, travel=0.28, preload=0.05, free_end=1.2)
+# build.py detent_force() gives the slide force and the strain.
+# v3.3: travel 0.28 -> 0.20 (the user found the add-on hard to slide on and off).
+DET = dict(beam_w=1.2, slit_w=0.8, arm=7.5, bump_r=1.5, travel=0.20, preload=0.05, free_end=1.2, pad=0.0)   # pad > 0: build.py clamp_pads()
 E_PLA = 2400.0                  # MPa, for the detent force estimate
 MU_PLA = 0.3                    # PLA on PLA friction, for the detent force estimate
 
@@ -101,7 +105,7 @@ ENVELOPE = dict(
     z=(-37.8, 56.2),            # front and rear faces of the Pi add-on body
     half_w_low=29.6,            # max |X| of the add-on body (flat floor at Y 26.0, over the cover and the shoulders)
     half_w_high=35.6,           # max |X| above Y 36 (a 45 deg chamfer from Y 30): the rear legs swing back past the floor edge
-    top=63.2,                   # add-on top; no robot limit, but a high mass makes the robot less stable
+    top=67.2,                   # add-on top; no robot limit, but a high mass makes the robot less stable
     com_z_max=10.0,             # keep the add-on center of mass within this distance of Z 0 (robot center)
     hug_gap=0.4,                # gap to the cover and the shoulder plates
 )

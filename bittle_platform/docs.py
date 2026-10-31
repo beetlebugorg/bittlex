@@ -1,4 +1,4 @@
-"""Bittle X platform v3.2: drawings, renders, interface.json, SPEC.md and the PDF.
+"""Bittle X platform: drawings, renders, interface.json, SPEC.md and the PDF.
 
 Run build.py first, then:  python docs.py
 README.md and bittle_platform_spec.pdf come from the same content list (CONTENT), so they agree.
@@ -53,7 +53,7 @@ def plan_drawing(path):
     a.scatter(lp[:, 1], lp[:, 0], s=0.15, color="0.55")
     a.annotate(f"raised logo (top Y {I.LOGO['top']})", (-3.5, -7.0), (-36, -22), fontsize=7, color="0.4",
                arrowprops=dict(arrowstyle="->", color="0.5", lw=0.6))
-    S, H = I.SLOT, I.HDR
+    S, H = I.SLOT_WIDE, I.HDR
     a.add_patch(Rectangle((S["z0"], S["x0"]), S["z1"] - S["z0"], S["x1"] - S["x0"], color="0.6"))
     a.add_patch(Rectangle((H["z0"], H["x0"]), H["z1"] - H["z0"], H["x1"] - H["x0"], color="tab:red", alpha=0.8))
     a.add_patch(Rectangle((H["z0"] - I.SLIDE - 0.4, H["x0"] - 0.4), H["z1"] - H["z0"] + I.SLIDE + 0.8, H["x1"] - H["x0"] + 0.8,
@@ -223,7 +223,11 @@ def content():
       "Version 3.1 adds a notch in the front edge of the cover, left side, for the Grove plug on the BiBoard (the head camera cable). "
       "Version 3.2 turns the cover model 180 deg to match the robot: the Pi slot (the BiBoard header) is at the front left, and the notch is on the "
       "front left, as on the robot. Reprint the cover: the pegs and the keyholes are the same as in 3.0. "
-      "Keep add-on parts out of the plug space (GROVE_PLUG, in keepout.stl).")
+      "Keep add-on parts out of the plug space (GROVE_PLUG, in keepout.stl). "
+      f"Version 3.3 cuts the Pi slot wider toward the center ({I.SLOT_WIDE['x1'] - I.SLOT_WIDE['x0']:g} mm, was {I.SLOT['x1'] - I.SLOT['x0']:g} mm): "
+      "the BiBoard Dupont plugs did not fit. "
+      f"It also makes the click travel smaller ({I.DET['travel']:g} mm, was 0.28 mm): the add-on slides on and off with less force. "
+      "Reprint the cover and the add-on plate. The pegs do not change.")
     img("iso/platform-light.png", 0.6, "The platform (white) on the robot, with the starter plate on the pegs.")
 
     h("1. Key numbers")
@@ -256,8 +260,8 @@ def content():
     p("One Cura profile prints every part: \"Bittle X\" (cura/Bittle_X.curaprofile in the repository; import it in Cura). "
       "cura/install_profiles.py installs it, and a copy with the size compensation of each spool that the tolerance app measured.")
     tbl([["Part", "Orientation", "Supports"],
-         ["cover_pegs_foot (recommended)", "stand on the rear end, foot on the bed", "none: the foot is the support. Snap it off after the print."],
-         ["cover_pegs (no foot)", "stand on the rear end", "turn on tree supports from the bed and a 14-line brim"],
+         ["cover_pegs (no foot, recommended)", "stand on the rear end", "turn on tree supports from the bed and a 14-line brim"],
+         ["cover_pegs_foot (alternative)", "stand on the rear end, foot on the bed", "none: the foot is the support. Snap it off after the print."],
          ["starter_plate and add-ons", "plate bottom on the bed", "none"],
          ], [50, 55, 65])
     tbl([["Setting", "Bittle X"],
@@ -270,7 +274,8 @@ def content():
          ], [80, 90])
     lst(["Material: PLA works. Use PETG for add-ons that you remove often or that get warm.",
          "Standing on its end, the cover prints the pegs with layers along their length. This makes them strong. The shaft and collar points are down, so they need no supports.",
-         "The cover stands on a thin strip, and its center of mass is past that strip. The foot is a 3-layer plate with 7 fins under the leaning face. It increases the first layer from 53 to about 1000 mm². The fins touch the cover only at 21 small teeth, each one layer tall at 0.20 mm layers. Twist the foot off after the print.",
+         "The cover stands on a thin strip, and its center of mass is past that strip. The foot is a 3-layer plate with 7 fins under the leaning face. It increases the first layer from 53 to about 1000 mm². The fins touch the cover only at 21 small teeth, each one layer tall at 0.20 mm layers. Twist the foot off after the print. "
+         "The no-foot print is the recommended one: the foot teeth leave a spot on the cover where they break off.",
          "In add-ons, keep overhangs at 45 deg or less. Use chamfers, not round edges, on the bottom side.",
          f"The fits use {I.KEY_SLOT_GAP:g} (slot), {I.KEY_HOLE_GAP:g} (drop-in hole) and {I.PEG_HEAD_Y0 - I.MOUNT_Y1:.1f} (under the heads) clearance. Calibrate your printer if the plate does not slide on."])
 

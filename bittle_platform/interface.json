@@ -13,7 +13,7 @@
   "slit_w": 0.8,
   "arm": 7.5,
   "bump_r": 1.5,
-  "travel": 0.28,
+  "travel": 0.2,
   "preload": 0.05,
   "free_end": 1.2
  },
@@ -21,7 +21,7 @@
   "z": [-37.8, 56.2],
   "half_w_low": 29.6,
   "half_w_high": 35.6,
-  "top": 63.2,
+  "top": 67.2,
   "com_z_max": 10.0,
   "hug_gap": 0.4
  },
@@ -76,8 +76,15 @@
   "z0": -25.75,
   "z1": -11.75
  },
+ "SLOT_WIDE": {
+  "x0": -27.75,
+  "x1": -20.75,
+  "y0": 19.5,
+  "z0": -25.75,
+  "z1": -11.75
+ },
  "TIP_DEG": 45.0,
- "VERSION": "3.2",
+ "VERSION": "3.3",
  "frame": "X lateral (+X robot right), Y up, Z length (-Z head end); mm; origin on the center line at the middle of the cover",
  "fit_sequence": "place 7 mm rearward (+Z) of the locked place, lower onto the pegs, slide 7 mm forward (-Z) until the detents click; remove: slide 7 mm rearward and lift",
  "keyholes": [
@@ -85,25 +92,25 @@
    "peg": [12.0, -5.5],
    "slot": [[12.0, -12.5], [12.0, -5.5]],
    "drop_in_center": [12.0, -12.5],
-   "bump_centers": [[15.22, -6.748], [8.78, -6.748]]
+   "bump_centers": [[15.3, -6.514], [8.7, -6.514]]
   },
   {
    "peg": [12.0, 14.5],
    "slot": [[12.0, 7.5], [12.0, 14.5]],
    "drop_in_center": [12.0, 7.5],
-   "bump_centers": [[15.22, 13.252], [8.78, 13.252]]
+   "bump_centers": [[15.3, 13.486], [8.7, 13.486]]
   },
   {
    "peg": [-12.0, -5.5],
    "slot": [[-12.0, -12.5], [-12.0, -5.5]],
    "drop_in_center": [-12.0, -12.5],
-   "bump_centers": [[-8.78, -6.748], [-15.22, -6.748]]
+   "bump_centers": [[-8.7, -6.514], [-15.3, -6.514]]
   },
   {
    "peg": [-12.0, 14.5],
    "slot": [[-12.0, 7.5], [-12.0, 14.5]],
    "drop_in_center": [-12.0, 7.5],
-   "bump_centers": [[-8.78, 13.252], [-15.22, 13.252]]
+   "bump_centers": [[-8.7, 13.486], [-15.3, 13.486]]
   }
  ],
  "clearances": {
@@ -120,7 +127,7 @@
    [
     "starter_plate locked",
     "cover_pegs",
-    0.206
+    0.214
    ],
    [
     "starter_plate locked",
@@ -150,7 +157,7 @@
    [
     "starter_plate at detent bump",
     "cover_pegs",
-    3.051
+    1.846
    ],
    [
     "starter_plate at detent bump",
@@ -210,12 +217,12 @@
    [
     "starter_plate (body)",
     "keepout",
-    -0.0
+    0.0
    ],
    [
     "starter_plate turned 180 (min, Z +-12)",
     "peg heads",
-    10.53
+    11.553
    ],
    [
     "starter_plate drop-on (lowered)",
@@ -239,13 +246,13 @@
    ]
   ],
   "overhang_mm2": {
-   "cover_pegs": 176.505,
+   "cover_pegs": 182.401,
    "starter_plate": 0.0,
-   "cover_pegs_foot": 201.189,
+   "cover_pegs_foot": 207.085,
    "cover_stock": 197.244
   },
   "mass_g_pla_solid": {
-   "cover_pegs": 11.1,
+   "cover_pegs": 11.0,
    "starter_plate": 3.5
   },
   "clearances": {
@@ -258,11 +265,11 @@
    "collar_to_flat_edge": 0.57
   },
   "detent": {
-   "lock_N": 3.2,
-   "unlock_N": 3.2,
+   "lock_N": 2.2,
+   "unlock_N": 2.2,
    "hold_N": 1.47,
-   "beam_travel": 0.28,
-   "strain_pct": 0.9,
+   "beam_travel": 0.2,
+   "strain_pct": 0.64,
    "k_N_per_mm": 3.69
   }
  }
