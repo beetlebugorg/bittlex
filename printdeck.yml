@@ -91,3 +91,10 @@ parts:
     # ChiTuBox profile: "Microcenter - ABS Like/Standard 50/50 Black" (0.05 mm, 18 s, bottom 95 s x 10)
     prebuilt: bittle_pi_addon/stl/plates/resin_phenom.cbddlp    # not made yet: a ChiTuBox slice goes here
     alone: true
+
+# The PDFs of the project. The project page shows each one with a picture of its first page.
+docs:
+  - name: Build guide
+    file: bittle_pi_addon/bittle_pi_addon_guide.pdf
+  - name: Platform spec
+    file: bittle_platform/bittle_platform_spec.pdf
