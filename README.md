@@ -82,10 +82,31 @@ that clicks onto the platform.
 | [`bittle_platform/`](bittle_platform) | The platform: spec, print files, CAD, build script |
 | [`bittle_pi_addon/`](bittle_pi_addon) | The Pi add-on: build guide, print files, CAD, build script |
 | [`web/`](web), `build_site.py` | The website and the 3D viewer |
+| [`profiles/`](profiles) | The Cura profiles of the printers, for Printdeck builds |
+| `printdeck.yml` | The printed parts, with the printer, the profile and the material of each |
+| [`cura/`](cura) | The old Cura profile "Bittle X" |
 
 The build scripts use [build123d](https://github.com/gumyr/build123d) and
 [manifold3d](https://github.com/elalish/manifold). The website build needs
 only Python.
+
+## Build and print
+
+Install the packages, and make the print files again:
+
+```
+pip install -r requirements.txt
+python bittle_platform/build.py
+python bittle_pi_addon/pod.py fast
+python bittle_pi_addon/plates.py
+```
+
+`pod.py fast` does not write the STEP files. Use `pod.py` to write them.
+
+`printdeck.yml` lists each printed part for Printdeck. Each FDM part has a
+profile in `profiles/taz-workhorse-se/` (0.10 mm or 0.20 mm layers) and a
+material (a roll). Printdeck slices the parts with these profiles. After
+you approve a 3D preview, it sends them to the printer.
 
 ## License
 

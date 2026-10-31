@@ -1,0 +1,58 @@
+{
+ "cura": "5.13.0",
+ "machine": "lulzbot_taz_workhorse_se",
+ "extruder": "lulzbot_taz_workhorse_se_extruder",
+ "definition_changes": "definition_changes/machine.inst.cfg",
+ "definition_changes_extruder": "definition_changes/extruder.inst.cfg",
+ "profiles": {
+  "pla-0.10-fine": {
+   "quality_changes": "quality_changes/PLA_0.10_Fine.inst.cfg",
+   "quality_changes_extruder": "quality_changes/PLA_0.10_Fine_e0.inst.cfg",
+   "quality": "quality/draft.inst.cfg"
+  },
+  "pla-0.20-standard": {
+   "quality_changes": "quality_changes/PLA_0.20_Standard.inst.cfg",
+   "quality_changes_extruder": "quality_changes/PLA_0.20_Standard_e0.inst.cfg",
+   "quality": "quality/draft.inst.cfg"
+  },
+  "pla-0.30-fast": {
+   "quality_changes": "quality_changes/PLA_0.30_Fast.inst.cfg",
+   "quality_changes_extruder": "quality_changes/PLA_0.30_Fast_e0.inst.cfg",
+   "quality": "quality/draft.inst.cfg"
+  }
+ },
+ "materials": {
+  "roll-1": {
+   "file": "materials/printdeck_black-2.xml.fdm_material",
+   "brand": "MatterHackers",
+   "material": "PLA",
+   "color": "Black",
+   "color_code": "#1a1a1a",
+   "roll": "1"
+  },
+  "roll-4": {
+   "file": "materials/printdeck_black.xml.fdm_material",
+   "brand": "MatterHackers",
+   "material": "PLA",
+   "color": "Black",
+   "color_code": "#1a1a1a",
+   "roll": "4"
+  },
+  "roll-3": {
+   "file": "materials/printdeck_navy.xml.fdm_material",
+   "brand": "MatterHackers",
+   "material": "PLA",
+   "color": "Navy",
+   "color_code": "#1f2a5a",
+   "roll": "3"
+  },
+  "roll-2": {
+   "file": "materials/printdeck_orange.xml.fdm_material",
+   "brand": "eSun",
+   "material": "PLA",
+   "color": "Orange",
+   "color_code": "#ff7a1a",
+   "roll": "2"
+  }
+ }
+}

@@ -1,0 +1,487 @@
+{
+    "version": 2,
+    "name": "LulzBot TAZ Workhorse | SE | 0.5 mm",
+    "inherits": "fdmprinter",
+    "metadata": {
+        "visible": true,
+        "author": "Ported from LulzBot CuraLE_Resources",
+        "manufacturer": "Fargo Additive Manufacturing Equipment 3D, LLC",
+        "file_formats": "text/x-gcode",
+        "platform": "lulzbot_taz_workhorse_bed.stl",
+        "platform_offset": [
+            -2,
+            -23.1,
+            3
+        ],
+        "machine_extruder_trains": {
+            "0": "lulzbot_taz_workhorse_se_extruder"
+        },
+        "preferred_material": "generic_pla",
+        "exclude_materials": [
+            "3D-Fuel_PLA_PRO_Black",
+            "3D-Fuel_PLA_SnapSupport",
+            "Extrudr_GreenTECPro_Anthracite_175",
+            "Extrudr_GreenTECPro_Black_175",
+            "Extrudr_GreenTECPro_Blue_175",
+            "Extrudr_GreenTECPro_Nature_175",
+            "Extrudr_GreenTECPro_Red_175",
+            "Extrudr_GreenTECPro_Silver_175",
+            "Extrudr_GreenTECPro_White_175",
+            "Vertex_Delta_ABS",
+            "Vertex_Delta_PET",
+            "Vertex_Delta_PLA",
+            "Vertex_Delta_PLA_Glitter",
+            "Vertex_Delta_PLA_Mat",
+            "Vertex_Delta_PLA_Satin",
+            "Vertex_Delta_PLA_Wood",
+            "Vertex_Delta_TPU",
+            "basf_ultrafuse_316l_175",
+            "bestfilament_abs_skyblue",
+            "bestfilament_petg_orange",
+            "bestfilament_pla_green",
+            "chromatik_pla",
+            "dsm_arnitel2045_175",
+            "dsm_novamid1070_175",
+            "eSUN_PETG_Black",
+            "eSUN_PETG_Grey",
+            "eSUN_PETG_Purple",
+            "eSUN_PLA_PRO_Black",
+            "eSUN_PLA_PRO_Grey",
+            "eSUN_PLA_PRO_Purple",
+            "eSUN_PLA_PRO_White",
+            "eazao_clay",
+            "emotiontech_abs",
+            "emotiontech_absx",
+            "emotiontech_acetate",
+            "emotiontech_asax",
+            "emotiontech_bvoh",
+            "emotiontech_copa",
+            "emotiontech_hips",
+            "emotiontech_nylon_1030",
+            "emotiontech_nylon_1030cf",
+            "emotiontech_nylon_1070",
+            "emotiontech_pa6cf",
+            "emotiontech_pa6gf",
+            "emotiontech_pc",
+            "emotiontech_pekk",
+            "emotiontech_petg",
+            "emotiontech_pla",
+            "emotiontech_pla_hr_870",
+            "emotiontech_pva-m",
+            "emotiontech_pva-s",
+            "emotiontech_tpu98a",
+            "eryone_petg",
+            "eryone_pla",
+            "eryone_pla_glow",
+            "eryone_pla_matte",
+            "eryone_pla_wood",
+            "eryone_tpu",
+            "fabtotum_abs",
+            "fabtotum_nylon",
+            "fabtotum_pla",
+            "fabtotum_tpu",
+            "fdplast_abs_tomato",
+            "fdplast_petg_gray",
+            "fdplast_pla_olive",
+            "fiberlogy_hd_pla",
+            "filo3d_pla",
+            "filo3d_pla_green",
+            "filo3d_pla_red",
+            "generic_abs_175",
+            "generic_asa",
+            "generic_asa_175",
+            "generic_bam",
+            "generic_bvoh",
+            "generic_bvoh_175",
+            "generic_cffcpe",
+            "generic_cffpa",
+            "generic_cffpps",
+            "generic_cpe",
+            "generic_cpe_175",
+            "generic_cpe_plus",
+            "generic_gffcpe",
+            "generic_gffpa",
+            "generic_hips",
+            "generic_hips_175",
+            "generic_nylon",
+            "generic_nylon-cf-slide",
+            "generic_nylon_175",
+            "generic_pc",
+            "generic_pc_175",
+            "generic_petcf",
+            "generic_petg_175",
+            "generic_pla_175",
+            "generic_pp",
+            "generic_pva",
+            "generic_pva_175",
+            "generic_tough_pla",
+            "generic_tpu_175",
+            "goofoo_abs",
+            "goofoo_asa",
+            "goofoo_bronze_pla",
+            "goofoo_emarble_pla",
+            "goofoo_esilk_pla",
+            "goofoo_hips",
+            "goofoo_pa",
+            "goofoo_pa_cf",
+            "goofoo_pc",
+            "goofoo_peek",
+            "goofoo_petg",
+            "goofoo_pla",
+            "goofoo_pva",
+            "goofoo_tpe_83a",
+            "goofoo_tpu_87a",
+            "goofoo_tpu_95a",
+            "goofoo_wood_pla",
+            "ideagen3D_ToughPLA",
+            "imade3d_petg_175",
+            "imade3d_pla_175",
+            "innofill_innoflex60_175",
+            "jabil_tpe_sebs_1300_95a_175",
+            "layer_one_black_pla",
+            "layer_one_dark_gray_pla",
+            "layer_one_white_pla",
+            "leapfrog_abs_natural",
+            "leapfrog_epla_natural",
+            "leapfrog_pva_natural",
+            "octofiber_pla",
+            "polyflex_pla",
+            "polymaker_polymax_pc_175",
+            "polymax_pla",
+            "polyplus_pla",
+            "polywood_pla",
+            "redd_abs",
+            "redd_asa",
+            "redd_hips",
+            "redd_nylon",
+            "redd_petg",
+            "redd_pla",
+            "redd_tpe",
+            "structur3d_dap100silicone",
+            "tizyx_abs",
+            "tizyx_flex",
+            "tizyx_petg",
+            "tizyx_pla",
+            "tizyx_pla_bois",
+            "tizyx_pva",
+            "ultimaker_abs",
+            "ultimaker_abs_175",
+            "ultimaker_abs_black",
+            "ultimaker_abs_blue",
+            "ultimaker_abs_green",
+            "ultimaker_abs_grey",
+            "ultimaker_abs_orange",
+            "ultimaker_abs_pearl-gold",
+            "ultimaker_abs_red",
+            "ultimaker_abs_silver-metallic",
+            "ultimaker_abs_white",
+            "ultimaker_abs_yellow",
+            "ultimaker_abscf_175",
+            "ultimaker_absr_175",
+            "ultimaker_asa_175",
+            "ultimaker_bam",
+            "ultimaker_cpe",
+            "ultimaker_cpe_black",
+            "ultimaker_cpe_blue",
+            "ultimaker_cpe_dark-grey",
+            "ultimaker_cpe_green",
+            "ultimaker_cpe_light-grey",
+            "ultimaker_cpe_plus",
+            "ultimaker_cpe_plus_black",
+            "ultimaker_cpe_plus_transparent",
+            "ultimaker_cpe_plus_white",
+            "ultimaker_cpe_red",
+            "ultimaker_cpe_transparent",
+            "ultimaker_cpe_white",
+            "ultimaker_cpe_yellow",
+            "ultimaker_metallic_pla_175",
+            "ultimaker_nylon",
+            "ultimaker_nylon-cf-slide",
+            "ultimaker_nylon-cf_175",
+            "ultimaker_nylon12-cf_175",
+            "ultimaker_nylon_175",
+            "ultimaker_nylon_black",
+            "ultimaker_nylon_transparent",
+            "ultimaker_pc",
+            "ultimaker_pc-abs-fr_175",
+            "ultimaker_pc-abs_175",
+            "ultimaker_pc_black",
+            "ultimaker_pc_transparent",
+            "ultimaker_pc_white",
+            "ultimaker_petcf",
+            "ultimaker_petcf_black",
+            "ultimaker_petcf_blue",
+            "ultimaker_petcf_gray",
+            "ultimaker_petg",
+            "ultimaker_petg_175",
+            "ultimaker_petg_black",
+            "ultimaker_petg_blue",
+            "ultimaker_petg_blue_translucent",
+            "ultimaker_petg_green",
+            "ultimaker_petg_green_translucent",
+            "ultimaker_petg_grey",
+            "ultimaker_petg_orange",
+            "ultimaker_petg_red",
+            "ultimaker_petg_red_translucent",
+            "ultimaker_petg_silver",
+            "ultimaker_petg_transparent",
+            "ultimaker_petg_white",
+            "ultimaker_petg_yellow",
+            "ultimaker_petg_yellow_fluorescent",
+            "ultimaker_pla",
+            "ultimaker_pla_175",
+            "ultimaker_pla_black",
+            "ultimaker_pla_blue",
+            "ultimaker_pla_green",
+            "ultimaker_pla_magenta",
+            "ultimaker_pla_orange",
+            "ultimaker_pla_pearl-white",
+            "ultimaker_pla_red",
+            "ultimaker_pla_silver-metallic",
+            "ultimaker_pla_transparent",
+            "ultimaker_pla_white",
+            "ultimaker_pla_yellow",
+            "ultimaker_pp_transparent",
+            "ultimaker_ppscf_metallic-anthracite",
+            "ultimaker_pva",
+            "ultimaker_pva_175",
+            "ultimaker_rapidrinse_175",
+            "ultimaker_sr30_175",
+            "ultimaker_tough_pla",
+            "ultimaker_tough_pla_175",
+            "ultimaker_tough_pla_black",
+            "ultimaker_tough_pla_blue",
+            "ultimaker_tough_pla_gray",
+            "ultimaker_tough_pla_green",
+            "ultimaker_tough_pla_red",
+            "ultimaker_tough_pla_white",
+            "ultimaker_tough_pla_yellow",
+            "ultimaker_tpu",
+            "ultimaker_tpu_black",
+            "ultimaker_tpu_blue",
+            "ultimaker_tpu_red",
+            "ultimaker_tpu_white",
+            "verbatim_bvoh_175",
+            "volumic_abs_ultra",
+            "volumic_arma_ultra",
+            "volumic_asa_ultra",
+            "volumic_br80_ultra",
+            "volumic_bumper_ultra",
+            "volumic_cu80_ultra",
+            "volumic_flex93_ultra",
+            "volumic_medical_ultra",
+            "volumic_nylon_ultra",
+            "volumic_pekk_carbone",
+            "volumic_petg_ultra",
+            "volumic_petgcarbone_ultra",
+            "volumic_pla_ultra",
+            "volumic_pp_ultra",
+            "volumic_strong_ultra",
+            "volumic_support_ultra",
+            "xyzprinting_abs",
+            "xyzprinting_antibact_pla",
+            "xyzprinting_carbon_fiber",
+            "xyzprinting_colorinkjet_pla",
+            "xyzprinting_flexible",
+            "xyzprinting_metallic_pla",
+            "xyzprinting_nylon",
+            "xyzprinting_pahtcf15",
+            "xyzprinting_pc",
+            "xyzprinting_petcf15",
+            "xyzprinting_petg",
+            "xyzprinting_pla",
+            "xyzprinting_ppgf30",
+            "xyzprinting_tough_pla",
+            "xyzprinting_tpu",
+            "zyyx_pro_flex",
+            "zyyx_pro_pla"
+        ]
+    },
+    "overrides": {
+        "machine_name": {
+            "default_value": "LulzBot TAZ Workhorse | SE | 0.5 mm"
+        },
+        "machine_width": {
+            "default_value": 280
+        },
+        "machine_depth": {
+            "default_value": 280
+        },
+        "machine_height": {
+            "default_value": 285
+        },
+        "machine_heated_bed": {
+            "default_value": true
+        },
+        "machine_center_is_zero": {
+            "default_value": false
+        },
+        "machine_gcode_flavor": {
+            "default_value": "RepRap (Marlin/Sprinter)"
+        },
+        "machine_nozzle_size": {
+            "default_value": 0.5
+        },
+        "machine_heat_zone_length": {
+            "default_value": 20
+        },
+        "machine_max_feedrate_x": {
+            "default_value": 500
+        },
+        "machine_max_feedrate_y": {
+            "default_value": 500
+        },
+        "machine_max_feedrate_z": {
+            "default_value": 8
+        },
+        "machine_max_feedrate_e": {
+            "default_value": 40
+        },
+        "machine_max_acceleration_x": {
+            "default_value": 9000
+        },
+        "machine_max_acceleration_y": {
+            "default_value": 9000
+        },
+        "machine_max_acceleration_z": {
+            "default_value": 100
+        },
+        "machine_max_acceleration_e": {
+            "default_value": 1000
+        },
+        "machine_acceleration": {
+            "default_value": 1000
+        },
+        "acceleration_print": {
+            "default_value": 1000
+        },
+        "acceleration_travel": {
+            "value": 4000
+        },
+        "jerk_print": {
+            "default_value": 12
+        },
+        "jerk_travel": {
+            "value": 12
+        },
+        "machine_start_gcode": {
+            "default_value": ";This G-Code has been generated specifically for the LulzBot TAZ Workhorse with the SE 0.5 mm tool head\n;\n;SETTINGS\n;Nozzle diameter = {machine_nozzle_size}mm\n;Filament name = {material_brand} {material_name}\n;Filament type = {material_type} {material_diameter}mm\n;Extruder temp = {material_print_temperature}\n;Bed temp = {material_bed_temperature}\n;\n;The following lines can be uncommented for printer specific fine tuning.\n;More information can be found at https://marlinfw.org/meta/gcode/\n;M92 E420                                   ; set axis steps-per-unit\n;M906 E160                                  ; digipot motor current ((875mA-750)/5+135) = 160\n;M900 K0.0                                  ; set linear advance K factor\n;\nM73 P0                                      ; clear GLCD progress bar\nM75                                         ; start GLCD timer\nM117 Starting {jobname}...                  ; progress indicator message on LCD\nM107                                        ; disable fans\nM420 S0                                     ; disable previous leveling matrix\nG90                                         ; absolute positioning\nM82                                         ; set extruder to absolute mode\nG92 E0                                      ; set extruder position to 0\nM104 R{material_standby_temperature}        ; start extruder heating to wipe temp\nM140 S{material_bed_temperature_layer_0}    ; start bed heating up\nG28                                         ; home all axes\nM117 Heating...                             ; progress indicator message on LCD\nM109 R{material_standby_temperature}        ; wait for extruder to reach wipe temp\nM83                                         ; set extruder to relative mode\nG1 E-3 F500                                 ; retract 3mm to reduce drool on fresh filament\nM106 S255                                   ; turn fan on to help drop temp\n; Use M206 below to adjust the nozzle wipe position.\n; X ~ (+)left/(-)right, Y ~ (+)front/(-)back, Z ~ (+)down/(-)up\nM206 X0 Y0 Z0                               ; set nozzle wipe offset\nM117 Wiping Nozzle...                       ; progress indicator message on LCD\nG12                                         ; wiping sequence\nM206 X0 Y0 Z0                               ; reset stock nozzle position ### CAUTION: changing this line can affect print quality ###\nM109 R{material_standby_temperature}        ; wait for extruder to reach probe temp\nM107                                        ; turn off part cooling fan\nM117 Probing...                             ; progress indicator message on LCD\nG29                                         ; start auto-leveling sequence\nM104 R{material_print_temperature_layer_0}  ; start heating to initial printing temp\nM420 S1                                     ; enable leveling matrix\nG1 X0 Y0 Z10 F5000                          ; move up off last probe point\nG4 S1                                       ; pause\nM400                                        ; wait for moves to finish\nM117 Heating...                             ; progress indicator message on LCD\nM190 R{material_bed_temperature_layer_0}    ; wait for bed to reach printing temp\nM109 R{material_print_temperature_layer_0}  ; wait for extruder to reach initial printing temp\nG0 Z{layer_height_0} F1500                  ; move to initial layer height\n; The extruder is in relative mode from the M83 above. LulzBot's stock lines\n; here are \"E6 / E6.5 / E8.5\", and their comments read those as absolute, for\n; 8.5 mm of filament in total. In relative mode the same lines purge 21 mm, and\n; the middle move asks for 207 mm3/s. The hot end melts about 9.5 mm3/s, so the\n; drive gear pushes against solid filament and buckles it.\n; One flow limited prime line replaces them: 8.5 mm of filament over 80 mm of\n; travel in 8.7 s, which is about 6.2 mm3/s.\nG1 X80 Y1 E8.5 F550                         ; prime line along the front edge\nG1 X95 Y1 F3000                             ; quick move to break the prime line off\nM82                                         ; set extruder to absolute mode\nG92 E1                                      ; set extruder position to 1 for a retract\nG1 E0 F1800                                 ; retract 1mm at 30mm/s back to E0\nM117 {jobname}                              ; progress indicator message on LCD\n;Start G-Code End\n"
+        },
+        "machine_end_gcode": {
+            "default_value": "M400                                        ; wait for moves to finish\nM140 S45                                    ; start bed cooling to part removal temp\nM104 S0                                     ; disable hotend\nM107                                        ; disable fans\nG92 E14                                     ; set extruder to 14mm for retract on print end\nM117 Cooling please wait                    ; progress indicator message on LCD\nG91                                         ; relative positioning\nG0 Z10                                      ; move up 10mm\nG90                                         ; absolute positioning\nG1 X145 Y0 F3000                            ; move to cooling position\nM83                                         ; relative extrude\nG0 E-14                                     ; retract 14mm\nM82                                         ; absolute extrude\nM190 R45                                    ; wait for bed to cool down to removal temp\nG1 Y260 F1000                               ; present finished print\nM140 S0                                     ; turn the bed heater off\nM77                                         ; end LCD print timer\nG90                                         ; absolute positioning\nM18 X E                                     ; turn off x and e axis\nM117 Print Complete.                        ; print complete message\n"
+        },
+        "material_bed_temp_prepend": {
+            "default_value": false
+        },
+        "material_print_temp_prepend": {
+            "default_value": false
+        },
+        "material_standby_temperature": {
+            "default_value": 160
+        },
+        "material_print_temperature": {
+            "minimum_value": "0",
+            "maximum_value_warning": "295"
+        },
+        "material_print_temperature_layer_0": {
+            "value": 215
+        },
+        "material_initial_print_temperature": {
+            "value": "max(0, material_print_temperature - 5)"
+        },
+        "material_bed_temperature": {
+            "minimum_value": "0",
+            "maximum_value_warning": "125"
+        },
+        "material_bed_temperature_layer_0": {
+            "maximum_value_warning": "125"
+        },
+        "layer_height_0": {
+            "default_value": 0.425
+        },
+        "layer_0_z_overlap": {
+            "value": 0.5
+        },
+        "wall_thickness": {
+            "value": "wall_line_width_0 if magic_spiralize else 1.0"
+        },
+        "top_bottom_thickness": {
+            "default_value": 1.0
+        },
+        "infill_sparse_density": {
+            "default_value": 20
+        },
+        "infill_before_walls": {
+            "default_value": false
+        },
+        "infill_pattern": {
+            "value": "'grid'"
+        },
+        "zig_zaggify_infill": {
+            "value": true
+        },
+        "retraction_amount": {
+            "default_value": 1.75
+        },
+        "retraction_speed": {
+            "default_value": 10
+        },
+        "speed_z_hop": {
+            "default_value": 8
+        },
+        "prime_tower_min_shell_thickness": {
+            "default_value": 0.5
+        },
+        "speed_print": {
+            "default_value": 40
+        },
+        "speed_infill": {
+            "value": 40
+        },
+        "speed_wall": {
+            "value": 30
+        },
+        "speed_wall_0": {
+            "value": 30
+        },
+        "speed_wall_x": {
+            "value": 30
+        },
+        "speed_topbottom": {
+            "value": 30
+        },
+        "speed_layer_0": {
+            "value": 15
+        },
+        "speed_travel": {
+            "value": "speed_print if magic_spiralize else 175"
+        },
+        "cool_min_layer_time": {
+            "default_value": 30
+        },
+        "cool_min_layer_time_fan_speed_max": {
+            "default_value": 30
+        },
+        "brim_line_count": {
+            "value": 10
+        },
+        "skirt_line_count": {
+            "default_value": 2
+        },
+        "skirt_brim_minimal_length": {
+            "default_value": 200
+        },
+        "adhesion_type": {
+            "default_value": "skirt"
+        },
+        "support_angle": {
+            "default_value": 60.0
+        },
+        "support_interface_density": {
+            "default_value": 40
+        },
+        "support_interface_pattern": {
+            "default_value": "triangles"
+        }
+    }
+}

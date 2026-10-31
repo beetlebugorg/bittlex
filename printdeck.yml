@@ -1,0 +1,59 @@
+# Printdeck builds: the printed parts of this repository.
+# The profiles are in profiles/ (copied from printdeck/profiles). All FDM parts print in black PLA (roll-4).
+project: bittlex
+
+generate:
+  python: "3.12"
+  install: pip install -r requirements.txt
+  # "fast" skips the STEP export of pod.py. The platform build writes its STEP files.
+  run: python bittle_platform/build.py && python bittle_pi_addon/pod.py fast && python bittle_pi_addon/plates.py
+  check: true
+
+parts:
+  # Pi add-on, screw version (rev 0.26), at 0.10 mm layers
+  - name: Pod body (screw)
+    files: [bittle_pi_addon/stl/print/pod_body_screw.3mf]     # support blockers on the amp nubs and the latch rib
+    printer: taz
+    profile: taz-workhorse-se/pla-0.10-fine
+    material: roll-4
+    settings: {support_enable: true, adhesion_type: brim}
+  - name: Pod panel (screw)
+    files: [bittle_pi_addon/stl/print/pod_panel_screw.stl]
+    printer: taz
+    profile: taz-workhorse-se/pla-0.10-fine
+    material: roll-4
+    settings: {adhesion_type: brim}
+  - name: Cover (screw)
+    files: [bittle_pi_addon/stl/print/cover_screw.stl]
+    printer: taz
+    profile: taz-workhorse-se/pla-0.10-fine
+    material: roll-4
+    settings: {support_enable: true, support_structure: tree, adhesion_type: brim, brim_line_count: 14}
+  - name: Pod door
+    files: [bittle_pi_addon/stl/print/pod_door.stl]
+    printer: taz
+    profile: taz-workhorse-se/pla-0.20-standard
+    material: roll-4
+    settings: {adhesion_type: brim}
+
+  # Platform, at 0.20 mm layers
+  - name: Platform cover
+    files: [bittle_platform/stl/print/cover_pegs.stl]
+    printer: taz
+    profile: taz-workhorse-se/pla-0.20-standard
+    material: roll-4
+    settings: {support_enable: true, support_structure: tree, adhesion_type: brim, brim_line_count: 14}
+  - name: Starter plate
+    files: [bittle_platform/stl/print/starter_plate.stl]
+    printer: taz
+    profile: taz-workhorse-se/pla-0.20-standard
+    material: roll-4
+    settings: {adhesion_type: brim}
+
+  # Resin plate (keyhole version with the resin fit, the cover and two fit coupons)
+  - name: Resin plate
+    files: [bittle_pi_addon/stl/plates/resin_phenom_plate.stl]
+    printer: phenom
+    material: Grey resin
+    prebuilt: bittle_pi_addon/stl/plates/resin_phenom.cbddlp    # not made yet: a ChiTuBox slice goes here
+    alone: true
