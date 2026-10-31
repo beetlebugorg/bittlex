@@ -1,0 +1,86 @@
+{
+ "plates": [
+  {
+   "id": "fdm_taz",
+   "label": "FDM: LulzBot TAZ Workhorse, 0.5 mm nozzle",
+   "bed": [
+    280.0,
+    280.0,
+    300.0
+   ],
+   "parts": [
+    {
+     "name": "pod_body",
+     "file": "fdm_taz/pod_body.stl",
+     "color": "#e9e9e6"
+    },
+    {
+     "name": "pod_panel",
+     "file": "fdm_taz/pod_panel.stl",
+     "color": "#e8641b"
+    },
+    {
+     "name": "cover_pegs",
+     "file": "fdm_taz/cover_pegs.stl",
+     "color": "#26272b"
+    },
+    {
+     "name": "pod_door",
+     "file": "fdm_taz/pod_door.stl",
+     "color": "#e9e9e6"
+    }
+   ]
+  },
+  {
+   "id": "resin_phenom",
+   "label": "Resin: Peopoly Phenom (first model)",
+   "bed": [
+    276.0,
+    155.0,
+    400.0
+   ],
+   "parts": [
+    {
+     "name": "pod_body",
+     "file": "resin_phenom/pod_body.stl",
+     "color": "#e9e9e6"
+    },
+    {
+     "name": "cover_pegs",
+     "file": "resin_phenom/cover_pegs.stl",
+     "color": "#26272b"
+    },
+    {
+     "name": "pod_panel",
+     "file": "resin_phenom/pod_panel.stl",
+     "color": "#e8641b"
+    },
+    {
+     "name": "coupon_tight",
+     "file": "resin_phenom/coupon_tight.stl",
+     "color": "#9aa0a6"
+    },
+    {
+     "name": "coupon_loose",
+     "file": "resin_phenom/coupon_loose.stl",
+     "color": "#9aa0a6"
+    },
+    {
+     "name": "pod_door",
+     "file": "resin_phenom/pod_door.stl",
+     "color": "#e9e9e6"
+    },
+    {
+     "name": "shoulder_end_a",
+     "file": "resin_phenom/shoulder_end_a.stl",
+     "color": "#f2a71c"
+    },
+    {
+     "name": "shoulder_end_b",
+     "file": "resin_phenom/shoulder_end_b.stl",
+     "color": "#f2a71c"
+    }
+   ]
+  }
+ ]
+}

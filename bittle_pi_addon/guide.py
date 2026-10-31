@@ -51,8 +51,7 @@ UART_PI = sub("wires_uart", lambda s: not s.endswith("_dev"))
 UART_DEV = sub("wires_uart", lambda s: s.endswith("_dev"))
 AMPW = keys("wires_amp")
 MICW = sub("wires_mic", lambda s: not s.endswith("_dev"))
-PANEL = ["panel", "button", "logo_white", "logo_red"]
-CAMERA = keys("camera") + keys("wires_camera")
+PANEL = ["panel"]
 
 # The build steps: title, the parts in place before, the new parts, camera, lift, text (one idea per line), check
 STEPS = []
@@ -86,12 +85,13 @@ def build_steps():
          ["Plug the six mic jumpers onto the mic header. Use 15 cm jumpers on GND and 3V.",
           "Drop the mic into the slots in the post and the ledge on the right wall, near the front.",
           "The port faces the wall. The header is at the front edge, the plugs point into the body."],
-         check="The board sits in both slots. A fork under the panel holds its top edge later.")
+         check="The board sits in both slots. The post, the ledge and a stop hold it.")
     step("Amp and speaker lead", AMP, "amp",
          ["Plug the speaker lead into the 2-pin connector at the rear end of the amp.",
           "Plug the flat amp cable into the 5-pin connector at the front end. G is at the top.",
           "Put the bottom edge of the amp into the slot along the right wall, parts to the inside.",
           "Tilt the top edge under the two nubs. Set it with a dab of glue.",
+          "Two forks under the panel hold the top edge later.",
           "Let the amp cable hang out of the top. It goes in after the BiBoard jumpers."])
     step("Pi + PiSugar S stack", STACK, "stack",
          ["Set the PiSugar AUTO switch first: it is under the cell.",
@@ -116,25 +116,18 @@ def build_steps():
           "Plug them from the lowest up: 3V on pin 1, GND on pin 9, BCLK and LRCL into their splices, DOUT on pin 38, SEL on pin 39."])
     step("BiBoard ends", UART_DEV, "bbend",
          ["Push the male ends of the three BiBoard jumpers into the BiBoard socket: TX2, RX2, GND.",
+          "Reach the plugs from the side, through the door opening in the left wall.",
           "The two +5V sockets stay empty: the PiSugar powers the Pi."], only=["body"] + STACK + UART_PI,
          note="The other wires are not shown here, for a clear view into the front-left corner.")
-    step("Button cap and logo", ["panel", "button", "logo_white", "logo_red"], "panel",
-         ["Press the post of the white button cap into the round hole in the panel tongue until the cap sits flat.",
-          "Glue the two logo inlays into the pocket in the front right corner of the panel top: the white ring and M at the left, the red ring and J at the right."],
-         lift={k: (0, 30, 0) for k in ("panel", "button", "logo_white", "logo_red")}, only=["body"])
+    step("Door", ["door"], "door",
+         ["Slide the door down into the two grooves of the opening in the left wall. The labels face in.",
+          "It stands on the wall under it. The panel holds it down."])
     step("Panel", ["panel"], "iso",
          [f"Put the panel down {pod.LID_SLIDE:g} mm behind its place.",
           f"Slide it forward until the latch at the rear clicks (about {CHECKS['snap']['slide_on_N']:g} N).",
-          "The PiSugar power switch is under the window beside the HDMI opening. Move it with a fingernail."],
+          "The PiSugar power switch is in the HDMI opening, beside the plug. Move it with a pen tip or a toothpick.",
+          "Press the PiSugar button through the large opening with a fingertip or a pen tip."],
          check="To open: lift the rear edge at the finger notch and slide the panel rearward.")
-    step("Camera mount", ["camera_mount"], "camera",
-         [f"Turn the camera mount {abs(pod.TW['twist']):g} deg counterclockwise (seen from above). Put it down into the round socket: the lugs go down through the keyways.",
-          f"Turn it {abs(pod.TW['twist']):g} deg clockwise until it clicks and stops.",
-          "To point the lens to the rear, turn the mount end for end first. It locks the same way."],
-         check="To remove: turn it counterclockwise and lift it.")
-    step("Camera and USB cable", CAMERA, "camera",
-         ["Push the camera case down between the brackets, lens forward, USB port up, until the hooks click over its top.",
-          "Plug the USB-C end into the top of the camera and the micro-USB end into the Pi data USB port."])
 
 
 def images():
@@ -225,19 +218,6 @@ def splice_card():
         s += wire(314, y, 420, y - 12, col) + wire(314, y, 420, y + 12, col)
         s += dupont(420, y - 12) + _t(462, y - 8, "mic " + ("BCLK" if k == 0 else "LRCL"), 10.5, 500)
         s += dupont(420, y + 12, male=True) + _t(466, y + 16, "amp cable " + ("BCLK" if k == 0 else "LRC"), 10.5, 500)
-    return s + "</svg>"
-
-
-def usb_card():
-    w, h = 560, 70
-    s = f'<svg viewBox="0 0 {w} {h}" width="100%" xmlns="http://www.w3.org/2000/svg">'
-    s += '<rect x="96" y="25" width="52" height="20" rx="4" fill="#2b2d33"/><rect x="148" y="31" width="10" height="8" rx="2" fill="#b9bcc2"/>'
-    s += _t(88, 39, "USB-C", 11, 600, "end")
-    s += '<path d="M96,35 C60,35 60,35 40,35" stroke="none"/>'
-    s += '<path d="M158,35 C280,35 300,35 410,35" stroke="#1d1d1f" stroke-width="5" fill="none"/>'
-    s += '<rect x="410" y="26" width="48" height="18" rx="4" fill="#2b2d33"/><rect x="458" y="31" width="9" height="8" rx="1.5" fill="#b9bcc2"/>'
-    s += _t(476, 39, "micro-USB", 11, 600)
-    s += _t(150, 62, "camera, top of the case", 9.5, 400, "middle", MUTE) + _t(440, 62, "Pi data USB port", 9.5, 400, "middle", MUTE)
     return s + "</svg>"
 
 
@@ -362,20 +342,20 @@ def swatch(c):
 def cover(img):
     return (f'<section class="page cover"><div class="art"><img src="{img}"></div><div class="title">'
             f'<div class="kicker">Build guide</div><h1>Bittle X<br>Pi Add-on</h1>'
-            f'<div class="lead">A Raspberry Pi Zero 2 W with a battery, a speaker, a microphone and a camera, in one rounded box '
+            f'<div class="lead">A Raspberry Pi Zero 2 W with a battery, a speaker and a microphone, in one rounded box '
             f'that clicks onto the back of the Petoi Bittle X.</div>'
             f'<div class="meta"><div><b>Add-on v{docs.VERSION}</b>{docs.DATE}</div><div><b>Platform v{PI.VERSION}</b>pegs on the stock cover</div>'
-            f'<div><b>{CHECKS["balance"]["mass_g"]:.0f} g</b>with the electronics</div><div><b>No supports</b>every part prints as is</div></div>'
+            f'<div><b>{CHECKS["balance"]["mass_g"]:.0f} g</b>with the electronics</div><div><b>No supports</b>for the add-on parts (FDM)</div></div>'
             f'</div><div class="bar"></div></section>')
 
 
 def overview(img, n):
+    n_steps = (len(STEPS) + 1) // 2                      # build_html: 2 steps on each page, from page 6
     rows = "".join(f"<div><span>{t}</span><span>{p}</span></div>" for t, p in (
-        ("What you build", 2), ("Parts to print", 3), ("Electronics and cables", 4), ("Pin maps", 5), ("Assembly", 6),
-        ("Wire table", 14), ("Checks, opening and removal", 15)))
+        ("What you build", 2), ("Parts to print", 3), ("Electronics and cables", 4), ("Pin maps and hardware", 5), ("Assembly", 6),
+        ("Wire table", 6 + n_steps), ("Checks, opening and removal", 7 + n_steps)))
     body = (f'<div class="kicker">Overview</div><h2>What you build</h2>'
-            f'<div class="grid2"><div><p class="lead">The add-on is a body that clicks onto the platform pegs, a slide-on top panel and '
-            f'a camera mount. Every part goes into the body from the top, in the order of this guide. No tools are necessary, '
+            f'<div class="grid2"><div><p class="lead">The add-on is a body that clicks onto the platform pegs, a slide-on top panel. Every part goes into the body from the top, in the order of this guide. No tools are necessary, '
             f'except a soldering iron for the two splices and a dab of glue for the amp.</p>'
             f'<h3>Directions in this guide</h3><p>Front is the head end of the robot. Left and right are the robot\'s left and right. '
             f'The Pi plugs and the BiBoard header are in the <b>left well</b>. The amp and the mic are on the <b>right wall</b>. '
@@ -388,34 +368,44 @@ def overview(img, n):
 
 
 def print_parts(n):
-    P = CHECKS["printing"]
+    R = json.load(open(os.path.join(pod.OUT, "plates", "resin_check.json")))
+    vol = sum(v["cup_volume_mm3"] for v in R.values())
+    cups = ("The resin check found no cups (trapped resin) in these orientations." if vol == 0 else
+            f"The resin check found cups (trapped resin, {vol:g} mm³ in total). See resin_check.json.")
     rows = [("pod_body", "Body", "PLA, white", "floor on the bed"), ("pod_panel", "Top panel", "PLA, second color", "upside down: top on the bed"),
-            ("pod_button", "Button cap", "PLA, white", "upside down: top on the bed"),
-            ("pod_logo_white", "Logo inlay, white", "PLA, white", "top on the bed"), ("pod_logo_red", "Logo inlay, red", "PLA, red", "top on the bed"),
-            ("pod_camera_mount", "Camera mount", "PLA, second color", "standing up, lugs on the bed (as in the STL)")]
-    # the panel: the 3MF has a support blocker over the logo pocket
+            ("pod_door", "Door", "PLA, white", "flat on its outer face")]
     tr = "".join(f"<tr><td><b>{t}</b><br><span class='muted'>stl/print/{f}.stl</span></td><td>{m}</td><td>{o}</td>"
-                 f"<td class='n'>{docs.pod_mass(f) if f in ('pod_body', 'pod_panel', 'pod_camera_mount') else '< 1'} g</td></tr>"
+                 f"<td class='n'>{docs.pod_mass(f) if f in ('pod_body', 'pod_panel', 'pod_door') else '< 1'} g</td></tr>"
                  for f, t, m, o in rows)
-    opt = ("<tr><td><b>Head-off camera mount</b> (optional)<br><span class='muted'>pod_camera_base_low, pod_camera_cradle_low</span></td>"
-           "<td>PLA</td><td>as in the STLs</td><td class='n'></td></tr>")
     body = (f'<div class="kicker">1</div><h2>Parts to print</h2>'
-            f'<p class="lead">Print every part without supports, in the orientation of its file in stl/print/. '
-            f'The platform cover is in the platform package (cover_pegs_foot.stl, with a break-off foot).</p>'
-            f'<table><tr><th>Part</th><th>Material</th><th>On the bed</th><th>Mass</th></tr>{tr}{opt}</table>'
+            f'<p class="lead">Print the add-on parts without supports, in the orientation of the files in stl/print/. '
+            f'The platform cover is in the platform package: print cover_pegs.stl (no foot) with tree supports and a 14-line brim. '
+            f'cover_pegs_foot.stl is the alternative. Its foot teeth leave a spot on the cover where they break off.</p>'
+            f'<table><tr><th>Part</th><th>Material</th><th>On the bed</th><th>Mass</th></tr>{tr}</table>'
             f'<h3>Settings</h3><div class="grid2"><p>0.2 mm layers, 0.25 mm first layer. Walls 2 mm: 4 lines of 0.5 mm. '
-            f'Small holes print about 0.2 mm under size: the fits allow for it.</p>'
-            f'<p>The panel prints top down: its logo pocket and its openings are on the bed. Slice stl/print/pod_panel.3mf: '
-            f'it has a support blocker over the logo pocket. The body prints floor down: '
+            f'Small holes print about 0.2 mm under size. The fits allow for it.</p>'
+            f'<p>The panel prints top down: its openings are on the bed. The body prints floor down: '
             f'its labels and its route grooves face up.</p></div>'
-            f'<h3>Hardware</h3><table><tr><th>Item</th><th>Count</th><th>Use</th></tr>'
-            f'<tr><td>Female-to-male Dupont jumper, 10 cm</td><td class="n">3</td><td>BiBoard serial link</td></tr>'
-            f'<tr><td>Female-female Dupont jumper, 10 cm</td><td class="n">4 + 2</td><td>mic (4) and the Pi ends of the splices (2)</td></tr>'
-            f'<tr><td>Female-female Dupont jumper, 15 cm</td><td class="n">2</td><td>mic GND and 3V</td></tr>'
-            f'<tr><td>Female-to-male Dupont jumper, 10 cm</td><td class="n">2</td><td>the amp ends of the splices</td></tr>'
-            f'<tr><td>Heat shrink, white</td><td class="n">2</td><td>splice sleeves</td></tr>'
-            f'<tr><td>USB-C to micro-USB cable, 15 cm or more</td><td class="n">1</td><td>camera to Pi</td></tr>'
-            f'<tr><td>Glue (a dab)</td><td class="n"></td><td>amp; logo inlays</td></tr></table>')
+            f'<h3>Print plates</h3>'
+            f'<p>stl/plates/ has every part and the platform cover on one bed, in its print orientation. '
+            f'Each 3MF has one object for each part.</p>'
+            f'<table><tr><th>Printer</th><th>File</th><th>Orientation</th></tr>'
+            f'<tr><td>FDM: LulzBot TAZ Workhorse, 0.5 mm nozzle</td><td>fdm_taz.3mf</td>'
+            f'<td>As in stl/print/. Use the "Bittle X" Cura profile. The cover stands on its rear end: turn on tree supports and a 14-line brim.</td></tr>'
+            f'<tr><td>Resin: Peopoly Phenom (first model)</td><td>resin_phenom.3mf</td>'
+            f'<td>The body, the panel and the door are tipped 45 deg. The cover stands on its rear end. Lift the parts 5 mm in the slicer and add supports.</td></tr></table>'
+            f'<div class="grid2"><div><h3>Resin supports</h3><ul style="margin:0;padding-left:5mm">'
+            f'<li>Body: the floor is toward the plate. Put the supports on the floor underside. '
+            f'Keep them out of the keyhole slots and off the click beams. Sand the marks flat.</li>'
+            f'<li>Panel: the open side is toward the plate. The top face has no marks.</li>'
+            f'<li>Cover: it stands on its rear end, the points of the peg heads down. Put the supports on the rear edge only.</li>'
+            f'<li>Door: the outer face is up, tipped 45 deg. The supports go on the inner face and the ears.</li>'
+            f'<li>{cups}</li></ul></div>'
+            f'<div><h3>Resin fits</h3><ul style="margin:0;padding-left:5mm">'
+            f'<li>The fits are for FDM. In resin, the holes print closer to size.</li>'
+            f'<li>The slide-on fits and the amp slot are a little looser.</li>'
+            f'<li>Use a tough resin (ABS-like) for the click beams and the latch tongue.</li>'
+            f'<li>Wash the parts in IPA and post-cure them before the fit test.</li></ul></div></div>')
     return page(body, n)
 
 
@@ -445,8 +435,7 @@ def cables(n):
             f'<p>Each clock signal feeds two boards. Make a Y from three jumper ends: solder, then cover with white heat shrink.</p>'
             f'{splice_card()}</div>'
             f'<div><div class="card"><h4>Speaker lead</h4><p>The 2-wire lead of the speaker ends in a 2-pin PH2.0 plug: it goes into the '
-            f'rear end of the amp.</p></div><div class="card"><h4>Camera USB cable</h4><p>USB-C at the camera, micro-USB at the Pi '
-            f'data port.</p>{usb_card()}</div></div></div>')
+            f'rear end of the amp.</p></div></div></div>')
     return page(body, n)
 
 
@@ -455,7 +444,7 @@ def pin_maps(n):
     amp = [(lab, W[("amp", lab)]["color"]) for lab in ("G", "V", "BCLK", "LRC", "DIN")]
     bb = [("TX2", W[("uart", "TX2")]["color"]), ("RX2", W[("uart", "RX2")]["color"]), ("GND", W[("uart", "GND")]["color"]),
           ("+5V", None), ("+5V", None)]
-    body = (f'<div class="kicker">3</div><h2>Pin maps</h2>'
+    body = (f'<div class="kicker">3</div><h2>Pin maps and hardware</h2>'
             f'<p class="lead">Every pin in use, in the color of its wire.</p>'
             f'<h3>Pi Zero 2 W, 40-pin header</h3>{pi_header_svg()}'
             f'<div class="grid3" style="margin-top:4mm">'
@@ -463,7 +452,13 @@ def pin_maps(n):
             f'<div><h3>Amp I2S plug</h3>{board_pins_svg("amp", amp, "G at the top (the amp stands upright)")}</div>'
             f'<div><h3>BiBoard socket</h3>{board_pins_svg("bb", bb, "male ends in; +5V stays empty")}</div></div>'
             f'<p class="callout" style="margin-top:4mm">TX and RX cross: BiBoard TX2 goes to Pi RXD (pin 10), BiBoard RX2 to Pi TXD (pin 8). '
-            f'SEL to GND puts the mic on the left channel. The PiSugar S powers the Pi through its contact pins.</p>')
+            f'SEL to GND puts the mic on the left channel. The PiSugar S powers the Pi through its contact pins.</p>'
+            f'<h3>Hardware</h3><table><tr><th>Item</th><th>Count</th><th>Use</th></tr>'
+            f'<tr><td>Female-to-male Dupont jumper, 10 cm</td><td class="n">3 + 2</td><td>BiBoard serial link (3) and the amp ends of the splices (2)</td></tr>'
+            f'<tr><td>Female-female Dupont jumper, 10 cm</td><td class="n">4 + 2</td><td>mic (4) and the Pi ends of the splices (2)</td></tr>'
+            f'<tr><td>Female-female Dupont jumper, 15 cm</td><td class="n">2</td><td>mic GND and 3V</td></tr>'
+            f'<tr><td>Heat shrink, white</td><td class="n">2</td><td>splice sleeves</td></tr>'
+            f'<tr><td>Glue (a dab)</td><td class="n"></td><td>amp</td></tr></table>')
     return page(body, n)
 
 
@@ -478,7 +473,7 @@ def step_html(i, s, img):
 def wire_table(n):
     order = [("uart", k) for k in ("TX2", "RX2", "GND")] + [("amp", k) for k in ("G", "V", "BCLK", "LRC", "DIN")] + \
             [("splice", "bclk"), ("splice", "lrclk")] + [("mic", k) for k in ("3V", "GND", "BCLK", "DOUT", "LRCL", "SEL")] + \
-            [("speaker", "+"), ("speaker", "-"), ("camera", "USB")]
+            [("speaker", "+"), ("speaker", "-")]
     tr = "".join(f"<tr><td>{swatch(W[k]['color'])}{E(W[k]['from'])}</td><td>{E(W[k]['to'])}</td>"
                  f"<td>{E(k[0])}</td><td class='n'>{W[k]['length_mm']:.0f} mm</td><td>{E(W[k].get('slack') or '')}</td></tr>" for k in order)
     body = (f'<div class="kicker">5</div><h2>Wire table</h2><p class="lead">Every wire, from end to end. Lengths are between the '
@@ -501,9 +496,9 @@ def checks_page(n):
             f'<li>Mass {B["mass_g"]:.0f} g; center of mass {abs(B["com"][2]):.1f} mm from the robot center.</li></ul></div>'
             f'<div><h3>Open the panel</h3><p>Lift the rear edge at the finger notch (about {S["lift_N"]:g} N), slide the panel '
             f'{pod.LID_SLIDE:g} mm rearward and lift it.</p>'
-            f'<h3>Remove the add-on</h3><p>Open the panel. Pull the three BiBoard plugs off. Slide the body {PI.SLIDE:g} mm rearward and lift it.</p>'
+            f'<h3>Remove the add-on</h3><p>Open the panel. Lift the door out of the left wall. Pull the three BiBoard plugs off from the side. Slide the body {PI.SLIDE:g} mm rearward and lift it.</p>'
             f'<h3>Change the SD card</h3><p>Open the panel and lift the speaker out of its grooves; the card is at the rear end of the Pi.</p>'
-            f'<h3>Files</h3><p class="muted">stl/print: the parts to print. cad/: STEP files. README.md: the full reference. '
+            f'<h3>Files</h3><p class="muted">stl/print: the parts to print. stl/plates: the print plates. cad/: STEP files. README.md: the full reference. '
             f'Designs CC BY 4.0, code MIT; see LICENSE.md and ATTRIBUTION.md.</p></div></div>')
     return page(body, n)
 

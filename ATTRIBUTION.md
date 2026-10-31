@@ -92,6 +92,5 @@ body with it.
 ## Logo
 
 `bittle_pi_addon/reference/logo/linechef.jpg` is the avatar of the GitHub
-account LineChef (github.com/LineChef). It is in the panel top and in the
-logo inlays (`pod_logo_white`, `pod_logo_red`) at the request of the
-project owner. The repository licenses do not cover it.
+account LineChef (github.com/LineChef). The repository licenses do not
+cover it. Since add-on rev 0.25, no part uses it.

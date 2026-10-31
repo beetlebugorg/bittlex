@@ -317,7 +317,7 @@ function place(m) {
   m.position.set(lift[0] * a + aside[0] * b, lift[1] * a + aside[1] * b, lift[2] * a + aside[2] * b)
     .add(u.manual).add(u.anim);
   m.quaternion.identity();
-  if (u.turn && u.t) {                // a twist about the vertical axis through the pivot
+  if (u.turn && u.t) {                // a turn about the vertical axis through the pivot
     m.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), THREE.MathUtils.degToRad(u.turn * u.t));
     m.position.add(u.pivot).sub(u.pivot.clone().applyQuaternion(m.quaternion));
   }
@@ -446,8 +446,7 @@ $("lidop").addEventListener("input", e => {
 // ---- colors: any part can have any color. The printed parts have buttons for the filaments of the project.
 // The choice stays in this browser (localStorage) and goes into a link (#colors=body:navy,panel:e8641b).
 const FIL = { white: "#f2f2ef", gray: "#9ea0a4", orange: "#e8641b", navy: "#24345c", black: "#1d1d1f" };
-const PRINTED = [["body", "Body"], ["panel", "Panel"], ["button", "Button cap"], ["logo_white", "Logo, white"], ["logo_red", "Logo, red"],
-                 ["camera_mount", "Camera mount"], ["cover", "Platform cover"]].filter(([id]) => parts[id]);
+const PRINTED = [["body", "Body"], ["door", "Door"], ["panel", "Panel"], ["cover", "Platform cover"]].filter(([id]) => parts[id]);
 const DEF = Object.fromEntries(manifest.parts.map(p => [p.id, p.color]));
 const COL_KEY = "bittlex.colors";
 const norm = c => (FIL[c] || (c.startsWith("#") ? c : "#" + c)).toLowerCase();
@@ -670,7 +669,7 @@ addEventListener("keydown", e => {
 
 // ---- build steps
 // A step shows its new parts exploded (at their start offset) in the accent, with a dashed guide line from their place
-// and a tag. Play moves them into place. A step may turn a part (turn: {id: deg}) as it comes in (the camera mount).
+// and a tag. Play moves them into place. A step may turn a part (turn: {id: deg}) as it comes in.
 const steps = manifest.steps || [];
 let stepI = -1;
 const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -793,7 +792,7 @@ addEventListener("hashchange", fromHash);
 
 // ---- checks table
 for (const c of manifest.meta.checks) {
-  // intended: the click bumps press on the peg shafts; the panel turned 180 deg must not fit; the button arm must touch
+  // intended: the click bumps press on the peg shafts; the panel turned 180 deg must not fit; a "(must touch)" row must touch
   const intended = (c.a === "cover_pegs" && c.b === "pod_body") || (c.a.startsWith("body back") && c.b === "cover_pegs")
     || c.a.startsWith("panel turned") || c.a.includes("(must touch)");
   const cls = c.v < 0.05 ? "ok" : intended ? "warn" : "bad";

@@ -6,7 +6,7 @@ Run after pod.py:  python iso_render.py [name ...]
   exploded      every part out of the open top (pod.py explode_plan)
   stepNN        one figure per step of the build guide (guide.py STEPS): the parts of the step in the accent,
                 exploded along their insert direction, with a dashed guide line from their place
-  top, open, wires, camera_low   figures for README.md and the site home page
+  top, open, wires   figures for README.md and the site home page
 The page iso/render.html draws each figure with three.js (iso/node_modules, from iso/package.json: npm install)
 and the look of web/lineart.js, which the viewer also uses. Headless Chromium runs the page.
 """
@@ -36,11 +36,11 @@ THEMES = ("light", "dark")
 # for this project: from the front right, above.
 ISO = (1.3, 1.0, -1.5)
 DIRS = dict(iso=ISO, high=(1.0, 1.9, -1.3), rear=(0.7, 1.9, -1.4), mic=(-1.0, 1.7, 0.9), amp=(-1.4, 1.8, -0.5),
-            well=(-1.5, 1.25, 0.35), front_left=(-1.2, 1.6, -1.1), top=(0.35, 2.4, -0.9))
+            well=(-1.5, 1.25, 0.35), front_left=(-1.2, 1.6, -1.1), top=(0.35, 2.4, -0.9), door=(1.5, 1.1, -0.7))
 
 
 # --------------------------------------------------------------------------
-# Parts: the viewer part list (build_site.py) and the head-off camera parts
+# Parts: the viewer part list (build_site.py) and the starter plate
 # --------------------------------------------------------------------------
 def part_table():
     parts = {}
@@ -49,13 +49,6 @@ def part_table():
         if os.path.exists(path):
             parts[pid] = dict(file=os.path.relpath(path, PROJ), finish=BS.finish(pid, group), tag=BS.tag(pid, label),
                               transform=tf, explode=ex)
-    low = dict(camera_base_low=("stl/installed/pod_camera_base_low.stl", "print", "Head-off base"),
-               camera_cradle_low=("stl/installed/pod_camera_cradle_low.stl", "print", "Cradle"),
-               camera_low_pins=("stl/models/camera_low_pins.stl", "buy", "Pins"),
-               camera_low=("stl/models/camera_low.stl", "dark", "Camera"),
-               wires_camera_low=("stl/models/wires_camera_low.stl", "dark", "USB cable"))
-    for pid, (src, fin, t) in low.items():
-        parts[pid] = dict(file=os.path.relpath(os.path.join(HERE, src), PROJ), finish=fin, tag=t, transform=None, explode=None)
     parts["starter_plate"] = dict(file="bittle_platform/stl/installed/starter_plate.stl", finish="print", tag="Starter plate",
                                   transform=None, explode=None)
     return parts
@@ -64,11 +57,10 @@ def part_table():
 PARTS = part_table()
 ROBOT = [p[0] for p in BS.PARTS if p[2] == "Robot" and not p[0].startswith("biboard_header")]
 TRUNK = ["shoulder_r", "shoulder_l", "front_plate", "rear_plate", "biboard_header__header"]
-PRINTED = ["cover", "body", "panel", "button", "logo_white", "logo_red", "camera_mount"]
-INSIDE = [k for k in PARTS if "__" in k and not k.startswith(("camera__", "wires_camera", "biboard_header"))]
-CAMERA = ["camera__case", "wires_camera__usb", "wires_camera__plug_cam", "wires_camera__plug_pi"]
-ALL = ROBOT + PRINTED + ["biboard_header__header"] + INSIDE + CAMERA
-PANEL = ["panel", "button", "logo_white", "logo_red"]
+PRINTED = ["cover", "body", "door", "panel"]
+INSIDE = [k for k in PARTS if "__" in k and not k.startswith("biboard_header")]
+ALL = ROBOT + PRINTED + ["biboard_header__header"] + INSIDE
+PANEL = ["panel"]
 
 
 def ids(keys):
@@ -83,8 +75,6 @@ def ids(keys):
 # The build steps (guide.py): how each step moves its parts in, and the view
 # --------------------------------------------------------------------------
 UP = lambda h, back=0.0: (0.0, h, back)      # noqa: E731  up h mm, back mm toward the rear (+Z)
-TWIST_PIVOT = (-pod.TW["c"][0], 0.0, pod.TW["c"][1])   # the socket axis in the robot frame (pod.py designs with X turned over)
-TWIST = abs(pod.TW["twist"])                              # the mount goes in turned this far counterclockwise (from above)
 
 # title: (offset of the new parts, view, extra moving parts, ghost the body, show the robot trunk)
 MOVES = {
@@ -99,10 +89,8 @@ MOVES = {
     "Amp cable": (UP(34), "well", [], True, False),
     "Mic jumpers": (UP(34), "well", [], True, False),
     "BiBoard ends": (UP(34), "front_left", [], True, False),
-    "Button cap and logo": (UP(18), "iso", [], False, False),
-    "Panel": (UP(40, pod.LID_SLIDE), "iso", ["button", "logo_white", "logo_red"], False, True),
-    "Camera mount": (UP(40), "iso", [], False, True),
-    "Camera and USB cable": (UP(55), "iso", [], False, True),
+    "Door": (UP(40), "door", [], False, True),
+    "Panel": (UP(40, pod.LID_SLIDE), "iso", [], False, True),
 }
 # One tag for all the parts of a step (else one tag for each name)
 STEP_TAG = {"Mic": "Mic", "Pi + PiSugar S stack": "Pi + PiSugar S", "Panel": "Top panel"}
@@ -114,8 +102,6 @@ def step_jobs():
     for i, s in enumerate(guide.STEPS, 1):
         off, view, extra, ghost, trunk = MOVES[s["title"]]
         before, new = ids(s["before"]), ids(s["new"])
-        if s["title"] == "Button cap and logo":       # the panel alone, the cap and the inlays over it
-            before, new = ["panel"], ["button", "logo_white", "logo_red"]
         move = new + [k for k in extra if k not in new]
         show = [k for k in dict.fromkeys(before + new) if trunk or k not in TRUNK]
         if not trunk:
@@ -124,9 +110,6 @@ def step_jobs():
                    ghost=["body"] if ghost else [], dir=DIRS[view], width=2000, height=1250)
         if s["title"] in STEP_TAG:
             job["tag"] = {k: STEP_TAG[s["title"]] for k in move}
-        if "camera_mount" in move:
-            job["turn"] = {"camera_mount": TWIST}
-            job["pivot"] = {"camera_mount": list(TWIST_PIVOT)}
         if ghost:                                    # wire steps: fit to the body and the wires
             job["frame"] = ["body"] + move
         jobs.append(job)
@@ -139,18 +122,15 @@ def figure_jobs():
         e = PARTS[k]["explode"]
         if e:
             ex[k] = [a + b for a, b in zip(e[1], e[2])]
-    open_ = ROBOT + ["cover", "body", "biboard_header__header"] + INSIDE
-    low = ([k for k in ROBOT if k not in ("head", "neck_mount")] + [k for k in PRINTED if k != "camera_mount"] +
-           ["biboard_header__header"] + INSIDE + ["camera_base_low", "camera_cradle_low", "camera_low_pins", "camera_low", "wires_camera_low"])
+    open_ = ROBOT + ["cover", "body", "door", "biboard_header__header"] + INSIDE
     return [
         dict(name="hero", show=ALL, dir=ISO, width=1500, height=2000),
         dict(name="exploded", show=ALL, offset=ex, dir=ISO, width=1600, height=2200),
         dict(name="top", show=[k for k in ALL if k not in ROBOT], dir=DIRS["top"], width=1600, height=1300,
-             frame=["body", "panel", "camera_mount", "camera__case", "wires_camera__usb"]),
+             frame=["body", "panel"]),
         dict(name="open", show=open_, dir=ISO, width=1600, height=1600),
         dict(name="wires", show=["cover", "body"] + INSIDE, ghost=["body"], dir=DIRS["well"], width=1600, height=1300,
              frame=["body"]),
-        dict(name="camera_low", show=low, dir=ISO, width=1500, height=1800),
         dict(name="platform", show=ROBOT + ["cover", "starter_plate"], dir=ISO, width=1600, height=1600, out=PLATFORM_OUT),
     ]
 

@@ -1,4 +1,4 @@
-"""Bittle X Pi add-on rev 0.24: one-piece body with a slide-on top panel.
+"""Bittle X Pi add-on rev 0.25: one-piece body with a slide-on top panel.
 
 Frame = the robot frame of the platform (bittle_platform/interface.py):
   X = lateral (+X = robot right), Y = up, Z = length (-Z = head end). mm.
@@ -18,15 +18,12 @@ Parts
   pod_panel  : the top, with the soft top edge and openings shaped to the plug bodies. It goes down 5 mm
                behind its place and slides forward: hooks go under lugs in the front and side walls, and
                a latch tongue at the rear clicks over a rib. Forks under the panel hold the stack,
-               the speaker and the amp down. A spring tongue over the PiSugar button is a large button.
-  pod_button : the button cap on the tongue.
-  pod_camera_mount : turns into a round socket in the panel (a twist lock, lens forward or to the rear) and holds the
-               Petoi AI Vision Module vertical.
-  pod_camera_base_low, pod_camera_cradle_low : the head-off mount (optional): the camera lower, in front of the body.
+               the speaker and the amp down. The PiSugar button is under the open port rectangle.
 Order: fit the platform cover, click the empty body on, put the parts in, plug in the wires, put the
-button cap into the panel, slide the panel on, turn the camera mount into its socket.
+door in, slide the panel on.
 Print: no supports (print_orient() has the orientation of each part).
 """
+import contextlib
 import math
 import os
 import sys
@@ -37,7 +34,7 @@ from build123d import Box, Cylinder, Pos, Rot, export_stl
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(ROOT))            # the folder that holds bittle_platform/
-from bittle_platform import interface as PI          # platform v3.1: cover, pegs, keyholes
+from bittle_platform import interface as PI          # platform v3.3: cover, pegs, keyholes
 REF = os.path.join(ROOT, "reference")                # vendor models (Pi Zero)
 PREF = os.path.join(os.path.dirname(ROOT), "bittle_platform", "reference")   # Petoi robot parts
 OUT = os.path.join(ROOT, "stl")
@@ -79,10 +76,12 @@ IN_A, ZF_IN, ZR_IN = A - WALL, Z0 + WALL, Z1 - WALL     # inner faces: 33.6, -35
 IN_A_LOW = A_LOW - WALL                                 # 27.6: the inner face below the chamfer
 FLOOR_Y0, FLOOR_Y1 = PI.MOUNT_Y0, PI.MOUNT_Y1          # the floor is the platform mount plate
 SEAM = 57.2                 # top of the body walls = bottom of the panel
-TOP = 63.2                  # panel top: 0.3 over the highest port
+# Panel top: 4.3 over the highest port. Rev 0.24 had 63.2 (0.3 over it): the battery leads at the front and the
+# speaker leads at the rear had no room under the panel (user print).
+TOP = 67.2
 RT = 4.0                    # round on the top edge; the last 45 deg of it is a chamfer (the bed edge in the print)
 PANEL_T = 1.6
-PANEL_IN = TOP - PANEL_T    # 61.6, underside of the panel top
+PANEL_IN = TOP - PANEL_T    # 65.6, underside of the panel top
 
 # Pegs (on the cover) and keyholes (in the floor): platform interface v3.1
 PEGS = PI.PEGS
@@ -159,16 +158,22 @@ CSI = dict(x=(0.0 + STACK_DX, 3.05 + STACK_DX), y=(33.5, 56.5), out=1.15)       
 
 # Ports (from the models): PiSugar USB-C charge port, button, switch; Pi power, data USB, mini-HDMI. All up.
 # The Pi power port and the PiSugar charge port are side by side: plug in one of them at a time.
+# Plug bodies: the larger overmolds of common cables (micro-USB 8 x 11.5, USB-C 8 x 13, mini-HDMI 9.5 x 15).
 PORT_PLUGS = dict(                 # (x center, z center, x size, z size) of the plug body
-    hdmi=(3.25 + STACK_DX, ZSD - 12.65, 8.5, 14.0),
-    pi_usb=(2.9 + STACK_DX, ZSD - 41.6, 7.5, 11.0),
-    pi_power=(2.9 + STACK_DX, ZSD - 54.1, 7.5, 11.0),
-    charge=(PS_PCB_X[0] - 1.63, ZSD - 53.7, 7.5, 12.5),     # USB-C plug body (estimate); the receptacle center is 1.63 over the PCB
+    hdmi=(3.25 + STACK_DX, ZSD - 12.65, 9.5, 15.0),
+    pi_usb=(2.9 + STACK_DX, ZSD - 41.6, 8.0, 11.5),
+    pi_power=(2.9 + STACK_DX, ZSD - 54.1, 8.0, 11.5),
+    charge=(PS_PCB_X[0] - 1.63, ZSD - 53.7, 8.0, 13.0),     # USB-C plug body; the receptacle center is 1.63 over the PCB
 )
 PORT_TOP = 61.3                    # highest port face
-# Port openings in the panel: each one is the plug body + PORT_CLR, with round corners and a 45 deg
+# Port openings in the panel: each one is the plug body + PORT_CLR, moved PORT_SHIFT, with round corners and a 45 deg
 # chamfer on the top edge. The Pi power and the PiSugar charge openings join.
-PORT_CLR, PORT_R, PORT_CHAMFER = 0.4, 1.0, 0.5
+# The user's rev 0.24 print (photo, 2026-10-26): the ports are about 1.2 mm forward and 1.0 mm toward the robot left
+# (+X in the design frame) of the model. The micro-USB ports touched the edge of their opening. The openings are
+# centered on the model ports (the user asked for even margins) and grow (PORT_CLR 0.4 -> 1.0), so the plug bodies
+# also fit at the place of the print.
+PORT_CLR, PORT_R, PORT_CHAMFER = 1.0, 1.0, 0.5
+PORT_SHIFT = (0.0, 0.0)           # (x, z) of the openings, the switch window and the button arm
 # Forks under the panel over the top edge of the boards (where no port is)
 STACK_FORKS = [ZSD - 27.4, ZSD - 4.0]    # z0 of each fork, 2 long: clear of the ports while the panel slides on
 FORK = dict(len=2.0, lip=1.85, clr_y=0.1)
@@ -180,65 +185,25 @@ SW_TRAVEL = 0.75
 SW_OFF_U = (13.0, 14.4)
 SW_LEVER = dict(x=(PS_PCB_X[0] - 1.25, PS_PCB_X[0] - 0.25), y=(STACK_Y0 + 28.2, STACK_Y0 + 29.9),
                 z=sd_z(SW_OFF_U[0] - SW_TRAVEL, SW_OFF_U[1] - SW_TRAVEL))
-SW_WIN = dict(x=(-1.0, 2.5), z=(SW_LEVER["z"][0] - SW_TRAVEL - 1.45, SW_LEVER["z"][1] + SW_TRAVEL + 1.45))   # 1.0 web to the HDMI opening
+# The window is 6.0 x 8.0: the lever is 5.7 under the panel underside, so a pen tip or a toothpick moves it. The
+# user's rev 0.24 print showed the lever at the edge of the old 3.5 x 5.8 window.
+SW_WIN = dict(x=(-2.0 + PORT_SHIFT[0], 4.0 + PORT_SHIFT[0]),
+              z=(SW_LEVER["z"][0] - SW_TRAVEL - 2.5 + PORT_SHIFT[1], SW_LEVER["z"][1] + SW_TRAVEL + 2.5 + PORT_SHIFT[1]))
 # Button: the PiSugar S side push button, its plunger out of the board edge (drawing: u 42.3..44.5, the end at v 30.5).
 PS_BTN_U = (42.3, 44.5)
-BTN = dict(x=(-10.5 + STACK_DX, -4.5 + STACK_DX), z=(-11.2, -1.2), t=1.0, slit=0.6,
-           cap=(PS_PCB_X[0] - 1.6, PS_PCB_X[0] - 0.4, *sd_z(*PS_BTN_U), STACK_Y0 + 30.5),     # the plunger: x0, x1, z0, z1, top
-           arm_x=(-6.5 + STACK_DX, -2.5 + STACK_DX), arm_z=(-9.9, -7.9), gap=0.2, press=0.6)   # the tongue: root at z1, free end at z0
-# The button cap (white) presses into a round hole in the tongue: a cross post, its ribs 0.15 over the hole on each
-# side, crush into the hole wall (coarse enough for a 0.5 mm nozzle).
-KEYCAP = dict(w=5.2, l=5.7, h=1.4, r=1.2, post_d=3.8, rib=1.0, press=0.05, post_h=0.9)   # small holes print about 0.2 under
-# Camera: the Petoi AI Vision Module in its Petoi case (reference/AiCamera250116-*.stl, 46.7 x 29.3 x 14.9) stands
-# vertical on the panel, lens forward over the head, the USB end (native -X) at the top. It stands on the twist mount
-# (TW, below): cx and front_z come from the socket center.
-# The mount has two side brackets with lips at the corners of the case and a hook over each top corner (clear of the
-# USB port). The brackets spread to let the case in from the top; the hooks snap over its top face. A USB cable goes
-# from the USB-C port in the top face of the case to the Pi data USB port, over the panel.
-CAM = dict(case_x=(-1.2, 45.55), case_y=(-24.83, 4.47), case_z=(-9.8, 5.1),
-           top_y=(-21.6, 1.25),                          # the top (USB) end face of the case, native Y (it is narrower)
-           base=dict(chin=3.0, clr=0.15),
-           brk=dict(t=2.0, clr=0.25, lip_front=0.8, lip_back=1.35, lip_h=15.0, hook=1.5, gap=0.1),
-           usb=(-10.15, -1.6), mass=15.0)                # usb: center of the USB-C port in the top face (native Y, Z; case model)
-# Head-off mount: for the robot without its head. The camera stands centered, lower, in front of the body: its rear
-# face rear_z, its bottom y0. Two parts, each prints without supports: a base (pod_camera_base_low: the twist pedestal,
-# an arm on the panel to the front edge (left of the button, to arm_x1), a chin and a front plate down the front of
-# the body, with two dovetail grooves; it prints on its side) and a cradle
-# (pod_camera_cradle_low: a floor and the side brackets with the hooks; their rear edges are dovetail tabs that slide
-# down into the grooves until the cradle sits on the top of the base; it prints on those rear edges). A 1.75 mm
-# filament pin through each side locks the cradle.
-# Its USB cable goes up from the top of the case, over the panel, to the Pi data USB port.
-CAM_LOW = dict(cx=0.0, rear_z=Z0 - 10.0, y0=20.0, floor_t=2.0, plate=dict(x=19.5, y0=42.0, z=(-41.2, -38.4)), arm_x1=-6.0,
-               tab=dict(d=1.4, w0=1.2, w1=2.0, clr=0.1), pin=dict(y=52.0, d=1.75, clr=0.1, x0=13.0))
-# Twist mount (rev 0.24): the camera mount locks into a round socket in the panel top, at the old logo place, as far
-# toward the center as the port openings allow. The pedestal goes down through the hole; two lugs pass down through
-# the keyways, then the mount turns `twist` deg back to the lock: the lugs go under the panel top, a stop under the
-# panel ends the turn, and a bump on a spring tab in the panel top drops into a notch in the top of each lug. The tab
-# presses the lug down, so the seat ring sits firm on the panel. The lock is the same with the mount turned 180 deg
-# (lens to the rear). The panel prints top down, so the tabs bend in their layers. The mount prints on its back end:
-# the pedestal, the seat and the lugs have 45 deg rear edges.
-TW = dict(c=(-17.6, 13.0), r_hole=9.95, r_neck=9.6, r_lug=13.4, lug_a=18.0, lug_t=1.2, gap=0.15, clr=0.3, twist=-40.0,
-          ramp=0.5, notch=0.35, preload=0.2, stop_clr=0.15, cs=0.45, seat_gap=0.15, R_b=18.0, rim=0.6, pocket=1.0, lip=0.8, lip_in=0.8,
-          hook_flat=1.5, hook_tip=0.6, seat_side=11.2, lift=0.7, base_t=2.0, base_hx=16.9, base_hw=12.5, base_r=3.0,
-          tab=dict(r0=12.0, r1=14.06, free=1.2, root=9.5, slit=0.6, t=1.2), bump=dict(r=(12.05, 13.3), tip=0.2))
-# The cone of the camera mount: parallel to the countersink, seat_gap from it; it starts at the pedestal radius.
-TW_CONE_Y = TOP - TW["cs"] + (TW["r_neck"] - TW["r_hole"] + TW["seat_gap"] * math.sqrt(2))
-TW_TOP = TW_CONE_Y + TW["R_b"] - TW["r_neck"] + TW["rim"]   # top of the round puck
-LOW_TOP = TOP + TW["lift"] + TW["base_t"]     # top of the plate of the head-off base
-CAM["cx"] = TW["c"][0]
-CAM["front_z"] = TW["c"][1] - (CAM["case_z"][1] - CAM["case_z"][0]) / 2
-# USB cable (estimates): USB-C plug body 12.0 x 6.5, 18 long over the case; micro-USB plug body 7.5 x 11 (the Pi
-# data USB opening), 18 long over the port; cable 3.5 thick, bends R 8 or more.
-USB_C = dict(w=12.0, t=6.5, l=18.0)
-USB_MICRO_L = 18.0
-USB_R, USB_BEND = 1.75, 8.0
-
+# Rev 0.25 (user): no button part and no spring tongue. The Pi power, the Pi data and the PiSugar charge openings and
+# the button are one rectangle in the panel (PORT_GROUPS "rect"): press the button with a fingertip or a pen tip.
+# BTN_WIN is the plunger + margin, a member of that rectangle.
+BTN = dict(cap=(PS_PCB_X[0] - 1.6, PS_PCB_X[0] - 0.4, *sd_z(*PS_BTN_U), STACK_Y0 + 30.5))     # the plunger: x0, x1, z0, z1, top
+BTN_WIN = dict(x=(BTN["cap"][0] - 1.5, BTN["cap"][1] + 1.5), z=(BTN["cap"][2] - 1.5, BTN["cap"][3] + 1.5))
 # BiBoard 5-pin female header in the cover slot (GND, +5V, TX2, RX2, ..), at the front right in the design frame.
 # Straight Dupont plugs.
 SLOT = dict(PI.SLOT, x0=-PI.SLOT["x1"], x1=-PI.SLOT["x0"])     # design frame (X turned over)
 HDR = dict(PI.HDR, x0=-PI.HDR["x1"], x1=-PI.HDR["x0"])
 BB_PLUG = dict(x=(HDR["x0"], HDR["x1"]), y=(HDR["top"], HDR["top"] + DUPONT_L), z=(HDR["z0"], HDR["z1"]))
-HDR_NOTCH = dict(x=(23.9, IN_A_LOW + 0.01), z=(HDR["z0"] - SLIDE - 0.8, HDR["z1"] + 0.8))   # floor notch: header + slide
+# Floor notch: the header + the slide. 7.0 wide (rev 0.24: 3.7, from x 23.9): the user found it too narrow to get the
+# BiBoard plugs and their wires through. The amp ribbon on the floor (AMP_RUN_X) crosses over it.
+HDR_NOTCH = dict(x=(20.6, IN_A_LOW + 0.01), z=(HDR["z0"] - SLIDE - 0.8, HDR["z1"] + 0.8))
 
 # Speaker: NULLLAB 3 W 4 ohm box speaker (user caliper measurements). Body 27.9 x 30 x 15.2 (X, Y, Z; caliper 15.15).
 # Two wings, 3.0 thick, 44.0 across: each one tapers from wing_h high at the body to a round end (wing_r) around its
@@ -259,8 +224,11 @@ AMP_X = (-IN_A_LOW + 0.5, -IN_A_LOW + 0.5 + AMP["t"])   # -27.1 .. -25.5, on the
 AMP_CABLE_X = AMP_X[1] + 2.5                    # the amp cable and the speaker lead leave the plugs here
 AMP_Y0 = 28.5
 AMP_Z = (-9.0, -9.0 + AMP["l"])                  # I2S 5-pin PH2.0 at the front end, speaker 2-pin PH2.0 and the screw terminal at the rear end
-AMP_FORKS = [-1.0]                               # z0 of the panel fork over the amp top edge (2.5 long); the camera socket is over the rest
-                                                 # of the amp and the screw terminal is at its rear end (the nubs hold both ends)
+AMP_FORKS = [-1.0, 12.0]                         # z0 of the panel forks over the amp top edge (2.5 long); the screw terminal is at its rear end
+# The amp slot and the nubs. Rev 0.24 (slot 0.15 a side, nubs 1.0 over the PCB) was too tight on the user's print
+# and the board did not click in. Holes print about 0.2 under, so the slot is 0.3 a side; the nubs reach 0.7 over
+# the PCB and are 0.2 over its top edge.
+AMP_SLOT_CLR, AMP_NUB = 0.3, dict(reach=0.7, gap=0.2)
 AMP_NUBS = [-5.0, 22.0]                          # z0 of the nubs on the wall over the amp top edge (4 long)
 # Board layout from the NULLLAB photo (u from the I2S end, v from the edge that the photo shows on top, mm). The PH2.0
 # headers are side entry: the plugs go in along the board, from the ends. ph=height of the PH headers over the PCB.
@@ -273,8 +241,7 @@ AMP_L = dict(ph5=(0.75, 6.8, 3.8, 17.4), ph2=(29.0, 35.7, 9.1, 17.0), term=(29.0
 # the front corner, high, port face to the wall (sound holes in the side face). The 6 pins (SEL, LRCL, DOUT, BCLK,
 # GND, 3V, 3V lowest) are a straight header along its front 16.12 edge: the Dupont housings point inward, and the
 # wires go straight across behind the front wall to the left well. It drops in without tools: its rear edge goes
-# down a slot in a post on the wall, its bottom edge into a slotted ledge (45 deg underside), and a fork under the
-# panel comes down over its top edge. The board is in front of the amp cable (Z -23.8 and rear), and the housings
+# down a slot in a post on the wall and its bottom edge into a slotted ledge (45 deg underside). The board is in front of the amp cable (Z -23.8 and rear), and the housings
 # go down behind the front wall lugs.
 MIC = dict(w=12.45, l=16.12, t=1.6, z0=-34.2, y0=37.0, hole_d=2.5, hole_in=2.3, pin_in=1.3)   # w along Z, l along Y
 MIC_HOLD = dict(gap=2.0, clr=0.15, lip=1.2, depth=1.5)   # wall to PCB, slot clearance, back lip, slot depth on the edges
@@ -300,7 +267,9 @@ LID_LUG_Y = SEAM - LID["top"] - LID["L"]                 # 55.1: the 45 deg unde
 # The latch: a tongue in the panel top at the rear center, cut free by two slits (root at the front, the rear
 # skirt at its free end). Its hook rides over a rib on the rear wall and drops in front of it. To open, lift the
 # rear edge at the finger notch and slide the panel rearward. The hook is over the speaker.
-LATCH = dict(hw=4.5, slit=0.6, root_z=34.0, rib_hw=3.0, rib_d=1.2, rib_top=59.6, hook_bot=58.9, hook_d=2.0,
+# Rev 0.25 (user: a firmer click): the tongue is 1.5 shorter and the hook drops 1.0 behind the rib (was 0.8), about
+# 5 N to lift (was 3.1 N).
+LATCH = dict(hw=4.5, slit=0.6, root_z=35.5, rib_hw=3.0, rib_d=1.2, rib_top=59.8, hook_bot=58.9, hook_d=2.0,
              hook_hw=3.5, ramp=1.0, gap=0.05)
 # Finger notch in the rear wall under the seam: lift the rear edge of the panel here.
 NOTCH = dict(hw=7.0, h=1.5, d=1.0)
@@ -328,7 +297,15 @@ WIRE_PATHS = {
 }
 WIRE_R = 0.7
 # Space for a finger tip over the BiBoard plug (panel off)
-FINGER = dict(x=(11.0, IN_A - 0.2), y=(37.0, SEAM), z=(-24.0, -10.5))
+FINGER = dict(x=(11.0, IN_A - 0.2), y=(37.0, SEAM), z=(-22.5, -10.5))
+# Door (rev 0.25, user: the BiBoard plug was hard to reach under the stack; no hardware): a piece of the left wall
+# (robot frame) over the BiBoard plug. It slides down into two vertical grooves inside the body and stands on the
+# wall under it (y0). The panel over it holds it down. Panel off, lift the door out: a finger reaches the BiBoard
+# plug from the side. An ear on each end of the door (a 45 deg wedge in plan) goes down a groove in a post on the
+# inner face; the wedge faces keep the door in the wall line both ways. The door prints flat on its outer face.
+# The front ear passes 0.15 behind the front lug of the panel hooks (LID side_z) as the door goes down.
+DOOR = dict(z=(-22.6, -8.6), y0=30.0, gap=0.2, gap_y=0.15, top_gap=0.1,
+            ear=dict(x0=31.2, tip_x=32.2, web=1.0, y=(41.5, 53.8)), post=dict(x0=29.4, lip=1.5, clr=0.25, top=53.9, y45=36.5))
 
 
 def flat_pi():
@@ -721,7 +698,7 @@ def mic_holder():
 def amp_base():
     """Bar on the floor along the wall with a slot for the bottom edge of the amp board, and two nubs over its top
     edge: tilt the board in, press its top edge under the nubs, then set it with a dab of glue."""
-    c = 0.15
+    c = AMP_SLOT_CLR
     b = mbox(-IN_A - 0.5, AMP_X[1] + 1.55, FLOOR_Y1 - 0.01, 30.0, *AMP_Z)
     b -= mbox(AMP_X[0] - c, AMP_X[1] + c, AMP_Y0 - 0.15, 31.0, AMP_Z[0] - 1, AMP_Z[1] + 1)
     return b + amp_nubs()
@@ -731,8 +708,9 @@ def amp_nubs():
     """Two posts behind the amp board (up from the chamfer) with a nub over its top edge: a flat catch, a 45 deg top."""
     yt = AMP_Y0 + AMP["h"]
     xb = AMP_X[0] - 1.6                                    # the back face of the posts
-    prof = [(xb, FLOOR_Y1), (AMP_X[0] - 0.05, FLOOR_Y1), (AMP_X[0] - 0.05, yt + 0.05), (AMP_X[0] + 1.0, yt + 0.05),
-            (AMP_X[0] + 1.0, yt + 0.45), (xb, yt + 0.45 + 1.05 + 1.6)]
+    r, g = AMP_NUB["reach"], AMP_NUB["gap"]
+    prof = [(xb, FLOOR_Y1), (AMP_X[0] - 0.05, FLOOR_Y1), (AMP_X[0] - 0.05, yt + g), (AMP_X[0] + r, yt + g),
+            (AMP_X[0] + r, yt + g + 0.4), (xb, yt + g + 0.4 + r + 0.05 + 1.6)]
     return union([prism_zp(prof, z, z + 4.0) for z in AMP_NUBS])
 
 
@@ -813,6 +791,197 @@ def keyhole_bump(px, pz):
     return flip_x(b3d_to_manifold(BP.detent_bump(px, pz)))
 
 
+def support_blockers():
+    """Support blockers for Cura: one around the flat catch of each amp nub (0.75 mm), and one around the
+    45 deg underside of the latch rib on the rear wall. These print without support, and the support
+    under them is tall and narrow and fails."""
+    yc = AMP_Y0 + AMP["h"] + AMP_NUB["gap"]                # the catch underside
+    x0, x1 = AMP_X[0] - 0.6, AMP_X[0] + AMP_NUB["reach"] + 1.0
+    out = [mbox(x0, x1, yc - 1.0, yc + 0.6, z - 0.5, z + 4.5) for z in AMP_NUBS]
+    C = LATCH
+    y0 = SEAM - 2.2                                        # the rib underside starts at the wall here
+    out.append(mbox(-C["rib_hw"] - 0.5, C["rib_hw"] + 0.5, y0 - 0.6, y0 + C["rib_d"] + 0.6, ZR_IN - C["rib_d"] - 0.6, ZR_IN + 0.3))
+    return union(out)
+
+
+def write_3mf_blocked(path, name, M, blockers):
+    """A 3MF for Cura: the part and its support blockers (cura:anti_overhang_mesh) in one group."""
+    import zipfile
+
+    def obj(i, n, S, meta=""):
+        m = S.to_mesh()
+        v = np.asarray(m.vert_properties)[:, :3]
+        vs = "".join(f'<vertex x="{a:.4f}" y="{b:.4f}" z="{c:.4f}"/>' for a, b, c in v)
+        ts = "".join(f'<triangle v1="{a}" v2="{b}" v3="{c}"/>' for a, b, c in np.asarray(m.tri_verts))
+        return (f'<object id="{i}" name="{n}" type="model">{meta}<mesh><vertices>{vs}</vertices>'
+                f'<triangles>{ts}</triangles></mesh></object>')
+
+    meta = ('<metadatagroup><metadata name="cura:anti_overhang_mesh" preserve="1" type="xs:string">True</metadata>'
+            '</metadatagroup>')
+    model = ('<?xml version="1.0" encoding="UTF-8"?>\n'
+             '<model unit="millimeter" xml:lang="en-US" xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02">'
+             '<resources>' + obj(1, name, M) + obj(2, "support blockers: amp nubs, latch rib", blockers, meta)
+             + f'<object id="3" name="{name} group" type="model"><components><component objectid="1"/>'
+             '<component objectid="2"/></components></object></resources><build><item objectid="3"/></build></model>')
+    types = ('<?xml version="1.0" encoding="UTF-8"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+             '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml" />'
+             '<Default Extension="model" ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml" /></Types>')
+    rels = ('<?xml version="1.0" encoding="UTF-8"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            '<Relationship Target="/3D/3dmodel.model" Id="rel0" Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel" />'
+            '</Relationships>')
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("[Content_Types].xml", types)
+        z.writestr("_rels/.rels", rels)
+        z.writestr("3D/3dmodel.model", model)
+
+
+CURA_BED = (280.0, 280.0)       # LulzBot TAZ Workhorse; the 3MF origin is the front-left corner of the bed
+
+
+def write_body_3mf(body, path):
+    """body: the body in the design frame. Writes it in the print orientation with the support blockers,
+    at the center of the bed."""
+    P, K = print_orient("pod_body", flip_x(body), also=flip_x(support_blockers()))
+    d = [CURA_BED[0] / 2, CURA_BED[1] / 2, 0.0]
+    P, K = P.translate(d), K.translate(d)
+    write_3mf_blocked(path, os.path.splitext(os.path.basename(path))[0], P, K)
+
+
+# Screw mount (user idea, rev 0.26): the pod screws to a cover with no pegs, and the pod and the cover clip onto the
+# robot as one unit. An M2.5 heat-set insert (4.0 long) goes into a boss on the pod floor at each peg place. An M2.5 x 4
+# button or pan head screw goes up through the cover from inside. The head is in a pocket in the cover wall and does not
+# go down to the BiBoard. A ring on the cover top holds the pod floor, so the pod has no play on the cover.
+# The boss top is 0.3 under the battery (x = +12) and 0.8 under the Pi plugs (x = -12): use screws of 5 mm or shorter.
+SCREW_MOUNT = dict(insert_d=3.6, insert_depth=3.9, boss_d=7.0, top=30.2, clr_d=2.9, head_d=5.4, web=0.8, ring_d=7.6)
+MOUNT = "keyhole"               # "keyhole" (platform pegs) or "screw" (build_body_screw, build_panel_screw)
+# Panel screws (screw mount): no latch. An M2.5 x 4 insert in a boss on the top of each speaker post, and an M2.5 x 12
+# screw down through a column in the panel. The boss top is gap under the column: the screw pulls the panel down,
+# and the front and side hooks press up on their lugs (no rattle). The hook gaps are smaller (LID_SCREW, 0.1 mm layers).
+PANEL_SCREW = dict(x=27.5, z=SPK_ZE + SPK["ear_t"] / 2, boss_d=7.0, col_d=6.8, gap=0.1, cb_d=5.0, cb_depth=2.0)
+LID_SCREW = dict(gap=0.05, gap_y=0.05, front_gap=0.02)
+
+
+def screw_bosses():
+    """The insert bosses on the floor top (design frame)."""
+    S = SCREW_MOUNT
+    return union([b3d_to_manifold(cyl_y(-px, pz, FLOOR_Y1 - 0.01, S["top"], S["boss_d"] / 2)) for px, pz in PEGS])
+
+
+def screw_holes():
+    """The insert holes in the bosses and the screw holes through the floor (design frame)."""
+    S = SCREW_MOUNT
+    yi = S["top"] - S["insert_depth"]
+    out = []
+    for px, pz in PEGS:
+        out.append(b3d_to_manifold(cyl_y(-px, pz, yi, S["top"] + 1.0, S["insert_d"] / 2)))
+        out.append(b3d_to_manifold(cyl_y(-px, pz, FLOOR_Y0 - 1.0, yi + 0.01, S["clr_d"] / 2)))
+    return union(out)
+
+
+def build_cover_screw():
+    """The platform cover (robot frame) with no pegs and no logo: a ring under the pod floor at each peg place, a screw hole,
+    and a pocket for the screw head from inside. The holes are teardrops (the cover prints on its rear end)."""
+    from bittle_platform import build as BP
+    S = SCREW_MOUNT
+    C = BP.cover_with_notch()
+    L = PI.LOGO                                            # no raised Petoi logo (user): flat to the cover top
+    C -= mbox(L["x"][0] - 0.5, L["x"][1] + 0.5, PI.COVER_TOP, L["top"] + 1.0, L["z"][0] - 0.5, L["z"][1] + 0.5)
+    N, W = PI.GROVE_NOTCH, PI.SLOT_WIDE                    # one opening (user): no thin bar between the Grove notch and the Pi slot
+    C -= mbox(N["x"][0], W["x1"], W["y0"], 40.0, N["z"][1] - 2.5, W["z0"] + 0.5)
+    C += union([b3d_to_manifold(cyl_y(px, pz, PI.COVER_TOP - 0.5, FLOOR_Y0, S["ring_d"] / 2)) for px, pz in PEGS])
+    for px, pz in PEGS:
+        C -= BP.to_m(BP.tear_prism(px, pz, S["clr_d"] / 2, PI.COVER_INNER_AT_PEGS - 2.0, FLOOR_Y0 + 1.0, tip=-1.0))
+        C -= BP.to_m(BP.tear_prism(px, pz, S["head_d"] / 2, PI.COVER_INNER_AT_PEGS - 2.0, FLOOR_Y0 - S["web"], tip=-1.0))
+    return C
+
+
+def panel_screw_bosses():
+    """Bosses on the tops of the speaker posts, up to gap under the seam (design frame; the posts are symmetric)."""
+    P, S = PANEL_SCREW, SCREW_MOUNT
+    return union([b3d_to_manifold(cyl_y(sx * P["x"], P["z"], 50.0, SEAM - P["gap"], P["boss_d"] / 2)) for sx in (-1, 1)])
+
+
+def panel_screw_holes():
+    P, S = PANEL_SCREW, SCREW_MOUNT
+    top = SEAM - P["gap"]
+    out = []
+    for sx in (-1, 1):
+        out.append(b3d_to_manifold(cyl_y(sx * P["x"], P["z"], top - S["insert_depth"] - 0.4, top + 1.0, S["insert_d"] / 2)))
+        out.append(b3d_to_manifold(cyl_y(sx * P["x"], P["z"], top - S["insert_depth"] - 1.8, top, S["clr_d"] / 2)))
+    return union(out)
+
+
+def panel_screw_columns():
+    """Columns from the panel top down to the seam over the speaker posts, with the screw holes and a counterbore."""
+    P, S = PANEL_SCREW, SCREW_MOUNT
+    col = union([b3d_to_manifold(cyl_y(sx * P["x"], P["z"], SEAM, PANEL_IN + 0.01, P["col_d"] / 2)) for sx in (-1, 1)])
+    holes = union([b3d_to_manifold(cyl_y(sx * P["x"], P["z"], SEAM - 1.0, TOP + 1.0, S["clr_d"] / 2)) +
+                   b3d_to_manifold(cyl_y(sx * P["x"], P["z"], TOP - P["cb_depth"], TOP + 1.0, P["cb_d"] / 2)) for sx in (-1, 1)])
+    return col, holes
+
+
+def build_panel_screw():
+    """The panel for the screw mount (design frame): no latch, a screw column over each speaker post, smaller hook gaps."""
+    old = {k: LID[k] for k in LID_SCREW}
+    LID.update(LID_SCREW)
+    try:
+        P = build_panel(with_latch=False)
+    finally:
+        LID.update(old)
+    col, holes = panel_screw_columns()
+    return (P + col) - holes
+
+
+def build_body_screw():
+    """The body for the screw mount (design frame): no keyholes, an insert boss at each peg place."""
+    global MOUNT
+    old, MOUNT = MOUNT, "screw"
+    try:
+        return build_body()
+    finally:
+        MOUNT = old
+
+
+def screw_hardware():
+    """Display models of the screws and the inserts (robot frame; the places are symmetric in x)."""
+    S, P = SCREW_MOUNT, PANEL_SCREW
+    C = lambda x, z, y0, y1, r: b3d_to_manifold(cyl_y(x, z, y0, y1, r))
+    insert = lambda x, z, y1: C(x, z, y1 - S["insert_depth"], y1, 1.8) - C(x, z, y1 - 10.0, y1 + 1.0, 1.1)
+    yh = FLOOR_Y0 - S["web"]                    # the cover screw heads bear here
+    yp = TOP - P["cb_depth"]                    # the panel screw heads bear here
+    xs = (-P["x"], P["x"])
+    return dict(
+        mount_screws=union([C(x, z, yh - 1.4, yh, 2.4) + C(x, z, yh - 0.01, yh + 4.0, 1.25) for x, z in PEGS]),
+        mount_inserts=union([insert(x, z, S["top"]) for x, z in PEGS]),
+        panel_screws=union([C(x, P["z"], yp, yp + 1.8, 2.25) + C(x, P["z"], yp - 12.0, yp + 0.01, 1.25) for x in xs]),
+        panel_inserts=union([insert(x, P["z"], SEAM - P["gap"]) for x in xs]))
+
+
+def write_screw_parts():
+    """Writes the screw version: the print files in stl/print/, and a viewer folder stl/screw/ with the installed
+    parts, the screws, the inserts and the explode plan."""
+    import json
+    from bittle_platform import build as BP
+    d = os.path.join(OUT, "screw")
+    os.makedirs(os.path.join(d, "installed"), exist_ok=True)
+    body = build_body_screw()
+    parts = dict(pod_body=flip_x(body), pod_door=flip_x(build_door()), pod_panel=flip_x(build_panel_screw()),
+                 cover_screw=build_cover_screw(), **screw_hardware())
+    for n, M in parts.items():
+        save_stl(M, os.path.join(d, "installed", f"{n}.stl"))
+    save_stl(print_orient("pod_body", parts["pod_body"]), os.path.join(OUT, "print", "pod_body_screw.stl"))
+    write_body_3mf(body, os.path.join(OUT, "print", "pod_body_screw.3mf"))
+    save_stl(print_orient("pod_panel", parts["pod_panel"]), os.path.join(OUT, "print", "pod_panel_screw.stl"))
+    save_stl(BP.print_orient("cover_pegs", parts["cover_screw"]), os.path.join(OUT, "print", "cover_screw.stl"))
+    if not os.path.lexists(os.path.join(d, "models")):
+        os.symlink(os.path.join("..", "models"), os.path.join(d, "models"))
+    plan = {n: explode_robot(n) for n in ("pod_body", "pod_door", "pod_panel")}
+    plan.update(cover_screw=None, mount_screws=[0, [0, -22, 0], [0, 0, 0]],
+                panel_screws=[plan["pod_panel"][0], [0, 30, 0], [0, 170, 0]],
+                mount_inserts=[EXPLODE_STAGES, [0, 40, 0], [0, 0, 0]], panel_inserts=[EXPLODE_STAGES, [0, 40, 0], [0, 0, 0]])
+    json.dump(dict(stages=EXPLODE_STAGES + 1, parts=plan), open(os.path.join(d, "explode.json"), "w"), indent=1)
+
+
 def battery_supports():
     """Blocks on the floor under the cell."""
     S = BAT_SUPPORT
@@ -837,6 +1006,7 @@ def battery_clamp():
 # without supports (a raised label on a wall would push on the parts). Robot frame, then turned into the design frame.
 FONT = os.path.join(REF, "fonts", "LiberationSans-Bold.ttf")
 LABEL_D, LINE_W, LINE_D = 0.5, 0.8, 0.4
+LABELS = False                  # rev 0.26 (user): no text labels; small cut text does not print well on FDM. The route lines stay.
 
 
 def text_cut(text, size, origin, right, up, depth=LABEL_D):
@@ -865,12 +1035,10 @@ def body_marks():
     t = [text_cut("MIC →", S, (22.0, 51.0, ZF_IN), X, Y),                      # front wall: the mic is on the right wall
          text_cut("AMP", S, (IN_A, 52.6, 10.0), Z, Y),                               # right wall, over the amp
          text_cut("SPEAKER", S, (0.0, 53.6, ZR_IN), nX, Y),                          # rear wall, over the grille
-         text_cut("BIBOARD", S, (-IN_A, 51.0, (HDR["z0"] + HDR["z1"]) / 2), nZ, Y),   # left wall, over the BiBoard plug
          text_cut("PIN 1", 3.5, (-IN_A, 41.0, pin_yz(1)[1]), nZ, Y),                 # left wall, in line with the header ends
-         text_cut("PIN 40", 3.5, (-IN_A, 41.0, pin_yz(40)[1]), nZ, Y),
          text_cut("AMP", 3.5, (16.0, FLOOR_Y1, -28.0), X, nZ),                       # floor, at the start of the amp cable
          text_cut("MIC", 3.5, (12.0, FLOOR_Y1, -33.9), X, nZ)]                       # floor, at the mic wire run
-    marks = flip_x(union(t))
+    marks = flip_x(union(t)) if LABELS else m3.Manifold()
     lines = []
     for g, lab, col, pts in wire_routes():
         P = [p for p in pts]
@@ -883,17 +1051,69 @@ def body_marks():
     return marks + (union(lines) - keep)
 
 
+def _door_ear_cs(e, s, grow=0.0):
+    """The ear of the door at its end face e (z), toward s (-1 front, +1 rear), in plan, as a CrossSection for _plan_cut."""
+    E = DOOR["ear"]
+    xi = IN_A + 0.05                                       # in the door plate
+    reach = xi - E["tip_x"]
+    pts = [(xi, e - s * E["web"]), (xi, e), (E["tip_x"], e + s * reach), (E["x0"], e + s * reach), (E["x0"], e - s * E["web"])]
+    cs = _cs([(x, -z) for x, z in pts])
+    return cs.offset(grow, m3.JoinType.Round) if grow else cs
+
+
+def _door_ends():
+    D = DOOR
+    return ((D["z"][0] + D["gap"], -1), (D["z"][1] - D["gap"], 1))
+
+
+def door_posts():
+    """A post on the inner face of the wall at each end of the door opening, with the groove for the ear. The posts
+    have a 45 deg underside (the body prints floor down) and stop under the panel hooks."""
+    D, Pt = DOOR, DOOR["post"]
+    out = []
+    for (e, s), zo in zip(_door_ends(), D["z"]):
+        reach = IN_A + 0.05 - D["ear"]["tip_x"]
+        zf = zo + s * (reach - D["gap"] + Pt["clr"] + Pt["lip"])
+        post = mbox(Pt["x0"], IN_A + 0.1, 0.0, Pt["top"], *sorted((zo, zf)))
+        post -= _plan_cut(_door_ear_cs(e, s, Pt["clr"]), -1.0, 99.0)
+        y45 = Pt["y45"]
+        post -= prism_zp([(Pt["x0"] - 1, -1), (IN_A + 1, -1), (IN_A + 1, y45 - 0.4), (Pt["x0"] - 1, y45 + IN_A - Pt["x0"] + 1)], -99, 99)
+        out.append(post)
+    return union(out)
+
+
+def door_marks():
+    """The labels of the door (inner face, robot frame): the header pin 40 end and BIBOARD up the door."""
+    t = [text_cut("PIN 40", 2.8, (-IN_A, 41.0, -17.6), (0, 0, -1), (0, 1, 0)),
+         text_cut("BIBOARD", 3.0, (-IN_A, 47.5, -10.8), (0, 1, 0), (0, 0, 1))]
+    return flip_x(union(t)) if LABELS else m3.Manifold()
+
+
+def build_door():
+    D = DOOR
+    plate = (body_outer() - body_cavity()) ^ mbox(IN_A_LOW - 1.0, A + 1, D["y0"] + D["gap_y"], SEAM - D["top_gap"],
+                                                  D["z"][0] + D["gap"], D["z"][1] - D["gap"])
+    ears = union([_plan_cut(_door_ear_cs(e, s), *D["ear"]["y"]) for e, s in _door_ends()])
+    return (plate + ears) - door_marks()
+
+
 def build_body():
     O = body_outer()
     B = O - body_cavity()
-    B += (speaker_posts() + stack_posts() + mic_holder() + amp_base() + battery_supports()) ^ O
-    for px, pz in PEGS:
-        B -= keyhole_cut(px, pz)
-    for px, pz in PEGS:
-        B += keyhole_bump(px, pz)
+    B += (speaker_posts() + stack_posts() + mic_holder() + amp_base() + battery_supports() + door_posts()) ^ O
+    if MOUNT == "screw":
+        B = (B + screw_bosses()) - screw_holes()
+    else:
+        for px, pz in PEGS:
+            B -= keyhole_cut(px, pz)
+        for px, pz in PEGS:
+            B += keyhole_bump(px, pz)
     N = HDR_NOTCH
     B -= mbox(*N["x"], FLOOR_Y0 - 1, 30.0, *N["z"])                       # the BiBoard header comes up here
-    B += lid_lugs() + latch_rib()
+    if MOUNT == "screw":
+        B = (B + lid_lugs() + panel_screw_bosses()) - panel_screw_holes()
+    else:
+        B += lid_lugs() + latch_rib()
     nt = _cs([(NOTCH["hw"] + NOTCH["h"] * math.cos(t), SEAM + NOTCH["h"] * math.sin(t)) for t in np.linspace(-math.pi / 2, math.pi / 2, 16)]
              + [(-NOTCH["hw"] - NOTCH["h"] * math.cos(t), SEAM - NOTCH["h"] * math.sin(t)) for t in np.linspace(-math.pi / 2, math.pi / 2, 16)])
     B -= nt.extrude(NOTCH["d"] + 1).translate([0, 0, Z1 - NOTCH["d"]])   # finger notch
@@ -906,6 +1126,7 @@ def build_body():
     tri = [(FLOOR_Y0 - 1, Z0 - 1), (FLOOR_Y0 + h + 1, Z0 - 1), (FLOOR_Y0 - 1, Z0 + h + 1)]     # 45 deg face
     B -= prism_x(tri, *FRONT_NOTCH["x"])
     B -= mbox(*FRONT_NOTCH["x"], FLOOR_Y0 - 1, FLOOR_Y1 + 0.01, ZF_IN - 0.5, FRONT_NOTCH["z1"])     # floor opening over the Grove plug
+    B -= mbox(IN_A_LOW - 1.0, A + 1, DOOR["y0"], SEAM + 1, *DOOR["z"])   # the door opening
     return B - body_marks()
 
 
@@ -929,8 +1150,7 @@ def panel_forks():
     za, zb = SPK_ZE - G["clr"], SPK_ZE + SPK["ear_t"] + G["clr"]
     for sx in (-1, 1):
         out.append(mbox(*sorted((sx * 5.6, sx * 8.6)), SPK_Y0 + SPK["d"] - 0.5 + G["clr_y"], PANEL_IN + 0.01, zb - 2.75, zb - 0.25))   # clear of the lead path
-    yt = MIC["y0"] + MIC["l"]                              # over the top edge of the mic, behind its header
-    out.append(mbox(-IN_A + 1.7, MIC_X[1] + 0.8, yt + 0.1, PANEL_IN + 0.01, MIC_PIN_Z + 1.9, MIC["z0"] + MIC["w"] - 1.0))
+    # No fork over the mic (rev 0.24 had one): on the user's print it hit the mic and its wires, and the user cut it off.
     for z0 in AMP_FORKS:                                   # over the top edge of the amp board
         f = mbox(-IN_A + 0.15, AMP_X[1] + 1.55, 50.0, PANEL_IN + 0.01, z0, z0 + 2.5)
         out.append(f - mbox(-IN_A - 1, AMP_X[1] + 0.15, 0, AMP_Y0 + AMP["h"] + 0.3, z0 - 1, z0 + 3.5))
@@ -952,28 +1172,31 @@ def _close(cs, r):
     return cs.offset(r, m3.JoinType.Round).offset(-r, m3.JoinType.Round)
 
 
-PORT_GROUPS = [("hdmi", "switch"), ("pi_usb", "pi_power", "charge")]   # each group is one opening in the panel
-WEB_MIN = 1.0                      # webs under 2 x this between the openings and the tongue slits are cut away
+PORT_GROUPS = [("hdmi", "switch"), ("pi_usb", "pi_power", "charge", "button")]   # each group is one opening in the panel
+PORT_RECT = {1}                    # these groups are one rectangle: the bounding box of the members (rev 0.25, user)
+WEB_MIN = 1.0                      # webs under 2 x this between the members of a group are cut away
 
 
 def port_cuts():
-    """The openings in the panel top: one opening for each PORT_GROUPS group (the plug bodies + PORT_CLR and the
-    switch window, joined, inside corners round), a 45 deg chamfer of PORT_CHAMFER at the top face. A web
-    narrower than 2 x WEB_MIN between an opening and the tongue slit is cut away too: the tongue end is then at
-    the edge of the opening."""
-    box = {n: (xc - sx / 2 - PORT_CLR, xc + sx / 2 + PORT_CLR, zc - sz / 2 - PORT_CLR, zc + sz / 2 + PORT_CLR)
+    """The openings in the panel top: one opening for each PORT_GROUPS group (the plug bodies + PORT_CLR, the switch
+    window, the button window; joined, inside corners round; a PORT_RECT group is its bounding rectangle), a 45 deg
+    chamfer of PORT_CHAMFER at the top face."""
+    dx, dz = PORT_SHIFT
+    box = {n: (xc + dx - sx / 2 - PORT_CLR, xc + dx + sx / 2 + PORT_CLR, zc + dz - sz / 2 - PORT_CLR, zc + dz + sz / 2 + PORT_CLR)
            for n, (xc, zc, sx, sz) in PORT_PLUGS.items()}
     box["switch"] = (*SW_WIN["x"], *SW_WIN["z"])
-    rect = {n: _plan_cs(*b, PORT_R) for n, b in box.items()}
-    groups = [_close(union_cs([rect[n] for n in g]), WEB_MIN) for g in PORT_GROUPS]
-    B = BTN
-    (x0, x1), (z0, z1), w = B["x"], B["z"], B["slit"]
-    slit = _plan_cs(x0 - w, x1 + w, z0 - w, z1 - 0.01, 0.0) - _plan_cs(x0, x1, z0, z1 + 1, 0.0)
-    ports = union_cs(groups)
-    through = _close(ports + slit, WEB_MIN)
+    box["button"] = (*BTN_WIN["x"], *BTN_WIN["z"])
+    rims = []                                              # the outline of each opening at the top face (for the chamfer)
+    for i, g in enumerate(PORT_GROUPS):
+        if i in PORT_RECT:
+            b = [box[n] for n in g]
+            rims.append([(min(v[0] for v in b), max(v[1] for v in b), min(v[2] for v in b), max(v[3] for v in b))])
+        else:
+            rims.append([box[n] for n in g])
+    groups = [_close(union_cs([_plan_cs(*b, PORT_R) for b in r]), WEB_MIN) for r in rims]
     c = PORT_CHAMFER
-    out = [_plan_cut(through, PANEL_IN - 1, TOP + 1)]
-    for x0, x1, z0, z1 in box.values():                    # a 45 deg chamfer on each member (a hull: a true 45 deg face)
+    out = [_plan_cut(union_cs(groups), PANEL_IN - 1, TOP + 1)]
+    for x0, x1, z0, z1 in (b for r in rims for b in r):    # a 45 deg chamfer on each member (a hull: a true 45 deg face)
         out.append(m3.Manifold.batch_hull([_plan_cut(_plan_cs(x0, x1, z0, z1, PORT_R), TOP - c - 0.01, TOP - c),
                                            _plan_cut(_plan_cs(x0 - c, x1 + c, z0 - c, z1 + c, PORT_R + c), TOP, TOP + 1)]))
     return union(out)
@@ -991,440 +1214,14 @@ def prism_zp(pts_xy, z0, z1):
     return _cs(pts_xy).extrude(z1 - z0).translate([0, 0, z0])
 
 
-def button_cuts():
-    """U slit around the tongue (root at z1, free end at z0) and the thinning under it."""
-    B = BTN
-    (x0, x1), (z0, z1), w = B["x"], B["z"], B["slit"]
-    u = mbox(x0 - w, x1 + w, PANEL_IN - 1, TOP + 1, z0 - w, z1 - 0.01) - mbox(x0, x1, PANEL_IN - 2, TOP + 2, z0, z1 + 1)
-    thin = mbox(x0, x1, PANEL_IN - 1, TOP - B["t"], z0, z1 + 0.01)
-    return u + thin
-
-
-def button_arm(dy=0.0):
-    """Arm under the free end of the tongue: down from the tongue, then across over the button."""
-    B = BTN
-    y_low = B["cap"][4] + B["gap"]
-    v = mbox(B["arm_x"][0], B["x"][1] - 0.2, y_low, TOP - B["t"] + 0.01, *B["arm_z"])
-    h = mbox(B["arm_x"][0], B["arm_x"][1], y_low, y_low + 0.8, *B["arm_z"])
-    return (v + h).translate([0, dy, 0])
-
-
-def keycap_center():
-    K, B = KEYCAP, BTN
-    return (B["x"][0] + B["x"][1]) / 2, B["z"][0] + 0.3 + K["l"] / 2
-
-
-def keycap_hole():
-    """Round hole through the tongue for the post of the cap."""
-    xc, zc = keycap_center()
-    pts = [(xc + KEYCAP["post_d"] / 2 * math.cos(t), zc + KEYCAP["post_d"] / 2 * math.sin(t)) for t in np.linspace(0, 2 * math.pi, 40, endpoint=False)]
-    return prism_y(pts, PANEL_IN - 1, TOP + 1)
-
-
-def build_keycap(dz=0.0, press=True):
-    """The white button cap on the tongue, its cross post in the hole (press: the ribs are over the hole size)."""
-    K = KEYCAP
-    xc, zc = keycap_center()
-    z0, z1 = zc - K["l"] / 2, zc + K["l"] / 2
-    cap = prism_y(rrect_pts(xc - K["w"] / 2, xc + K["w"] / 2, z0, z1, K["r"]), TOP + 0.02, TOP + K["h"] - 0.5)
-    top = prism_y(rrect_pts(xc - K["w"] / 2 + 0.5, xc + K["w"] / 2 - 0.5, z0 + 0.5, z1 - 0.5, K["r"] - 0.3), TOP + K["h"] - 0.01, TOP + K["h"])
-    cap = m3.Manifold.batch_hull([cap, top])
-    e = K["post_d"] / 2 + (K["press"] if press else 0.0)
-    y0 = TOP - K["post_h"]
-    post = mbox(xc - e, xc + e, y0, TOP + 0.03, zc - K["rib"] / 2, zc + K["rib"] / 2) + mbox(xc - K["rib"] / 2, xc + K["rib"] / 2, y0, TOP + 0.03, zc - e, zc + e)
-    post = post ^ prism_y([(xc + e * math.cos(t), zc + e * math.sin(t)) for t in np.linspace(0, 2 * math.pi, 40, endpoint=False)], y0 - 1, TOP + 1)
-    lead = K["press"] + 0.35                               # 45 deg lead-in: the rib ends start inside the hole
-    post = post - (mbox(xc - e - 1, xc + e + 1, y0 - 1, y0 + lead, zc - e - 1, zc + e + 1)
-                   - m3.Manifold.batch_hull([prism_y(rrect_pts(xc - e + lead, xc + e - lead, zc - e + lead, zc + e - lead, 0.01), y0 - 0.01, y0),
-                                             prism_y(rrect_pts(xc - e, xc + e, zc - e, zc + e, 0.01), y0 + lead, y0 + lead + 0.01)]))
-    return (cap + post).translate([0, 0, dz])
-
-
-# ---------- camera mount
-def cam_to_body(low=False):
-    """Native case frame -> design frame: native X down (the USB end up), native Y to -X (a mirror in the design frame:
-    the robot frame turns it back), native Z (the lens axis) along Z. Centered at cx, on the base (or the cradle of
-    the head-off mount), front at front_z."""
-    C = CAM
-    x0, x1, y0, y1, z0, z1 = cam_box(low)
-    tx = (x0 + x1) / 2 + (C["case_y"][0] + C["case_y"][1]) / 2
-    return np.array([[0, -1, 0, tx], [-1, 0, 0, y0 + C["case_x"][1]], [0, 0, 1, z0 - C["case_z"][0]], [0, 0, 0, 1]], float)
-
-
-def cam_box(low=False):
-    """The camera case in place, as a box (x0, x1, y0, y1, z0, z1)."""
-    C = CAM
-    hx = (C["case_y"][1] - C["case_y"][0]) / 2
-    h, d = C["case_x"][1] - C["case_x"][0], C["case_z"][1] - C["case_z"][0]
-    if low:
-        L = CAM_LOW
-        return (L["cx"] - hx, L["cx"] + hx, L["y0"], L["y0"] + h, L["rear_z"] - d, L["rear_z"])
-    y0 = TW_TOP - TW["pocket"] + 0.05
-    return (C["cx"] - hx, C["cx"] + hx, y0, y0 + h, C["front_z"], C["front_z"] + d)
-
-
-def cam_usb_plug(low=False):
-    """The USB-C plug in the top face of the case: (x0, x1, y0, y1, z0, z1). It goes in along -Y from above."""
-    T = cam_to_body(low)
-    uy, uz = CAM["usb"]
-    xc, zc = T[0, 1] * uy + T[0, 3], uz + T[2, 3]
-    yt = cam_box(low)[3]
-    U = USB_C
-    return (xc - U["w"] / 2, xc + U["w"] / 2, yt + 0.05, yt + U["l"], zc - U["t"] / 2, zc + U["t"] / 2)
-
-
-def pi_usb_plug():
-    """The micro-USB plug in the Pi data USB port, through its opening in the panel."""
-    xc, zc, sx, sz = PORT_PLUGS["pi_usb"]
-    return (xc - sx / 2, xc + sx / 2, PORT_TOP + 0.2, PORT_TOP + 0.2 + USB_MICRO_L, zc - sz / 2, zc + sz / 2)
-
-
-def _chin(xa, xb, zfl, yb):
-    """A chin from the top yb over the rounded front edge of the panel (forward to zfl), from xa to xb."""
-    Bs = CAM["base"]
-    P = panel_outer()
-    cl = Bs["clr"]
-    Pc = union([P.translate([0, dy, dz]) for dy in (0.0, cl) for dz in (0.0, -cl)])
-    # Its underside is a 45 deg plane over the round: y >= z + k, k = the largest y - z of the panel top edge (98.71 at
-    # the center line) + clr.
-    k = 98.71 + Bs["clr"]
-    yl = TOP - Bs["chin"]
-    sec = [(zfl, yb), (zfl, yl), (yl - k, yl), (yb - k, yb)]                  # (z, y) section
-    chin = _cs([(z_, -y_) for z_, y_ in sec]).extrude(xb - xa).transform(np.array([[0, 0, 1, xa], [0, -1, 0, 0], [1, 0, 0, 0]], float))
-    return chin - Pc
-
-
-def _case_brackets(low=False, y_floor=TOP, z_end=None, walls_to_end=False):
-    """Two side brackets from y_floor: corner lips at the bottom, a hook over each top corner of the case (clear of
-    the USB port). The brackets spread to let the case in from the top; the hooks snap over its top face. The back
-    lips and the hooks go back to z_end (the end of the part on the print bed)."""
-    C, Br = CAM, CAM["brk"]
-    x0, x1, y0, y1, z0, z1 = cam_box(low)
-    zf, zb = z0 - Br["clr"], z1 + Br["clr"]
-    zfl = zf - Br["lip_front"]
-    yt = y1 + Br["gap"]                                   # underside of the hooks, over the top face of the case
-    ty = cam_to_body(low)
-    ze = zb + Br["lip_back"] if z_end is None else z_end
-    m = None
-    for sx, xi in ((-1, x0 - Br["clr"]), (1, x1 + Br["clr"])):
-        X = lambda a, b: sorted((a, b))
-        xo = xi + sx * Br["t"]
-        xe = ty[0, 1] * (C["top_y"][1] if sx < 0 else C["top_y"][0]) + ty[0, 3]   # edge of the top face
-        tip = xe - sx * Br["hook"]
-        w = mbox(*X(xi, xo), y_floor, yt + abs(xi - tip), zfl, ze if walls_to_end else zb + Br["lip_back"])
-        ylip = y0 + Br["lip_h"]
-        lb = zb + Br["lip_back"]                          # back lip (low part only); behind it a 45 deg end (no overhang in the print)
-        lp = [(xi, zb), (xi - sx * 1.6, zb), (xi - sx * 1.6, lb), (xi, min(lb + 1.6, ze))] if ze > lb else [(xi, zb), (xi - sx * 1.6, zb), (xi - sx * 1.6, lb), (xi, lb)]
-        w += prism_y(lp if sx < 0 else lp[::-1], y_floor, ylip)
-        lip = [(xi, zf), (xi, zfl), (xi - sx * Br["lip_front"], zfl)]
-        if sx < 0:
-            lip = lip[::-1]
-        pts = [(x, -z) for x, z in lip]                   # front lip, 45 deg (it prints last, the part stands on its back)
-        w += _cs(pts).extrude(ylip - y_floor).transform(np.array([[1, 0, 0, 0], [0, 0, 1, y_floor], [0, -1, 0, 0]], float))
-        # hook over the top corner: a flat catch over the top face, a 45 deg lead on top (the case pushes the
-        # brackets apart on the way down). It reaches Br hook over the edge of the top face.
-        hk = [(xi + sx * 0.01, yt), (tip, yt), (xi + sx * 0.01, yt + abs(xi - tip))]
-        w += prism_zp(hk if sx > 0 else hk[::-1], zf + 1.0, ze)
-        m = w if m is None else m + w
-    return m
-
-
-def tw_cs(pts_uw):
-    """Polygon in the mount frame (u = X - center, w = Z - center) as a CrossSection for tw_place."""
-    p = np.array([(u, -w) for u, w in pts_uw], float)
-    if np.sum(p[:, 0] * np.roll(p[:, 1], -1) - np.roll(p[:, 0], -1) * p[:, 1]) < 0:
-        p = p[::-1]                                                     # counterclockwise
-    return _cs(p)
-
-
-def tw_place(cs, y0, y1, rot=0.0):
-    """A tw_cs CrossSection turned rot deg (from +Z toward +X) about the twist axis, extruded from y0 up to y1."""
-    xc, zc = TW["c"]
-    return cs.rotate(rot).extrude(y1 - y0).transform(np.array([[1, 0, 0, xc], [0, 0, 1, y0], [0, -1, 0, zc]], float))
-
-
-def tw_turn(M, deg):
-    """Turn a solid deg (from +Z toward +X) about the twist axis."""
-    xc, zc = TW["c"]
-    return M.translate([-xc, 0, -zc]).rotate([0, deg, 0]).translate([xc, 0, zc])
-
-
-def _vdisc(r):
-    """A disc with its rear (+Z) part cut to a 45 deg V, the point on the circle: it prints on its back end."""
-    R = 40.0
-    return m3.CrossSection.circle(r, 96) ^ tw_cs([(-R, -R), (R, -R), (R, r - R), (0.0, r), (-R, r - R)])
-
-
-def _sector(r0, r1, a0, a1, n=48):
-    """A ring sector in the mount frame from angle a0 to a1 (deg, from +Z toward +X), as a tw_cs CrossSection."""
-    t = np.radians(np.linspace(a0, a1, n))
-    return tw_cs([(r1 * math.sin(x), r1 * math.cos(x)) for x in t] + [(r0 * math.sin(x), r0 * math.cos(x)) for x in t[::-1]])
-
-
-def tw_lug_cs(grow=0.0):
-    """The lug on the +X side of the pedestal: a ring sector out to r_lug, +-lug_a. grow > 0: the outline grown that
-    much (keyways and the space it sweeps)."""
-    T = TW
-    cs = _sector(T["r_neck"] - 0.5, T["r_lug"], 90.0 - T["lug_a"], 90.0 + T["lug_a"])
-    return cs.offset(grow, m3.JoinType.Round) if grow else cs
-
-
-def tw_y():
-    """(bottom, top) of the lugs."""
-    yt = PANEL_IN - TW["gap"]
-    return yt - TW["lug_t"], yt
-
-
-def _tw_revolve(pts_ry):
-    """A solid of revolution about the twist axis from a profile [(r, y)]."""
-    xc, zc = TW["c"]
-    M = m3.Manifold.revolve(m3.CrossSection([np.asarray(pts_ry, float)], m3.FillRule.NonZero), 144)
-    return M.transform(np.array([[1, 0, 0, xc], [0, 0, 1, 0], [0, -1, 0, zc]], float))
-
-
-def tw_core(style="upright"):
-    """The pedestal and the two lugs, and the seat. upright (the camera mount, it prints base down): a round pedestal,
-    a 45 deg cone that sits in the countersink of the hole and flares out to the round puck (radius R_b, top TW_TOP).
-    side (the head-off base, it prints on its -X side): the pedestal with a 45 deg V on its -X side and a flat seat
-    ring on the panel top."""
-    T = TW
-    yl0, yl1 = tw_y()
-    if style == "upright":
-        rn, R = T["r_neck"], T["R_b"]
-        m = _tw_revolve([(0.0, yl0), (rn, yl0), (rn, TW_CONE_Y), (R, TW_CONE_Y + R - rn), (R, TW_TOP), (0.0, TW_TOP)])
-    else:
-        m = tw_place(_vdisc(T["r_neck"]).rotate(270.0), yl0, TOP + 0.01)
-        m += tw_place(_vdisc(T["seat_side"]).rotate(270.0), TOP, TOP + T["lift"] + 0.01)
-    ch = T["ramp"]                                                     # the top edges of the lugs: 45 deg ramps for the bumps
-    lug = m3.Manifold.batch_hull([tw_place(tw_lug_cs(), yl0, yl1 - ch), tw_place(tw_lug_cs(-ch), yl1 - 0.01, yl1)])
-    B = T["bump"]
-    d = T["notch"]
-    v = d + B["tip"] / 2 + 0.1
-    notch = prism_x([(yl1 + 0.01, -v), (yl1 + 0.01, v), (yl1 - d, B["tip"] / 2 + 0.1), (yl1 - d, -B["tip"] / 2 - 0.1)],
-                    T["c"][0] + B["r"][0] - 0.5, T["c"][0] + T["r_lug"] + 1.0).translate([0, 0, T["c"][1]])
-    lug -= notch
-    return m + lug + tw_turn(lug, 180.0)
-
-
-def _round_brackets():
-    """Two side brackets on the puck, their outer faces on the puck circle: a lip at each corner of the case and a
-    hook over each top corner (clear of the USB port). The brackets spread to let the case in from the top; the hooks
-    snap over its top face. Each hook has a 45 deg underside and a flat catch of hook_flat at its tip (it prints
-    standing up)."""
-    C, Br, T = CAM, CAM["brk"], TW
-    x0, x1, y0, y1, z0, z1 = cam_box()
-    xc, zc = T["c"]
-    disc = m3.CrossSection.circle(T["R_b"], 144).translate([xc, -zc])
-    zf, zb = z0 - Br["clr"], z1 + Br["clr"]
-    lip = T["lip"]
-    yt = y1 + Br["gap"]                                   # underside of the hooks, over the top face of the case
-    ty = cam_to_body()
-    yb = TW_TOP - 0.01
-    out = []
-    for sx, xi in ((-1, x0 - Br["clr"]), (1, x1 + Br["clr"])):
-        X = lambda a, b: sorted((a, b))
-        xe = ty[0, 1] * (C["top_y"][1] if sx < 0 else C["top_y"][0]) + ty[0, 3]   # edge of the top face
-        tip = xe - sx * Br["hook"]
-        L = abs(xi - tip)
-        f = min(T["hook_flat"], L)
-        wall = _plan_cs(*X(xi, xi + sx * 6.0), zf - lip, zb + lip, 0.0) ^ disc
-        out.append(_plan_cut(wall, yb, yt + L + T["hook_tip"]))
-        for za, zb_ in ((zf - lip, zf), (zb, zb + lip)):   # lips at the corners of the case
-            out.append(_plan_cut(_plan_cs(*X(xi - sx * T["lip_in"], xi + sx * 0.01), za, zb_, 0.0) ^ disc, yb, y0 + Br["lip_h"]))
-        e = T["hook_tip"]                                 # a vertical face at the tip (no knife edge)
-        hk = [(xi + sx * 0.01, yt - (L - f)), (xi - sx * (L - f), yt), (tip, yt), (tip, yt + e), (xi + sx * 0.01, yt + L + e)]
-        out.append(prism_zp(hk if sx < 0 else hk[::-1], zf + 1.0, zb + lip) ^ _plan_cut(disc, 0.0, 200.0))
-    return union(out)
-
-
-def build_camera_mount():
-    """The twist mount: a pedestal through the round hole in the panel with two lugs under the panel top, a 45 deg
-    cone in the countersink of the hole that flares out to a round puck, a pocket for the case in the puck top, two
-    round side brackets for the case. The lock is the same when the mount is turned 180 deg (lens to the rear)."""
-    T, Br = TW, CAM["brk"]
-    x0, x1, y0, y1, z0, z1 = cam_box()
-    c = Br["clr"]
-    pocket = mbox(x0 - c, x1 + c, TW_TOP - T["pocket"], TW_TOP + 1.0, z0 - c, z1 + c)
-    return (tw_core("upright") - pocket) + _round_brackets()
-
-
-def tw_tab(sign=1.0):
-    """The spring tab of the +X lug (in the panel top, along Z): (tab, slits) as (u0, u1, w0, w1) boxes. The lug comes
-    from the keyway side to the bump at w = 0; the tab root is on the far side."""
-    t = TW["tab"]
-    s = t["slit"]
-    a, b = -t["free"], t["root"]
-    boxes = [(t["r0"], t["r1"], a, b), (t["r0"] - s, t["r0"], a - s, b), (t["r1"], t["r1"] + s, a - s, b), (t["r0"] - s, t["r1"] + s, a - s, a)]
-    if TW["twist"] < 0:                                              # the keyway is on the +Z side: mirror in w
-        boxes = [(u0, u1, -w1, -w0) for u0, u1, w0, w1 in boxes]
-    return boxes[0], boxes[1:]
-
-
-def _tw_box(u0, u1, w0, w1, y0, y1):
-    return tw_place(tw_cs([(u0, w0), (u1, w0), (u1, w1), (u0, w1)]), y0, y1)
-
-
-def tw_socket_cuts():
-    """The holes in the panel: the round hole with a 45 deg countersink, two keyways, the U slits of the two tabs, the
-    thinning under the tabs."""
-    T = TW
-    k = tw_lug_cs(T["clr"])
-    tab, slits = tw_tab()
-    sl = union_cs([tw_cs([(u0, w0), (u1, w0), (u1, w1), (u0, w1)]) for u0, u1, w0, w1 in slits])
-    cs = m3.CrossSection.circle(T["r_hole"], 96) + (k + k.rotate(180.0)).rotate(T["twist"]) + sl + sl.rotate(180.0)
-    out = [tw_place(_close(cs, 0.6), PANEL_IN - 1, TOP + 1)]           # no web under 1.2 mm between the cuts
-    out.append(m3.Manifold.batch_hull([tw_place(m3.CrossSection.circle(T["r_hole"], 144), TOP - T["cs"], TOP - T["cs"] + 0.01),
-                                       tw_place(m3.CrossSection.circle(T["r_hole"] + T["cs"] + 1.0, 144), TOP + 1.0, TOP + 1.01)]))   # 45 deg countersink: the cone seat
-    thin = _tw_box(*tab, PANEL_IN - 1, TOP - T["tab"]["t"])
-    return union(out + [thin, tw_turn(thin, 180.0)])
-
-
-def tw_socket_parts(which="all"):
-    """Under the panel: the bump on each tab, a stop at the end of the turn for each lug. which: all, bumps, stops."""
-    T, B = TW, TW["bump"]
-    yl0, yl1 = tw_y()
-    ytip = yl1 - T["notch"] - T["preload"]
-    ytab = TOP - T["tab"]["t"]
-    h = ytab - ytip
-    bump = prism_x([(ytab + 0.01, -(h + B["tip"] / 2)), (ytab + 0.01, h + B["tip"] / 2), (ytip, B["tip"] / 2), (ytip, -B["tip"] / 2)],
-                   T["c"][0] + B["r"][0], T["c"][0] + B["r"][1]).translate([0, 0, T["c"][1]])
-    r1 = T["tab"]["r0"] - T["tab"]["slit"]
-    k = 1.0 if T["twist"] < 0 else -1.0                              # the lug turns this way (in angle) to the lock
-    a0 = 90.0 + k * (T["lug_a"] + math.degrees(T["stop_clr"] / T["r_hole"]))   # past the leading edge of the lug
-    stop = tw_place(_sector(T["r_hole"], r1, *sorted((a0, a0 + k * 16.0))), yl0 - 0.3, PANEL_IN + 0.01)
-    one = dict(all=bump + stop, bumps=bump, stops=stop)[which]
-    return one + tw_turn(one, 180.0)
-
-
-def tw_keepout():
-    """The space the pedestal and the lugs pass through under the panel top, from the drop-in to the lock."""
-    T = TW
-    yl0 = tw_y()[0]
-    cs = m3.CrossSection.circle(T["r_neck"] + T["clr"], 96)
-    for a in np.linspace(0.0, T["twist"], 21):
-        cs += tw_lug_cs(T["clr"]).rotate(float(a)) + tw_lug_cs(T["clr"]).rotate(float(a) + 180.0)
-    return tw_place(cs, yl0 - 0.4, PANEL_IN + 0.01)
-
-
-def _low_dovetail(clr, y):
-    """The dovetail tabs on the rear edges of the cradle walls from y[0] to y[1] (clr > 0: the grooves in the base
-    plate)."""
-    L, Br = CAM_LOW, CAM["brk"]
-    T, P = L["tab"], L["plate"]
-    x0, x1 = cam_box(True)[:2]
-    z0 = P["z"][0]
-    ya, yb = y
-    out = []
-    for xc in ((x0 - Br["clr"] - Br["t"] / 2), (x1 + Br["clr"] + Br["t"] / 2)):
-        a, b = T["w0"] / 2 + clr, T["w1"] / 2 + clr        # narrow at the wall, wide at the tip
-        pts = [(xc - a, z0 - 0.01), (xc + a, z0 - 0.01), (xc + b, z0 + T["d"] + clr), (xc - b, z0 + T["d"] + clr)]
-        out.append(prism_y(pts, ya, yb))
-    return union(out)
-
-
-def _low_pins(clr=0.0):
-    """The filament pins: along X through the plate and the tabs, from each side of the plate."""
-    L = CAM_LOW
-    P, Pn, T = L["plate"], L["pin"], L["tab"]
-    zc = P["z"][0] + T["d"] / 2
-    return union([mcyl("x", *sorted((sx * Pn["x0"], sx * (P["x"] + 1.0))), Pn["d"] / 2 + clr, Pn["y"], zc, 16) for sx in (-1, 1)])
-
-
-def build_camera_base_low():
-    """The base of the head-off mount: the twist pedestal and lugs, a plate 0.7 over the panel from the socket to the
-    front edge (left of the button), a chin over the front edge, a front plate down the front of the body with the
-    two grooves (closed at the bottom: the stop), the pin holes. It prints on its -X side: the lug on that side is on
-    the bed, and the V of the pedestal points down."""
-    L, T = CAM_LOW, TW
-    P = L["plate"]
-    yb, yt = TOP + T["lift"], LOW_TOP
-    xc, zc = T["c"]
-    xbed = xc - T["r_lug"] * math.cos(math.radians(T["lug_a"])) + 0.05    # the chord of the -X lug
-    hw = T["base_hw"]
-    m = tw_core("side")
-    m += prism_y(rrect_pts(xbed - 2.0, xc + T["base_hx"], zc - hw, zc + hw, T["base_r"]), yb, yt)      # over the socket
-    m += prism_y(rrect_pts(xbed - 2.0, L["arm_x1"], ZF_IN, zc, T["base_r"]), yb, yt)                     # the arm to the front
-    m += _chin(xbed, P["x"], P["z"][0], yt)
-    m += mbox(xbed, P["x"], P["y0"], TOP - CAM["base"]["chin"] + 0.5, *P["z"])          # to the bed on the -X side
-    m -= _low_dovetail(L["tab"]["clr"], (P["y0"] - 1.0, yt + 1.0))
-    m = m ^ mbox(xbed, 100, -100, 200, -200, 200)                       # the bed side flat
-    return m - _low_pins(L["pin"]["clr"])
-
-
-def build_camera_cradle_low():
-    """The cradle of the head-off mount: a floor under the case, the side brackets with the hooks, carried back to the
-    base plate; dovetail tabs on their rear edges, the pin holes. It prints on its rear edges: below and above the
-    base plate the walls and the floor go back as far as the tabs."""
-    L, Br = CAM_LOW, CAM["brk"]
-    x0, x1, y0, y1, z0, z1 = cam_box(True)
-    yf = y0 - 0.05 - L["floor_t"]
-    zr = L["plate"]["z"][0]
-    ze = zr + L["tab"]["d"]                                # the print bed
-    xa, xb = x0 - Br["clr"] - Br["t"], x1 + Br["clr"] + Br["t"]
-    ytop = cam_box(True)[3] + Br["gap"] + 5.0
-    m = _case_brackets(True, yf, ze)
-    for xi, xo in ((xa, xa + Br["t"]), (xb - Br["t"], xb)):              # the walls go back to the base plate
-        m += mbox(xi, xo, yf, ytop, z1, zr)
-        m += mbox(xi, xo, LOW_TOP, ytop, zr - 0.01, ze)                  # over the base: the cradle sits on it
-    m += mbox(xa, xb, yf, y0 - 0.05, z0 - Br["clr"] - Br["lip_front"], zr)   # floor (a bridge between the tabs in the print)
-    m += _low_dovetail(0.0, (yf, ytop))
-    return m - _low_pins(0.05)
-
-
-# Logo on the panel top (user request: the LineChef avatar, reference/logo/linechef.jpg): two inlays printed flat in
-# two colors (the white ring and M, the red ring and J), glued into a pocket in the top face. The pocket prints on
-# the bed side of the panel (its floor bridges over it). Robot frame center (x, z); the logo reads from the rear. It is
-# in the front right corner of the flat top (rev 0.24: the camera socket is at its old place). The panel 3MF has a
-# support blocker over the pocket (write_panel_3mf). The pocket is one 0.2 mm layer deeper than the inlay
-# (room for the glue) and 0.25 mm wider on each side (rev 0.24 at 0.15 was too tight).
-LOGO = dict(file=os.path.join(REF, "logo", "linechef.jpg"), d=26.0, c=(18.3, -20.5), depth=0.8, pocket=1.0, clr=0.25, min_w=0.6)
-
-
-def logo_shapes():
-    """{'white', 'red'}: CrossSections in mm (u right, v up), centered. Traced from the image; features under
-    min_w (thin tips, the shading line in the M) are rounded away, so a 0.4 or 0.5 mm nozzle prints them."""
-    import contourpy
-    import matplotlib.image as mi
-    from scipy.ndimage import gaussian_filter
-    a = mi.imread(LOGO["file"]).astype(float)[..., :3]
-    mx, mn = a.max(2), a.min(2)
-    masks = dict(white=(mn > 90) & (mx - mn < 50), red=(a[..., 0] > 90) & (a[..., 0] - np.maximum(a[..., 1], a[..., 2]) > 45))
-    h, w = mn.shape
-    k = LOGO["d"] / max(h, w)
-    out = {}
-    for n, m in masks.items():
-        lines = contourpy.contour_generator(z=gaussian_filter(m.astype(float), 0.8)).lines(0.5)
-        polys = [np.c_[(L[:, 0] - w / 2) * k, (h / 2 - L[:, 1]) * k] for L in lines if len(L) > 3]
-        cs = m3.CrossSection(polys, m3.FillRule.EvenOdd)
-        e = LOGO["min_w"] / 2
-        out[n] = cs.offset(e).offset(-e).offset(-e).offset(e).simplify(0.02)
-    return out
-
-
-def _logo_place(cs, y0, y1):
-    """A CrossSection on the panel top between heights y0 and y1, in the design frame."""
-    cx, cz = LOGO["c"]
-    T = np.array([[1, 0, 0, cx], [0, 0, 1, y0], [0, -1, 0, cz]], float)   # u -> +X, v -> -Z (robot front up), w -> +Y
-    return flip_x(cs.extrude(y1 - y0).transform(T))
-
-
-def logo_pocket():
-    S = logo_shapes()
-    return _logo_place((S["white"] + S["red"]).offset(LOGO["clr"]), TOP - LOGO["pocket"], TOP + 1)
-
-
-def build_logo(color):
-    return _logo_place(logo_shapes()[color], TOP - LOGO["pocket"], TOP - LOGO["pocket"] + LOGO["depth"])
-
-
 def build_panel(with_latch=True):
     P = panel_outer() - prism_y(plan(WALL), SEAM - 1, PANEL_IN)
-    P -= port_cuts() + button_cuts() + keycap_hole() + tw_socket_cuts() + logo_pocket()
-    P += (panel_forks() + button_arm() + battery_clamp()) - lid_keepout() - tw_keepout()
-    P += tw_socket_parts()
+    P -= port_cuts()
+    P += (panel_forks() + battery_clamp()) - lid_keepout()
     P += lid_hooks()
-    if with_latch:
-        P += latch_hook()
+    if not with_latch:
+        return P
+    P += latch_hook()
     return P - latch_slits()
 
 
@@ -1439,16 +1236,6 @@ def latch_force():
     phi = math.atan(PI.MU_PLA)
     return dict(tongue_k_N_per_mm=round(k, 2), lift_mm=round(d, 2), lift_N=round(F, 1),
                 slide_on_N=round(F * math.tan(math.radians(45) + phi), 1), strain_pct=round(100 * 1.5 * t * d / L ** 2, 2))
-
-
-def tw_force():
-    """Camera socket tabs: cantilevers in the panel top (k = 3EI/L^3) from the root to the bump. Forces in N, each tab."""
-    T, t = TW, TW["tab"]
-    L, b = t["root"], t["r1"] - t["r0"]
-    k = 3 * PI.E_PLA * (b * t["t"] ** 3 / 12) / L ** 3
-    ride = T["notch"] + T["preload"]                       # the bump lifts this much on the top of the lug
-    return dict(tab_k_N_per_mm=round(k, 2), ride_mm=round(ride, 2), ride_N=round(k * ride, 1), hold_N=round(k * T["preload"], 1),
-                strain_pct=round(100 * 1.5 * t["t"] * ride / L ** 2, 2), twist_deg=abs(T["twist"]))
 
 
 # --------------------------------------------------------------------------
@@ -1674,35 +1461,6 @@ def parallel_ribbon(center, n, pitch, n0):
     return [np.array(o) for o in out]
 
 
-def _usb_cable(low):
-    """Up out of the USB-C plug, a half circle over in the vertical plane through the two plugs, straight down
-    into the micro-USB plug. The bend radius is half the plan distance between the plugs."""
-    a, b = cam_usb_plug(low), pi_usb_plug()
-    A = np.array([(a[0] + a[1]) / 2, a[3], (a[4] + a[5]) / 2])
-    B = np.array([(b[0] + b[1]) / 2, b[3], (b[4] + b[5]) / 2])
-    u = np.array([B[0] - A[0], 0.0, B[2] - A[2]])
-    r = np.linalg.norm(u) / 2
-    u /= 2 * r
-    yc = A[1] + 4.0
-    c = A + u * r
-    pts = [A + [0, y, 0] for y in np.linspace(-2.0, 4.0, 4)]
-    pts += [c + [0, yc - c[1], 0] - u * r * math.cos(t) + np.array([0, r * math.sin(t), 0]) for t in np.linspace(0, math.pi, 40)[1:]]
-    pts += [B + [0, y, 0] for y in np.linspace(yc - B[1], -2.0, 30)[1:]]
-    return [("camera", "USB", "#1d1d1f", np.array(pts))]
-
-
-def camera_cable():
-    """The USB cable of the camera: up out of the USB-C plug in the top of the case, rearward over the panel, down into
-    the micro-USB plug in the Pi data USB port."""
-    return _usb_cable(False)
-
-
-def camera_cable_low():
-    """The USB cable of the head-off mount: up out of the top of the case, rearward over the panel, down into the
-    Pi data USB port."""
-    return _usb_cable(True)
-
-
 def speaker_leads():
     """The speaker lead pair: from the 2-pin plug at the rear end of the amp, up the left gallery, over the ear
     plate, into the top of the speaker body."""
@@ -1865,20 +1623,16 @@ def build_models():
     mesh -= union([mcyl("z", ze - 1, ze + 1, 0.45, x, y, 8) for x in np.arange(-9.0, 9.1, 1.5) for y in np.arange(SPK_Y0 + 4.5, SPK_Y0 + SPK["d"] - 4.4, 1.5)])
     add("speaker", "grille", "speaker grille", mesh, "#5a5b60")
     spk = plate + body + mesh
-    cam = union([stl_manifold(f, cam_to_body(), ref=os.path.join(os.path.dirname(ROOT), "reference")) for f in ("AiCamera250116-down.stl", "AiCamera250116-up.stl")])
-    add("camera", "case", "Petoi AI Vision Module in its case", cam, "#2b2d33")
-    models = dict(pizero=pizero, pisugar_s=pisugar, stack_screws=stack_scr, battery=bat, sd_card=card, pi_plugs=pi_plugs, camera=cam,
+    models = dict(pizero=pizero, pisugar_s=pisugar, stack_screws=stack_scr, battery=bat, sd_card=card, pi_plugs=pi_plugs,
                   biboard_header=hdr, biboard_plug=bb, speaker=spk, amp_ns4168=amp, mic_sph0645=mic)
     # wires
     groups = {}
     for g, lab, col, pts, smooth in all_routes():
         sub = wire_sub(lab)
-        T = add(f"wires_{g}", sub, f"{g} wire {lab}", tube(pts, r=USB_R if g == "camera" else WIRE_R, rounded=not smooth), col)
+        T = add(f"wires_{g}", sub, f"{g} wire {lab}", tube(pts, r=WIRE_R, rounded=not smooth), col)
         groups[g] = groups.get(g, []) + [T]
         for end, hk in wire_housings(g, lab):                  # its Dupont housings go on with it
             add(f"wires_{g}", f"{sub}_{end}", f"{g} wire {lab}: Dupont housing", HOUSING_MESH[hk], "#3a3b40")
-    groups["camera"].append(add("wires_camera", "plug_cam", "USB-C plug in the camera", rbox("y", *cam_usb_plug(), 1.0), "#1d1d1f"))
-    groups["camera"].append(add("wires_camera", "plug_pi", "micro-USB plug in the Pi", rbox("y", *pi_usb_plug(), 1.0), "#1d1d1f"))
     sleeves = union([mcyl("y", *SPLICE["y"], SPLICE["r"], SPLICE[t][0], SPLICE[t][1], 16) for t in ("bclk", "lrclk")])
     groups["splice"].append(add("wires_splice", "sleeves", "solder splices (heat shrink)", sleeves, "#f2f2ef"))   # white heat shrink (user photo)
     for g, Ts in groups.items():
@@ -1901,7 +1655,7 @@ def obstacle_field(solids):
     from matplotlib.path import Path
     from scipy.ndimage import distance_transform_edt
     h = GRID_H
-    xs, ys, zs = np.arange(-IN_A - 1.0, IN_A + 1.01, h), np.arange(27.0, 62.61, h), np.arange(-36.6, 55.11, h)
+    xs, ys, zs = np.arange(-IN_A - 1.0, IN_A + 1.01, h), np.arange(27.0, TOP + 2.01, h), np.arange(-36.6, 55.11, h)
     occ = np.zeros((len(xs), len(ys), len(zs)), bool)
     X, Y = np.meshgrid(xs, ys, indexing="ij")
     pts = np.c_[X.ravel(), Y.ravel()]
@@ -2205,13 +1959,12 @@ WIRE_FROM = {("uart", "TX2"): "BiBoard TX2", ("uart", "RX2"): "BiBoard RX2", ("u
              ("amp", "G"): "amp G", ("amp", "V"): "amp V", ("amp", "BCLK"): "amp BCLK", ("amp", "LRC"): "amp LRC", ("amp", "DIN"): "amp DIN",
              ("mic", "SEL"): "mic SEL", ("mic", "LRCL"): "mic LRCL", ("mic", "DOUT"): "mic DOUT", ("mic", "BCLK"): "mic BCLK",
              ("mic", "GND"): "mic GND", ("mic", "3V"): "mic 3V", ("splice", "bclk"): "BCLK splice", ("splice", "lrclk"): "LRCLK splice",
-             ("speaker", "+"): "amp speaker +", ("speaker", "-"): "amp speaker -",
-             ("camera", "USB"): "camera USB-C"}
+             ("speaker", "+"): "amp speaker +", ("speaker", "-"): "amp speaker -"}
 WIRE_TO = {("uart", "TX2"): "pin 10", ("uart", "RX2"): "pin 8", ("uart", "GND"): "pin 6", ("amp", "G"): "pin 14", ("amp", "V"): "pin 2",
            ("amp", "BCLK"): "BCLK splice", ("amp", "LRC"): "LRCLK splice", ("amp", "DIN"): "pin 40", ("mic", "SEL"): "pin 39",
            ("mic", "LRCL"): "LRCLK splice", ("mic", "DOUT"): "pin 38", ("mic", "BCLK"): "BCLK splice", ("mic", "GND"): "pin 9",
            ("mic", "3V"): "pin 1", ("splice", "bclk"): "pin 12", ("splice", "lrclk"): "pin 35", ("speaker", "+"): "speaker +",
-           ("speaker", "-"): "speaker -", ("camera", "USB"): "Pi data USB"}
+           ("speaker", "-"): "speaker -"}
 
 SETTLED = {}          # (group, label) -> settled polyline, set by settle_all()
 SLACK_SHAPE = {}      # (group, label) -> "arch" or "loop xN"
@@ -2236,7 +1989,7 @@ def all_routes():
             out.append((g, lab, col, SETTLED[(g, lab)], True))
         else:
             out.append((g, lab, col, pts, False))
-    for g, lab, col, pts in speaker_leads() + camera_cable():
+    for g, lab, col, pts in speaker_leads():
         out.append((g, lab, col, pts, True))
     return out
 
@@ -2253,9 +2006,9 @@ def settle_all(parts, models):
     """Place the pack jumpers (PACK_L) one at a time, in SETTLE_ORDER, with their excess as an arch or a loop."""
     H = HEATSINK                                           # the pin fins as a block: no wire between the pins
     fins = mbox(H["x0"], H["x0"] + H["h"], *H["y"], *H["z"])
-    rigid = union([parts["pod_body"], fins] + [M for k, M in models.items() if not k.startswith("wires_")])
+    rigid = union([parts["pod_body"], parts["pod_door"], fins] + [M for k, M in models.items() if not k.startswith("wires_")])
     lid = union([parts["pod_panel"].translate([0, 0, float(dz)]) for dz in np.arange(0.0, LID_SLIDE + 0.01, 1.25)])
-    ceiling = mbox(-A - 1, A + 1, PANEL_IN - 0.2, 70.0, Z0 - 1, Z1 + 1)          # no slack up into the port openings
+    ceiling = mbox(-A - 1, A + 1, PANEL_IN - 0.2, TOP + 8.0, Z0 - 1, Z1 + 1)          # no slack up into the port openings
     F = obstacle_field(rigid + lid + ceiling)     # the panel over its slide
     LIFT.clear()
     LIFT["F"] = obstacle_field(rigid)                      # when the wires go in, the panel is not on yet
@@ -2304,13 +2057,13 @@ def wire_report():
     for g, lab, col, pts, smooth in all_routes():
         if smooth:
             P = np.asarray(pts, float)
-            rmin = _min_radius(P) if g not in ("speaker", "camera") else R_BEND
+            rmin = _min_radius(P) if g != "speaker" else R_BEND
         else:
             P, rmin = round_corners(pts)
         L = float(np.linalg.norm(np.diff(P, axis=0), axis=1).sum())
         rows.append(dict(group=g, wire=lab, length_mm=round(L, 1), min_bend_r=round(min(rmin, 99), 2), color=col,
                          points=np.round(P, 2).tolist()))
-        tubes.append((f"{g} {lab}", tube(pts, r=USB_R if g == "camera" else WIRE_R, rounded=not smooth)))
+        tubes.append((f"{g} {lab}", tube(pts, r=WIRE_R, rounded=not smooth)))
     joints = union([mcyl("y", SPLICE["y"][0] - 4.0, SPLICE["y"][1] + 3.0, SPLICE["r"] + 2.5, SPLICE[t][0], SPLICE[t][1], 16)
                     for t in ("bclk", "lrclk")])
     cross = []
@@ -2362,9 +2115,7 @@ def robot_parts():
 
 def build_all():
     from bittle_platform import build as BP
-    return dict(cover_pegs=flip_x(BP.cover_with_notch() + b3d_to_manifold(build_pegs())), pod_body=build_body(), pod_panel=build_panel(),
-                pod_button=build_keycap(), pod_camera_mount=build_camera_mount(), pod_logo_white=build_logo("white"),
-                pod_logo_red=build_logo("red"))
+    return dict(cover_pegs=flip_x(BP.cover_with_notch() + b3d_to_manifold(build_pegs())), pod_body=build_body(), pod_door=build_door(), pod_panel=build_panel())
 
 
 def wire_paths():
@@ -2376,46 +2127,7 @@ PATH_ENDS = {"uart": ("pi_plugs", "biboard_plug", "biboard_header"), "i2s": ("pi
              "mic": ("mic_sph0645",), "speaker": ("amp_ns4168", "speaker")}
 # Each wire group starts and ends in these parts.
 WIRE_ENDS = {"wires_uart": ("pi_plugs", "biboard_plug"), "wires_amp": ("pi_plugs", "amp_ns4168"),
-             "wires_mic": ("pi_plugs", "mic_sph0645"), "wires_splice": ("pi_plugs",), "wires_speaker": ("speaker", "amp_ns4168"),
-             "wires_camera": ("camera",)}
-
-
-def low_mount_models():
-    """The head-off mount (base, cradle, pins), its camera and its USB cable (design frame)."""
-    cam = union([stl_manifold(f, cam_to_body(True), ref=os.path.join(os.path.dirname(ROOT), "reference"))
-                 for f in ("AiCamera250116-down.stl", "AiCamera250116-up.stl")])
-    cable = (union([tube(w, r=USB_R, rounded=False) for _, _, _, w in camera_cable_low()]) + rbox("y", *cam_usb_plug(True), 1.0)
-             + rbox("y", *pi_usb_plug(), 1.0))
-    return build_camera_base_low(), build_camera_cradle_low(), _low_pins(), cam, cable
-
-
-def check_low(parts, models, robot, low):
-    """The head-off mount on the robot without its head."""
-    Bs, Cr, pins, cam, cable = low
-    vol = lambda a, b: (a ^ b).volume()
-    rows = []
-    U = under_cover()
-    inside = union([X for k, X in models.items() if k not in ("camera", "wires_camera")])
-    for n, X in (("pod_body", parts["pod_body"]), ("pod_panel", parts["pod_panel"]), ("cover_pegs", parts["cover_pegs"]), ("under_cover", U),
-                 ("parts inside", inside)):
-        for a, Y in (("pod_camera_base_low", Bs), ("pod_camera_cradle_low", Cr), ("camera (head off)", cam), ("USB cable (head off)", cable)):
-            rows.append((a, n, vol(Y, X)))
-    for a, b, A_, B_ in (("pod_camera_base_low", "pod_camera_cradle_low", Bs, Cr), ("pod_camera_base_low", "camera (head off)", Bs, cam),
-                         ("pod_camera_cradle_low", "camera (head off)", Cr, cam), ("pins", "pod_camera_base_low", pins, Bs),
-                         ("pins", "pod_camera_cradle_low", pins, Cr), ("USB cable (head off)", "head-off mount", cable, Bs + Cr)):
-        rows.append((a, b, vol(A_, B_)))
-    for n, X in robot.items():
-        if n != "head":
-            rows.append(("head-off mount + camera + cable", n, vol(Bs + Cr + cam + cable, X)))
-    for n, M in (("pod_camera_base_low", Bs), ("pod_camera_cradle_low", Cr)):
-        rows.append((n, "loose_pieces", sum(sorted(c.volume() for c in M.decompose())[:-1])))
-    rows.append(("camera (head off) lifted 0.3mm (must touch)", "pod_camera_cradle_low", vol(cam.translate([0, 0.3, 0]), Cr)))
-    rows.append(("cradle lifted 0.3mm (must touch)", "pins", vol(Cr.translate([0, 0.3, 0]), pins)))
-    rows.append(("cradle lowered 0.3mm (must touch)", "pod_camera_base_low", vol(Cr.translate([0, -0.3, 0]), Bs)))
-    rows.append(("cradle slid down from 20 mm up (no pins)", "pod_camera_base_low",
-                 max(vol(Cr.translate([0, float(dy), 0]), Bs) for dy in (0.5, 2.0, 5.0, 10.0, 15.0, 20.0))))
-    rows.append(("pod_camera_base_low lifted 0.3mm (must touch)", "pod_panel", vol(Bs.translate([0, 0.3, 0]), parts["pod_panel"])))
-    return rows
+             "wires_mic": ("pi_plugs", "mic_sph0645"), "wires_splice": ("pi_plugs",), "wires_speaker": ("speaker", "amp_ns4168")}
 
 
 def check(parts, models, robot):
@@ -2424,20 +2136,18 @@ def check(parts, models, robot):
     names = list(parts)
     for i, a in enumerate(names):
         for b in names[i + 1:]:
-            pa, pb = (build_keycap(press=False) if n == "pod_button" else parts[n] for n in (a, b))   # the press fit ribs: checked below
+            pa, pb = parts[a], parts[b]
             rows.append((a, b, vol(pa, pb)))
     for a in names:
         for b, M in models.items():
             rows.append((a, b, vol(parts[a], M)))
     U = under_cover()
-    ADD = ("pod_body", "pod_panel", "pod_button", "pod_camera_mount")
+    ADD = ("pod_body", "pod_door", "pod_panel")
     for a in ADD:
         rows.append((a, "under_cover", vol(parts[a], U)))
         for b, M in robot.items():
             rows.append((a, b, vol(parts[a], M)))
     for a in names:
-        if a.startswith("pod_logo_"):
-            continue                                       # a ring and a letter each: they are glued in one by one
         pcs = sorted(c.volume() for c in parts[a].decompose())
         rows.append((a, "loose_pieces", sum(pcs[:-1])))
     mn = list(models)
@@ -2479,9 +2189,9 @@ def check(parts, models, robot):
         rows.append((f"install {g} (max over 40 mm down)", "body + parts in", worst))
         placed = placed + G
     # panel: straight down LID_SLIDE behind its place, then forward. The latch hook rides over the rib (checked below).
-    Pc = build_panel(with_latch=False) + parts["pod_button"]
+    Pc = build_panel(with_latch=False)
     inside = union([models[n] for n in models if n not in ("biboard_header",)])
-    inside_nc = union([M for k, M in models.items() if k not in ("biboard_header", "camera", "wires_camera")])   # the camera goes on later
+    inside_nc = union([M for k, M in models.items() if k != "biboard_header"])
     lever = mbox(*SW_LEVER["x"], *SW_LEVER["y"], *SW_LEVER["z"])
     lever_sw = m3.Manifold.batch_hull([lever.translate([0, 0, -SW_TRAVEL]), lever.translate([0, 0, SW_TRAVEL])])
     fixed = parts["pod_body"] + inside_nc + lever_sw       # the switch in either place
@@ -2491,7 +2201,8 @@ def check(parts, models, robot):
                  max(vol(Pc.translate([0, 0, float(dz)]), fixed) for dz in np.arange(0.25, LID_SLIDE + 0.01, 0.25))))
     rib = latch_rib()
     rows.append(("latch hook, panel slid back 0.3mm (must touch)", "rib", vol(latch_hook().translate([0, 0, 0.3]), rib)))
-    rows.append(("latch hook lifted 0.8mm, slide", "body", max(vol(latch_hook(0.8).translate([0, 0, float(dz)]), parts["pod_body"])
+    lift = LATCH["rib_top"] - LATCH["hook_bot"] + 0.05
+    rows.append((f"latch hook lifted {lift:.2f}mm, slide", "body", max(vol(latch_hook(lift).translate([0, 0, float(dz)]), parts["pod_body"])
                                                                for dz in np.arange(0.0, LID_SLIDE + 0.01, 0.25))))
     rows.append(("panel lifted 0.3mm (must touch)", "pod_body", vol(parts["pod_panel"].translate([0, 0.3, 0]), parts["pod_body"])))
     rows.append(("panel lifted 0.3mm at drop place", "pod_body", vol(parts["pod_panel"].translate([0, 0.3, LID_SLIDE]) - latch_hook().translate([0, 0.3, LID_SLIDE]), parts["pod_body"])))
@@ -2499,45 +2210,17 @@ def check(parts, models, robot):
     # switch: the lever is under the window over its travel (a fingernail reaches its top)
     win = mbox(*SW_WIN["x"], 0, 99, *SW_WIN["z"])
     rows.append(("switch lever over its travel, outside the window (must be 0)", "lever", vol(lever_sw - win, lever_sw)))
-    # button: the arm stands BTN gap over the button; pressed BTN press, it pushes the button
+    # button: the plunger is under the opening (a fingertip or a pen tip reaches it)
     cap = mbox(*BTN["cap"][:2], BTN["cap"][4] - 0.7, BTN["cap"][4], *BTN["cap"][2:4])
+    rows.append(("button plunger under the opening (must be 0)", "panel", vol(cap.translate([0, 30.0, 0]), parts["pod_panel"])))
     cell = mbox(*BAT["x"], *BAT["y"], *BAT["z"])
     rows.append(("battery moved 0.5mm left (must touch)", "pod_panel", vol(cell.translate([-0.5, 0, 0]), parts["pod_panel"])))
     rows.append(("battery moved 0.5mm up (must touch)", "pod_panel", vol(cell.translate([0, 0.5, 0]), parts["pod_panel"])))
     rows.append(("battery moved 0.5mm down (must touch)", "pod_body", vol(cell.translate([0, -0.5, 0]), parts["pod_body"])))
-    rows.append(("button arm at rest", "button", vol(button_arm(), cap)))
     pcb = mbox(*MIC_X, MIC["y0"], MIC["y0"] + MIC["l"], MIC["z0"], MIC["z0"] + MIC["w"])
-    for lab, v, P in (("lifted", (0, 0.3, 0), parts["pod_panel"]), ("moved inward", (0.3, 0, 0), parts["pod_body"]),
+    for lab, v, P in (("moved inward", (0.3, 0, 0), parts["pod_body"]),
                       ("moved forward", (0, 0, -0.3), parts["pod_body"]), ("moved rearward", (0, 0, 0.3), parts["pod_body"])):
         rows.append((f"mic board {lab} 0.3mm (must touch)", "pod_panel" if P is parts["pod_panel"] else "pod_body", vol(pcb.translate(list(v)), P)))
-    rows.append(("logo inlays in the pocket", "pod_panel", vol(parts["pod_logo_white"] + parts["pod_logo_red"], parts["pod_panel"])))
-    rows.append(("button cap ribs in the hole (press fit, must touch)", "pod_panel", vol(build_keycap(), parts["pod_panel"])))
-    rows.append(("button cap lifted 0.3mm (must touch)", "pod_panel", vol(parts["pod_button"].translate([0, 0.3, 0]), parts["pod_panel"])))
-    rows.append(("camera mount lifted 0.3mm (must touch)", "pod_panel", vol(parts["pod_camera_mount"].translate([0, 0.3, 0]), parts["pod_panel"])))
-    rows.append(("camera lifted 0.3mm (must touch)", "pod_camera_mount", vol(models["camera"].translate([0, 0.3, 0]), parts["pod_camera_mount"])))
-    # twist lock: drop in at the keyways, turn to the lock; the bumps ride on the lugs (they press 0.1 into the notches)
-    Mt, Pn = parts["pod_camera_mount"], parts["pod_panel"]
-    bumps = tw_socket_parts("bumps")
-    T = TW
-    rows.append(("camera mount dropped in at the keyways", "pod_panel", max(vol(tw_turn(Mt, T["twist"]).translate([0, dy, 0]), Pn) for dy in (0.0, 0.5, 1.5, 3.0, 6.0))))
-    rows.append(("camera mount over the turn", "panel without the bumps",
-                 max(vol(tw_turn(Mt, T["twist"] * f), Pn - bumps) for f in (1.0, 0.75, 0.5, 0.25, 0.1))))
-    rows.append(("camera mount over the turn (must touch: the bumps ride on the lugs)", "bumps",
-                 min(vol(tw_turn(Mt, T["twist"] * f), bumps) for f in (0.12, 0.06))))
-    rows.append(("camera mount locked: bumps in the notches (preload, must touch)", "bumps", vol(Mt, bumps)))
-    rows.append(("camera mount turned 180 deg (lens to the rear)", "panel without the bumps", vol(tw_turn(Mt, 180.0), Pn - bumps)))
-    rows.append(("camera mount pushed down 0.3mm (must touch: the cone in the countersink)", "panel without the bumps",
-                 vol(Mt.translate([0, -0.3, 0]), Pn - bumps - tw_socket_parts("stops"))))
-    rows.append(("camera mount turned 2 deg past the lock (must touch the stops)", "pod_panel", vol(tw_turn(Mt, -2.0 * math.copysign(1, T["twist"])), Pn - bumps)))
-    inside_c = union([M for k, M in models.items() if k not in ("camera", "wires_camera")])
-    rows.append(("camera mount over the turn", "body + parts", max(vol(tw_turn(Mt, T["twist"] * f), parts["pod_body"] + inside_c) for f in (1.0, 0.5, 0.0))))
-    rows.append(("camera mount turned 180 deg", "body + parts", vol(tw_turn(Mt, 180.0), parts["pod_body"] + inside_c)))
-    for n, (xc, zc_, sx, sz) in PORT_PLUGS.items():
-        B = mbox(xc - sx / 2, xc + sx / 2, PORT_TOP + 0.2, 95.0, zc_ - sz / 2, zc_ + sz / 2)
-        rows.append((f"plug {n}", "camera, its mount and its cable", vol(B, parts["pod_camera_mount"] + models["camera"]
-                                                                        + (models["wires_camera"] if n != "pi_usb" else m3.Manifold()))))
-    rows.append(("button arm pressed (must touch)", "button", vol(button_arm(-BTN["press"]), cap)))
-    rows.append(("button arm pressed", "parts (not the PiSugar)", vol(button_arm(-BTN["press"]), others)))
     zc = (Z0 + Z1) / 2
     R = parts["pod_panel"].transform(np.array([[-1.0, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, 2 * zc]]))
     rows.append(("panel turned 180 (min, Z +-6)", "body + parts",
@@ -2558,6 +2241,14 @@ def check(parts, models, robot):
     rows.append(("Grove cable space, front (robot left)", "pod_body", vol(C, parts["pod_body"])))
     F = mbox(*FINGER["x"], *FINGER["y"], *FINGER["z"])
     rows.append(("finger over the BiBoard plug", "pod_body", vol(F, parts["pod_body"])))
+    Dr, Bd = parts["pod_door"], parts["pod_body"]
+    rigid_in = union([M for m, M in models.items() if not m.startswith("wires_")])
+    rows.append(("door slid down from 45 mm up", "body + parts", max(vol(Dr.translate([0, float(dy), 0]), Bd + rigid_in)
+                                                                    for dy in (0.3, 1, 2, 4, 8, 12, 16, 20, 25, 30, 35, 40, 45))))
+    for lab, v in (("pushed out", (0.3, 0, 0)), ("pushed in", (-0.3, 0, 0)), ("pushed forward", (0, 0, -0.3)), ("pushed rearward", (0, 0, 0.3)),
+                   ("pushed down", (0, -0.3, 0))):
+        rows.append((f"door {lab} 0.3mm (must touch)", "pod_body", vol(Dr.translate(list(v)), Bd)))
+    rows.append(("door lifted 0.3mm (must touch)", "pod_panel", vol(Dr.translate([0, 0.3, 0]), parts["pod_panel"])))
     rows.append(("finger over the BiBoard plug", "other parts", vol(F, union([M for m, M in models.items()
                                                                             if m != "biboard_plug" and not m.startswith("wires_")]))))
     for n, (xc, zc_, sx, sz) in PORT_PLUGS.items():
@@ -2642,17 +2333,11 @@ EXPLODE_STAGES = 7
 
 def explode_plan(name, sub=""):
     """(stage, first move (dx, dy, dz), second move (dx, dy, dz)) of a display part, or None for a part that stays."""
-    if name == "camera":
-        return 0, (0, 250, 0), (0, 0, 0)
-    if name in ("camera_mount", "pod_camera_mount"):
-        return 1, (0, 210, 0), (0, 0, 0)
+    if name in ("door", "pod_door"):
+        return 3, (0, 100, 0), (40, 0, 0)                         # up out of its grooves, then aside
     if name in ("panel", "pod_panel"):
         return 2, (0, 0, LID_SLIDE), (0, 170, 0)
-    if name in ("button", "pod_button", "pod_logo_white", "pod_logo_red"):
-        return 2, (0, 0, LID_SLIDE), (0, 170, 0)                         # they stay clicked into the panel
     if name.startswith("wires_"):
-        if name == "wires_camera":
-            return 0, (0, 250, 0), (0, 0, 0)                      # the USB cable goes with the camera
         if name == "wires_speaker":
             return 4, (0, 45, 0), (-30, 0, 0)                     # the speaker lead goes with the amp
         return 3, (0, 100, 0), (0, 0, 0)                         # the harness, its housings on it, with the Pi
@@ -2676,7 +2361,7 @@ def explode_robot(name, sub=""):
 
 
 MASS_G = dict(stack_screws=1.0, pizero=10.0, pisugar_s=10.0, battery=23.5, sd_card=0.4, pi_plugs=5.0, speaker=14.0, amp_ns4168=5.0,
-              mic_sph0645=1.3, camera=CAM["mass"], wires_uart=2.4, wires_amp=4.0, wires_mic=4.8, wires_speaker=1.0, wires_camera=2.5,
+              mic_sph0645=1.3, wires_uart=2.4, wires_amp=4.0, wires_mic=4.8, wires_speaker=1.0,
               wires_splice=0.5, biboard_plug=0.5)
 PRINT_FILL = 0.5
 PLA_G_MM3 = 1.24e-3
@@ -2694,7 +2379,7 @@ def balance(parts, models):
     """Mass and center of mass of the add-on (printed parts + electronics), design frame (main() turns X over).
     The robot center is X 0, Z 0: the cover and the shoulder plates are symmetric about it."""
     rows = []
-    for n in ("pod_body", "pod_panel", "pod_button", "pod_camera_mount"):
+    for n in ("pod_body", "pod_door", "pod_panel"):
         rows.append((n, parts[n].volume() * PLA_G_MM3 * PRINT_FILL, centroid(parts[n])))
     for n, g in MASS_G.items():
         rows.append((n, g, centroid(models[n])))
@@ -2707,17 +2392,11 @@ def balance(parts, models):
 def print_orient(name, M, also=None):
     """Rotate to the print orientation and put the part on the bed (Z=0). also: another solid that gets the same
     move (returned as a second value)."""
-    if name == "pod_body":
+    if name == "pod_door":
+        R = np.array([[0, 0, -1], [0, 1, 0], [1, 0, 0]], float)        # on its outer face (robot -X down)
+    elif name == "pod_body":
         R = np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]], float)        # floor down
-    elif name == "pod_camera_mount":
-        R = np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]], float)        # standing up: the lugs on the bed
-    elif name == "pod_camera_cradle_low":
-        R = np.array([[-1, 0, 0], [0, 1, 0], [0, 0, -1]], float)       # on its back end: prisms along Z, the front lips last
-    elif name == "pod_camera_base_low":
-        R = np.array([[0, 0, 1], [0, 1, 0], [-1, 0, 0]], float)        # on its side, robot +X (the design -X lug) on the bed
-    elif name == "pod_button":
-        R = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]], float)        # upside down, the cap top on the bed
-    elif name in ("pod_panel", "pod_logo_white", "pod_logo_red"):
+    elif name == "pod_panel":
         R = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]], float)        # upside down, top on the bed
     else:
         raise ValueError(name)
@@ -2729,55 +2408,58 @@ def print_orient(name, M, also=None):
     return M.translate(d), also.transform(np.hstack([R, np.zeros((3, 1))])).translate(d)
 
 
-def logo_blocker():
-    """A support blocker over the logo pocket: in the print the pocket is open to the bed and its floor bridges."""
-    S = logo_shapes()
-    return _logo_place((S["white"] + S["red"]).offset(LOGO["clr"] + 1.0), TOP - LOGO["pocket"] - 0.3, TOP + 0.3)
+# Keyhole fit for 0.1 mm layers (fit test 14, printed). At 0.1 mm the holes print near their true size,
+# so the platform fit (gap 0.35, travel 0.20) is loose. A 0.1 mm clamp pad on each beam removes the lift
+# and tilt on the 0.3 mm gap under the peg heads. The pegs on the cover do not change.
+FINE_FIT = dict(gap=0.10, travel=0.375, pad=0.10)
 
 
-def write_panel_3mf(panel, path):
-    """The panel in its print orientation with a Cura support blocker (anti_overhang_mesh) over the logo pocket, as
-    one group. The blocker is not printed."""
-    import zipfile
-    P, B = print_orient("pod_panel", panel, also=flip_x(logo_blocker()))
+@contextlib.contextmanager
+def fit_set(fit):
+    """Use the fit values in fit (FINE_FIT, RESIN_FIT) for the parts built in the with block.
+    Keys: gap, travel, pad (keyholes and click beams), door_gap, door_clr, amp_clr (optional)."""
+    from bittle_platform import build as BP
+    g = globals()
+    mods = {id(PI): PI, id(BP.I): BP.I}.values()      # build.py has its own copy of interface.py
+    old = [(M, M.KEY_SLOT_GAP, M.KEY_SLOT_W, dict(M.DET)) for M in mods]
+    old_det = BP.DET_DX, BP.DET_DZ
+    old_door, old_amp = (DOOR["gap"], DOOR["post"]["clr"]), g["AMP_SLOT_CLR"]
+    try:
+        for M in mods:
+            M.KEY_SLOT_GAP = fit["gap"]
+            M.KEY_SLOT_W = M.PEG_SHAFT_D + 2 * fit["gap"]
+            M.DET["travel"] = fit["travel"]
+            M.DET["pad"] = fit.get("pad", 0.0)
+        BP.DET_DX, BP.DET_DZ = BP.detent_geometry()[:2]
+        DOOR["gap"] = fit.get("door_gap", DOOR["gap"])
+        DOOR["post"]["clr"] = fit.get("door_clr", DOOR["post"]["clr"])
+        g["AMP_SLOT_CLR"] = fit.get("amp_clr", g["AMP_SLOT_CLR"])
+        yield BP.detent_force()
+    finally:
+        for M, gp, w, det in old:
+            M.KEY_SLOT_GAP, M.KEY_SLOT_W = gp, w
+            M.DET.clear()
+            M.DET.update(det)
+        BP.DET_DX, BP.DET_DZ = old_det
+        (DOOR["gap"], DOOR["post"]["clr"]), g["AMP_SLOT_CLR"] = old_door, old_amp
 
-    def obj(oid, name, M, settings):
-        m = M.to_mesh()
-        v = np.asarray(m.vert_properties)[:, :3]
-        t = np.asarray(m.tri_verts)
-        out = [f'  <object id="{oid}" name="{name}" type="model">']
-        if settings:
-            out.append("   <metadatagroup>")
-            out += [f'    <metadata name="cura:{k}" preserve="1" type="xs:string">{x}</metadata>' for k, x in settings.items()]
-            out.append("   </metadatagroup>")
-        out.append("   <mesh>\n    <vertices>")
-        out += [f'     <vertex x="{a:.4f}" y="{b:.4f}" z="{c:.4f}" />' for a, b, c in v]
-        out.append("    </vertices>\n    <triangles>")
-        out += [f'     <triangle v1="{a}" v2="{b}" v3="{c}" />' for a, b, c in t]
-        out.append("    </triangles>\n   </mesh>\n  </object>")
-        return "\n".join(out)
-    model = "\n".join([
-        '<?xml version="1.0" encoding="UTF-8"?>',
-        '<model unit="millimeter" xml:lang="en-US" xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02">',
-        " <resources>",
-        obj(1, "pod_panel", P, None),
-        obj(2, "logo_support_blocker", B, {"anti_overhang_mesh": "True"}),
-        '  <object id="3" name="pod_panel_group" type="model">',
-        '   <components>\n    <component objectid="1" />\n    <component objectid="2" />\n   </components>',
-        "  </object>",
-        " </resources>",
-        ' <build>\n  <item objectid="3" />\n </build>',
-        "</model>"])
-    types = ('<?xml version="1.0" encoding="UTF-8"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
-             '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml" />'
-             '<Default Extension="model" ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml" /></Types>')
-    rels = ('<?xml version="1.0" encoding="UTF-8"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
-            '<Relationship Target="/3D/3dmodel.model" Id="rel0" Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel" />'
-            '</Relationships>')
-    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
-        z.writestr("[Content_Types].xml", types)
-        z.writestr("_rels/.rels", rels)
-        z.writestr("3D/3dmodel.model", model)
+
+def build_body_fine():
+    """The body with the FINE_FIT keyholes and click beams, for prints at 0.1 mm layers."""
+    with fit_set(FINE_FIT) as f:
+        return build_body(), f
+
+
+# Resin fit (best guess, not printed yet). A resin print is more accurate than FDM, and the resin is more brittle.
+# Keyholes: a smaller slot gap, a shorter click (beam strain 0.8 %), and a 0.05 mm clamp pad (one resin layer).
+# Door and amp slot: smaller gaps. The lid hooks and the latch stay the same (their gaps are 0.05 to 0.15).
+RESIN_FIT = dict(gap=0.08, travel=0.25, pad=0.05, door_gap=0.12, door_clr=0.15, amp_clr=0.15)
+
+
+def build_resin():
+    """The add-on parts (design frame) with RESIN_FIT, and the click values."""
+    with fit_set(RESIN_FIT) as f:
+        return dict(pod_body=build_body(), pod_door=build_door(), pod_panel=build_panel()), f
 
 
 def export_assembly(path, models):
@@ -2795,10 +2477,9 @@ def export_assembly(path, models):
         cover=(mesh_to_manifold(BP.ref_tris(COVER_STL)), "#26272b"),
         pod_body=(mesh_to_manifold(load_stl(os.path.join(OUT, "installed", "pod_body.stl"))), "#e9e9e6"),
         pod_panel=(mesh_to_manifold(load_stl(os.path.join(OUT, "installed", "pod_panel.stl"))), "#e8641b"),
-        pod_button=(mesh_to_manifold(load_stl(os.path.join(OUT, "installed", "pod_button.stl"))), "#e9e9e6"),
-        pod_camera_mount=(mesh_to_manifold(load_stl(os.path.join(OUT, "installed", "pod_camera_mount.stl"))), "#e8641b"),
+        pod_door=(mesh_to_manifold(load_stl(os.path.join(OUT, "installed", "pod_door.stl"))), "#e9e9e6"),
     )
-    cols = dict(camera="#2b2d33", pizero="#2a8c47", pisugar_s="#c4588c", battery="#3a5fa8", sd_card="#222222", pi_plugs="#d83a34",
+    cols = dict(pizero="#2a8c47", pisugar_s="#c4588c", battery="#3a5fa8", sd_card="#222222", pi_plugs="#d83a34",
                 biboard_header="#0d0d0d", biboard_plug="#d83a34", speaker="#7a52b8", amp_ns4168="#1a5a8c",
                 mic_sph0645="#d83a34")
     for n, col in cols.items():
@@ -2831,7 +2512,10 @@ def main(fast=False):
     robot = robot_parts()
     for d in ("print", "installed", "models"):
         os.makedirs(os.path.join(OUT, d), exist_ok=True)
-    for f in ("pod_tray.stl", "pod_lid.stl", "top_insert.stl"):          # rev 0.15 parts
+    old = ("pod_tray.stl", "pod_lid.stl", "top_insert.stl",                 # rev 0.15 parts
+           "pod_camera_mount.stl", "pod_camera_base_low.stl", "pod_camera_cradle_low.stl", "pod_camera_mount_low.stl",
+           "pod_logo_white.stl", "pod_logo_red.stl", "pod_panel.3mf", "pod_button.stl")   # rev 0.24 parts (no camera mount, logo, cap)
+    for f in old:
         for d in ("print", "installed"):
             p = os.path.join(OUT, d, f)
             if os.path.exists(p):
@@ -2843,13 +2527,24 @@ def main(fast=False):
             continue            # a platform part: bittle_platform/stl/print/cover_pegs.stl
         P = print_orient(n, flip_x(M))
         save_stl(P, os.path.join(OUT, "print", f"{n}.stl"))
-        if n == "pod_panel":
-            write_panel_3mf(flip_x(M), os.path.join(OUT, "print", "pod_panel.3mf"))
+        if n == "pod_body":
+            write_body_3mf(M, os.path.join(OUT, "print", "pod_body.3mf"))
         regs = BP.overhang_regions(P)
         printing[n] = dict(overhang_mm2=round(sum(r["area"] for r in regs), 1), regions=regs[:8])
         print(f"{n:11s} vol {M.volume():8.0f} mm3  ~{M.volume() * PLA_G_MM3:5.1f} g PLA (solid)   overhang {printing[n]['overhang_mm2']:6.1f} mm2")
         for r in regs[:8]:
             print(f"     {r['area']:6.1f} mm2  flat {r['flat']:5.1f}  at print z {r['z'][0]:.1f}..{r['z'][1]:.1f}  x {r['x'][0]:.1f}..{r['x'][1]:.1f}  y {r['y'][0]:.1f}..{r['y'][1]:.1f}")
+    fine, f = build_body_fine()
+    save_stl(print_orient("pod_body", flip_x(fine)), os.path.join(OUT, "print", "pod_body_fine.stl"))
+    write_body_3mf(fine, os.path.join(OUT, "print", "pod_body_fine.3mf"))
+    os.makedirs(os.path.join(OUT, "installed", "resin"), exist_ok=True)
+    resin, f = build_resin()
+    for n, M in resin.items():
+        save_stl(flip_x(M), os.path.join(OUT, "installed", "resin", f"{n}.stl"))
+    printing["resin"] = dict(fit=RESIN_FIT, click=f)
+    printing["pod_body_fine"] = dict(fit=FINE_FIT, click=f)
+    print(f"pod_body_fine (0.1 mm layers): gap {FINE_FIT['gap']}, click travel {FINE_FIT['travel']}, slide {f['lock_N']} N")
+    write_screw_parts()
     for f in os.listdir(os.path.join(OUT, "models")):
         if f.endswith(".stl"):
             os.unlink(os.path.join(OUT, "models", f))
@@ -2869,24 +2564,9 @@ def main(fast=False):
     save_stl(flip_x(union(list(wire_paths().values()))), os.path.join(OUT, "models", "wire_paths.stl"))      # display only
     rows = check(parts, models, robot)
     rows += install_checks(parts, models)
-    low = low_mount_models()                       # the head-off camera mount: two separate parts
-    rows += check_low(parts, models, robot, low)
-    for n, M in (("pod_camera_base_low", low[0]), ("pod_camera_cradle_low", low[1])):
-        save_stl(flip_x(M), os.path.join(OUT, "installed", f"{n}.stl"))
-        P = print_orient(n, flip_x(M))
-        save_stl(P, os.path.join(OUT, "print", f"{n}.stl"))
-        regs = BP.overhang_regions(P)
-        printing[n] = dict(overhang_mm2=round(sum(r["area"] for r in regs), 1), regions=regs[:8])
-        print(f"{n:11s} vol {M.volume():8.0f} mm3  ~{M.volume() * PLA_G_MM3:5.1f} g PLA (solid)   overhang {printing[n]['overhang_mm2']:6.1f} mm2")
-        for r_ in regs[:8]:
-            print(f"     {r_['area']:6.1f} mm2  flat {r_['flat']:5.1f}  at print z {r_['z'][0]:.1f}..{r_['z'][1]:.1f}  x {r_['x'][0]:.1f}..{r_['x'][1]:.1f}  y {r_['y'][0]:.1f}..{r_['y'][1]:.1f}")
-    for f in ("pod_camera_mount_low.stl",):
-        for d in ("print", "installed"):
-            if os.path.exists(os.path.join(OUT, d, f)):
-                os.unlink(os.path.join(OUT, d, f))
-    save_stl(flip_x(low[2]), os.path.join(OUT, "models", "camera_low_pins.stl"))
-    save_stl(flip_x(low[3]), os.path.join(OUT, "models", "camera_low.stl"))
-    save_stl(flip_x(low[4]), os.path.join(OUT, "models", "wires_camera_low.stl"))
+    for f in ("camera_low_pins.stl", "camera_low.stl", "wires_camera_low.stl"):
+        if os.path.exists(os.path.join(OUT, "models", f)):
+            os.unlink(os.path.join(OUT, "models", f))
     wires, cross = wire_report()
     rows.append(("wires: pairs that pass through each other", "-", float(len(cross))))
     rows.append((f"wires: designed bends under {R_BEND - 0.05:.2f} mm, slack bends under {R_SLACK:.2f} mm", "-",
@@ -2910,28 +2590,24 @@ def main(fast=False):
     snap = latch_force()
     clicks = BP.detent_force()
     print(f"balance: {bal['mass_g']} g, center of mass x {bal['com'][0]} y {bal['com'][1]} z {bal['com'][2]}")
-    twist = tw_force()
     print("panel latch:", snap)
-    print("camera socket tabs:", twist)
     print("platform clicks:", clicks)
     print("checks (mm^3, >0.05 shown):")
     for a, b, v in rows:
         if v > 0.05:
             print(f"  {a:34s} x {b:20s} {v:9.2f}")
-    json.dump(dict(rows=rows, printing=printing, balance=bal, snap=snap, clicks=clicks, twist=twist),
+    json.dump(dict(rows=rows, printing=printing, balance=bal, snap=snap, clicks=clicks),
               open(os.path.join(OUT, "checks.json"), "w"), indent=1)
     if fast:
         return
     from build123d import export_step
     os.makedirs(os.path.join(ROOT, "cad"), exist_ok=True)
-    for f in ("pod_tray.step", "top_insert.step"):
+    for f in ("pod_tray.step", "top_insert.step", "pod_button.step", "pod_camera_mount.step", "pod_camera_base_low.step", "pod_camera_cradle_low.step"):
         p = os.path.join(ROOT, "cad", f)
         if os.path.exists(p):
             os.unlink(p)
-    for n in ("pod_body", "pod_panel", "pod_button", "pod_camera_mount"):
+    for n in ("pod_body", "pod_door", "pod_panel"):
         export_step(mesh_solid(flip_x(parts[n]), 0.02), os.path.join(ROOT, "cad", f"{n}.step"))
-    for n, M in (("pod_camera_base_low", low[0]), ("pod_camera_cradle_low", low[1])):
-        export_step(mesh_solid(flip_x(M), 0.02), os.path.join(ROOT, "cad", f"{n}.step"))
     export_assembly(os.path.join(ROOT, "cad", "assembly.step"), {n: flip_x(M) for n, M in models.items()})
 
 

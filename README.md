@@ -4,7 +4,6 @@
 > [LineChef](https://github.com/LineChef). His project is
 > [LineChef/BittleX](https://github.com/LineChef/BittleX), and its documentation
 > site is [LineChef/react-bittlex](https://github.com/LineChef/react-bittlex).
-> The logo on the panel top is the LineChef avatar.
 
 Click-on add-ons for the Petoi Bittle X robot dog. Print a new back cover
 with 4 teardrop pegs, then put hardware on your robot without tools, glue or tape.
@@ -58,9 +57,9 @@ that clicks onto the platform.
 - SPH0645 I2S microphone on the right side near the front, away from the speaker
 - One-piece body: it clicks onto the platform empty, then every part goes in from the top
 - Serial link to the BiBoard: the Dupont plugs go onto the header at the front left, and all the wires stay inside
-- A slide-on top panel with openings shaped to the plugs and the power switch, a large button and a logo inlay
-- The Petoi AI Vision Module on a round twist-lock mount in the panel top. Turn it end for end to point the lens to the rear. A lower mount in front of the body is for use with the head off
-- All printed parts print without supports
+- A slide-on top panel with openings over the plugs, the power switch and the PiSugar button
+- A door in the left wall over the BiBoard plugs: take the panel off, lift the door out, and reach the plugs from the side
+- On FDM, the add-on parts print without supports. Print plates for an FDM and a resin printer are in `bittle_pi_addon/stl/plates/`
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="bittle_pi_addon/doc/iso/open-dark.png">
