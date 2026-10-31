@@ -45,7 +45,7 @@ stl/plates/ has every part and the platform cover on one bed, in its print orien
 | Printer | File | Orientation |
 |---|---|---|
 | FDM: LulzBot TAZ Workhorse (280 x 280 x 300), 0.5 mm nozzle | fdm_taz.3mf or fdm_taz_plate.stl | The parts as in stl/print/. Use the "Bittle X" Cura profile. The cover stands on its rear end: turn on tree supports and a 14-line brim. |
-| Resin: Peopoly Phenom, first model (276 x 155 x 400) | resin_phenom.3mf or resin_phenom_plate.stl | The body, the panel, the door and the two fit coupons are tipped 45 deg, and the cover stands on its rear end. The two wide shoulder ends (../bittleParts_fixed/wide_shoulder_ends/) have a 15 deg roll and a 15 deg tilt. The lowest point is at Z 0. Lift the parts 5 mm in the slicer and add supports. |
+| Resin: Peopoly Phenom, first model (276 x 155 x 400) | resin_phenom.3mf or resin_phenom_plate.stl | The body, the panel, the door and the two fit coupons are tipped 45 deg, and the cover stands on its rear end. The lowest point is at Z 0. Lift the parts 5 mm in the slicer and add supports. |
 
 1. Body (resin): the floor is toward the plate. Put the supports on the floor underside. Keep them out of the keyhole slots and off the click beams. Sand the marks flat: the floor slides on the cover.
 2. Panel (resin): the open side is toward the plate. The top face has no support marks.

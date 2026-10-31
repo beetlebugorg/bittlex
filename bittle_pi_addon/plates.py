@@ -35,7 +35,7 @@ GAP = 8.0                                              # between parts on a plat
 RESIN_LAYER = 0.25                                     # check layer (the print uses 0.05)
 CUP_MIN = 1.0                                          # mm2: smaller closed voids are not counted
 COLORS = dict(pod_door="#e9e9e6", pod_body="#e9e9e6", pod_panel="#e8641b", cover_pegs="#26272b",
-              coupon_tight="#9aa0a6", coupon_loose="#9aa0a6", shoulder_end_a="#f2a71c", shoulder_end_b="#f2a71c")
+              coupon_tight="#9aa0a6", coupon_loose="#9aa0a6")
 
 PLATES = {
     "fdm_taz": dict(label="FDM: LulzBot TAZ Workhorse, 0.5 mm nozzle", bed=(280.0, 280.0, 300.0)),
@@ -99,9 +99,6 @@ def fdm_parts():
                 cover_pegs=load(os.path.join(PLATFORM_PRINT, "cover_pegs.stl")))     # no foot: it printed best (user)
 
 
-# The wide shoulder ends (from the Mac session): both in one file, already tilted for resin (15 deg roll, 15 deg tilt
-# in wide_shoulder_ends_part.scad). Each one turns 90 deg on the bed (about Z only: the tilt stays the same).
-SHOULDERS = os.path.join(os.path.dirname(ROOT), "bittleParts_fixed", "wide_shoulder_ends", "shoulder_ends_resin_15roll15tilt.stl")
 # Resin fit coupons: starter plates (platform build.py) a step tighter and a step looser than pod.py RESIN_FIT.
 # Front rim notches: 1 = tight, 2 = loose. Try them on the cover with the body: they show the next step.
 RESIN_COUPONS = {"coupon_tight": dict(gap=0.05, travel=0.30, pad=0.05, notches=1),
@@ -120,8 +117,8 @@ def coupon(fit):
 
 
 def resin_parts():
-    """The installed parts with the resin fit (pod.py RESIN_FIT: stl/installed/resin/), the cover, the fit
-    coupons and the shoulder ends."""
+    """The installed parts with the resin fit (pod.py RESIN_FIT: stl/installed/resin/), the cover and the fit
+    coupons."""
     def inst(n):
         r = os.path.join(P.OUT, "installed", "resin", f"{n}.stl")
         return load(r if os.path.exists(r) else os.path.join(P.OUT, "installed", f"{n}.stl"))
@@ -130,17 +127,12 @@ def resin_parts():
         o = RESIN["pod_body"]
         R = rot("y", o["roll"]) @ rot("x", o["tip"]) @ np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]], float)
         out[n] = on_bed(coupon(f).transform(affine(R)))
-    if os.path.exists(SHOULDERS):
-        sh = sorted(load(SHOULDERS).decompose(), key=lambda M: M.bounding_box()[0])
-        for n, M in zip(("shoulder_end_a", "shoulder_end_b"), sh):
-            out[n] = on_bed(M.transform(affine(rot("z", 90.0))))
     return out
 
 
-# Resin plate: three columns, each part list from the back (+Y) to the front. A row is a list of parts side by side.
+# Resin plate: two columns, each part list from the back (+Y) to the front. A row is a list of parts side by side.
 RESIN_COLUMNS = [[["pod_body"], ["cover_pegs"]],
-                 [["pod_panel"], ["coupon_tight", "coupon_loose"], ["pod_door"]],
-                 [["shoulder_end_a", "shoulder_end_b"]]]
+                 [["pod_panel"], ["coupon_tight", "coupon_loose"], ["pod_door"]]]
 
 
 def column_layout(parts, bed, columns, gap=6.0):

@@ -69,16 +69,6 @@
      "name": "pod_door",
      "file": "resin_phenom/pod_door.stl",
      "color": "#e9e9e6"
-    },
-    {
-     "name": "shoulder_end_a",
-     "file": "resin_phenom/shoulder_end_a.stl",
-     "color": "#f2a71c"
-    },
-    {
-     "name": "shoulder_end_b",
-     "file": "resin_phenom/shoulder_end_b.stl",
-     "color": "#f2a71c"
     }
    ]
   }
