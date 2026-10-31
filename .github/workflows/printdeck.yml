@@ -1,0 +1,45 @@
+name: printdeck
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      build:
+        description: The Printdeck build to slice
+        required: true
+
+permissions:
+  contents: read
+  id-token: write   # the OIDC token for Printdeck
+
+jobs:
+  plan:
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the base of the pull request, to find the parts that changed
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: beetlebugorg/printdeck-action@v1
+        with:
+          mode: plan
+
+  slice:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the commit of the plan
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: beetlebugorg/printdeck-action@v1
+        with:
+          mode: slice
+          build: ${{ inputs.build }}
