@@ -83,14 +83,28 @@ parts:
         profile: taz-workhorse-se/pla-0.20-standard
         files: [bittle_platform/stl/print/cover_pegs.stl]
 
-  # Resin plate (keyhole version with the resin fit, the cover and two fit coupons)
-  - name: Resin plate
-    files: [bittle_pi_addon/stl/plates/resin_phenom_plate.stl]
+  # Resin: the screw version with glued M2.5 nuts, each part alone in its resin orientation (plates.py)
+  # ChiTuBox profile: "Microcenter - ABS Like/Standard 50/50 Black" (0.05 mm, 18 s, bottom 95 s x 10)
+  - name: Pod body (resin)
+    files: [bittle_pi_addon/stl/print/resin/pod_body.stl]
     printer: phenom
     material: Grey standard 80% + Tenacious Flex black 20%
-    # ChiTuBox profile: "Microcenter - ABS Like/Standard 50/50 Black" (0.05 mm, 18 s, bottom 95 s x 10)
-    prebuilt: bittle_pi_addon/stl/plates/resin_phenom.cbddlp    # not made yet: a ChiTuBox slice goes here
-    alone: true
+  - name: Pod panel (resin)
+    files: [bittle_pi_addon/stl/print/resin/pod_panel.stl]
+    printer: phenom
+    material: Grey standard 80% + Tenacious Flex black 20%
+  - name: Pod door (resin)
+    files: [bittle_pi_addon/stl/print/resin/pod_door.stl]
+    printer: phenom
+    material: Grey standard 80% + Tenacious Flex black 20%
+  - name: Cover (resin)
+    files: [bittle_pi_addon/stl/print/resin/cover_screw.stl]
+    printer: phenom
+    material: Grey standard 80% + Tenacious Flex black 20%
+  - name: Starter plate (resin)
+    files: [bittle_pi_addon/stl/print/resin/starter_plate_screw.stl]
+    printer: phenom
+    material: Grey standard 80% + Tenacious Flex black 20%
 
 # The PDFs of the project. The project page shows each one with a picture of its first page.
 docs:

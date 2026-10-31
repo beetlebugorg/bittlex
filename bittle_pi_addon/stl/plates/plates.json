@@ -46,8 +46,8 @@
      "color": "#e9e9e6"
     },
     {
-     "name": "cover_pegs",
-     "file": "resin_phenom/cover_pegs.stl",
+     "name": "cover_screw",
+     "file": "resin_phenom/cover_screw.stl",
      "color": "#26272b"
     },
     {
@@ -56,13 +56,8 @@
      "color": "#e8641b"
     },
     {
-     "name": "coupon_tight",
-     "file": "resin_phenom/coupon_tight.stl",
-     "color": "#9aa0a6"
-    },
-    {
-     "name": "coupon_loose",
-     "file": "resin_phenom/coupon_loose.stl",
+     "name": "starter_plate_screw",
+     "file": "resin_phenom/starter_plate_screw.stl",
      "color": "#9aa0a6"
     },
     {

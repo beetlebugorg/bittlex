@@ -48,16 +48,16 @@ stl/plates/ has every part and the platform cover on one bed, in its print orien
 | Printer | File | Orientation |
 |---|---|---|
 | FDM: LulzBot TAZ Workhorse (280 x 280 x 300), 0.5 mm nozzle | fdm_taz.3mf or fdm_taz_plate.stl | The parts as in stl/print/. Use the "Bittle X" Cura profile. The cover stands on its rear end: turn on tree supports and a 14-line brim. |
-| Resin: Peopoly Phenom, first model (276 x 155 x 400) | resin_phenom.3mf or resin_phenom_plate.stl | The body, the panel, the door and the two fit coupons are tipped 45 deg, and the cover stands on its rear end. The lowest point is at Z 0. Lift the parts 5 mm in the slicer and add supports. |
+| Resin: Peopoly Phenom, first model (276 x 155 x 400) | resin_phenom.3mf or resin_phenom_plate.stl | The screw version with nuts: the body, the panel, the door and the starter plate are tipped 45 deg, and the cover stands on its rear end. The lowest point is at Z 0. Lift the parts 5 mm in the slicer and add supports. stl/print/resin/ has each part alone. |
 
-1. Body (resin): the floor is toward the plate. Put the supports on the floor underside. Keep them out of the keyhole slots and off the click beams. Sand the marks flat: the floor slides on the cover.
+1. Body (resin): the floor is toward the plate. Put the supports on the floor underside, off the screw holes. Sand the marks flat: the floor is on the cover rings.
 2. Panel (resin): the open side is toward the plate. The top face has no support marks.
-3. Cover (resin): it stands on its rear end, the points of the peg heads down. Put the supports on the rear edge only.
+3. Cover (resin): it stands on its rear end. Put the supports on the rear edge only.
 4. Door (resin): the outer face is up, tipped 45 deg. The supports go on the inner face and the ears.
 5. The resin check found no cups (trapped resin) in these orientations.
-6. The resin plate has the resin fit (pod.py RESIN_FIT, a best guess; stl/installed/resin/). Keyholes: slot gap 0.08 mm a side, click travel 0.25 mm (about 2.8 N), and a 0.05 mm clamp pad. Door gap 0.12 mm, door post gap 0.15 mm, amp slot gap 0.15 mm. The lid hooks and the latch do not change.
-7. The two fit coupons are a step tighter (1 notch in the front rim: gap 0.05, click 0.30) and a step looser (2 notches: gap 0.12, click 0.20) than the body. Try them on the cover with the body. If the body is loose or tight, the coupon that fits shows the next fit.
-8. Use a tough resin (ABS-like) for the click beams and the latch tongue.
+6. The resin parts take nuts in place of the inserts. Put an M2.5 nut (5.0 mm across the flats, 2.0 mm thick) into the hex pocket at the top of each boss, with a drop of superglue: 4 in the floor bosses and 2 in the speaker posts. The bosses are 8.0 mm across. Use the same screws as the FDM version: 4 x M2.5 x 4 up through the cover, and 2 x M2.5 x 12 down through the panel.
+7. The resin fit (pod.py RESIN_FIT, a best guess; stl/installed/resin/): door gap 0.12 mm, door post gap 0.15 mm, amp slot gap 0.15 mm. The panel has the hook gaps for 0.10 mm layers (0.05 mm).
+8. The starter plate (resin) has the same nut bosses. Print it first to test the nut pockets on the cover.
 9. Wash the parts in IPA and post-cure them before the fit test.
 
 
