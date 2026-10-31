@@ -10,45 +10,78 @@ generate:
   check: true
 
 parts:
-  # Pi add-on, screw version (rev 0.26), at 0.10 mm layers
+  # Each FDM part has a "fine" variant (0.10 mm layers) and a "standard" variant (0.20 mm layers). A *_fine file
+  # has the fit values for 0.10 mm layers. Only the screw panel is different now (smaller hook gaps).
+
+  # Pi add-on, screw version (rev 0.26)
   - name: Pod body (screw)
-    files: [bittle_pi_addon/stl/print/pod_body_screw.3mf]     # support blockers on the amp nubs and the latch rib
     printer: taz
-    profile: taz-workhorse-se/pla-0.10-fine
     material: roll-4
     settings: {support_enable: true, adhesion_type: brim}
+    variants:
+      - name: fine
+        profile: taz-workhorse-se/pla-0.10-fine
+        files: [bittle_pi_addon/stl/print/pod_body_screw_fine.3mf]
+      - name: standard
+        profile: taz-workhorse-se/pla-0.20-standard
+        files: [bittle_pi_addon/stl/print/pod_body_screw.3mf]
   - name: Pod panel (screw)
-    files: [bittle_pi_addon/stl/print/pod_panel_screw.stl]
     printer: taz
-    profile: taz-workhorse-se/pla-0.10-fine
     material: roll-4
     settings: {adhesion_type: brim}
+    variants:
+      - name: fine
+        profile: taz-workhorse-se/pla-0.10-fine
+        files: [bittle_pi_addon/stl/print/pod_panel_screw_fine.stl]
+      - name: standard
+        profile: taz-workhorse-se/pla-0.20-standard
+        files: [bittle_pi_addon/stl/print/pod_panel_screw.stl]
   - name: Cover (screw)
-    files: [bittle_pi_addon/stl/print/cover_screw.stl]
     printer: taz
-    profile: taz-workhorse-se/pla-0.10-fine
     material: roll-4
     settings: {support_enable: true, support_structure: tree, adhesion_type: brim, brim_line_count: 14}
+    variants:
+      - name: fine
+        profile: taz-workhorse-se/pla-0.10-fine
+        files: [bittle_pi_addon/stl/print/cover_screw_fine.stl]
+      - name: standard
+        profile: taz-workhorse-se/pla-0.20-standard
+        files: [bittle_pi_addon/stl/print/cover_screw.stl]
   - name: Pod door
-    files: [bittle_pi_addon/stl/print/pod_door.stl]
     printer: taz
-    profile: taz-workhorse-se/pla-0.20-standard
     material: roll-4
     settings: {adhesion_type: brim}
+    variants:
+      - name: fine
+        profile: taz-workhorse-se/pla-0.10-fine
+        files: [bittle_pi_addon/stl/print/pod_door_fine.stl]
+      - name: standard
+        profile: taz-workhorse-se/pla-0.20-standard
+        files: [bittle_pi_addon/stl/print/pod_door.stl]
   - name: Starter plate (screw)
-    files: [bittle_pi_addon/stl/print/starter_plate_screw.stl]
     printer: taz
-    profile: taz-workhorse-se/pla-0.10-fine
     material: roll-4
     settings: {adhesion_type: brim}
+    variants:
+      - name: fine
+        profile: taz-workhorse-se/pla-0.10-fine
+        files: [bittle_pi_addon/stl/print/starter_plate_screw_fine.stl]
+      - name: standard
+        profile: taz-workhorse-se/pla-0.20-standard
+        files: [bittle_pi_addon/stl/print/starter_plate_screw.stl]
 
-  # Platform, at 0.20 mm layers
+  # Platform
   - name: Platform cover
-    files: [bittle_platform/stl/print/cover_pegs.stl]
     printer: taz
-    profile: taz-workhorse-se/pla-0.20-standard
     material: roll-4
     settings: {support_enable: true, support_structure: tree, adhesion_type: brim, brim_line_count: 14}
+    variants:
+      - name: fine
+        profile: taz-workhorse-se/pla-0.10-fine
+        files: [bittle_platform/stl/print/cover_pegs.stl]     # the same file: the keyhole fit is in the add-on
+      - name: standard
+        profile: taz-workhorse-se/pla-0.20-standard
+        files: [bittle_platform/stl/print/cover_pegs.stl]
 
   # Resin plate (keyhole version with the resin fit, the cover and two fit coupons)
   - name: Resin plate

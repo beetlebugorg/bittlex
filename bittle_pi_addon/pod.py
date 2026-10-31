@@ -927,10 +927,12 @@ def panel_screw_columns():
     return col, holes
 
 
-def build_panel_screw():
-    """The panel for the screw mount (design frame): no latch, a screw column over each speaker post, smaller hook gaps."""
+def build_panel_screw(fine=True):
+    """The panel for the screw mount (design frame): no latch, a screw column over each speaker post.
+    fine: the smaller hook gaps of LID_SCREW, for 0.10 mm layers. Otherwise the LID gaps, for 0.20 mm layers."""
     old = {k: LID[k] for k in LID_SCREW}
-    LID.update(LID_SCREW)
+    if fine:
+        LID.update(LID_SCREW)
     try:
         P = build_panel(with_latch=False)
     finally:
@@ -976,11 +978,16 @@ def write_screw_parts():
                  cover_screw=build_cover_screw(), **screw_hardware())
     for n, M in parts.items():
         save_stl(M, os.path.join(d, "installed", f"{n}.stl"))
-    save_stl(print_orient("pod_body", parts["pod_body"]), os.path.join(OUT, "print", "pod_body_screw.stl"))
-    write_body_3mf(body, os.path.join(OUT, "print", "pod_body_screw.3mf"))
-    save_stl(print_orient("pod_panel", parts["pod_panel"]), os.path.join(OUT, "print", "pod_panel_screw.stl"))
-    save_stl(BP.print_orient("cover_pegs", parts["cover_screw"]), os.path.join(OUT, "print", "cover_screw.stl"))
-    save_stl(BP.print_orient("starter_plate", build_starter_screw()), os.path.join(OUT, "print", "starter_plate_screw.stl"))
+    # Print files for 0.20 mm layers, and *_fine files for 0.10 mm layers. Only the panel is different now (its hook
+    # gaps). The other parts have a fine file too, for later fit changes at 0.10 mm.
+    starter = build_starter_screw()
+    for sfx, panel in (("", flip_x(build_panel_screw(fine=False))), ("_fine", parts["pod_panel"])):
+        save_stl(print_orient("pod_body", parts["pod_body"]), os.path.join(OUT, "print", f"pod_body_screw{sfx}.stl"))
+        write_body_3mf(body, os.path.join(OUT, "print", f"pod_body_screw{sfx}.3mf"))
+        save_stl(print_orient("pod_panel", panel), os.path.join(OUT, "print", f"pod_panel_screw{sfx}.stl"))
+        save_stl(BP.print_orient("cover_pegs", parts["cover_screw"]), os.path.join(OUT, "print", f"cover_screw{sfx}.stl"))
+        save_stl(BP.print_orient("starter_plate", starter), os.path.join(OUT, "print", f"starter_plate_screw{sfx}.stl"))
+    save_stl(print_orient("pod_door", parts["pod_door"]), os.path.join(OUT, "print", "pod_door_fine.stl"))
     if not os.path.lexists(os.path.join(d, "models")):
         os.symlink(os.path.join("..", "models"), os.path.join(d, "models"))
     plan = {n: explode_robot(n) for n in ("pod_body", "pod_door", "pod_panel")}

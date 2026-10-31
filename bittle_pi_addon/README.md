@@ -22,7 +22,9 @@ At 0.10 mm layers, print pod_body_fine in place of pod_body. At fine layers the 
 
 The 3MF files (pod_body.3mf, pod_body_fine.3mf) have support blockers on the two amp nubs and on the latch rib of the rear wall. These print without support, and the tall, narrow support under them fails. Open the 3MF in Cura and turn on support as usual.
 
-Screw version (rev 0.26, for 0.10 mm layers; viewer: --stl bittle_pi_addon/stl/screw). The pod screws to a cover with no pegs, and the pod and the cover clip onto the robot as one unit. The panel slides on as before, with smaller hook gaps, and two screws hold it in place of the latch.
+Screw version (rev 0.26; viewer: --stl bittle_pi_addon/stl/screw). The pod screws to a cover with no pegs, and the pod and the cover clip onto the robot as one unit. The panel slides on as before, and two screws hold it in place of the latch.
+
+Each screw part has a file for 0.20 mm layers and a *_fine file for 0.10 mm layers, for example pod_panel_screw.stl and pod_panel_screw_fine.stl. The fine panel has smaller hook gaps (0.05 mm). The other fine files are the same as the 0.20 mm files now.
 
 | File (stl/print/) | Inserts and screws |
 |---|---|
