@@ -1,0 +1,38 @@
+{
+  "printer": {
+    "name": "Peopoly Phenom",
+    "bed": [276.48, 155.52, 400],
+    "resolution": [3840, 2160],
+    "mirror": true,
+    "margin": 4,
+    "prusaslicer": {
+      "supports_enable": 1,
+      "support_tree_type": "default",
+      "support_object_elevation": 5,
+      "pad_enable": 1
+    }
+  },
+  "profiles": {
+    "abs-like-0.05": {
+      "name": "Microcenter ABS Like/Standard 50/50 Black, 0.05 mm",
+      "layer_height": 0.05,
+      "exposure": 12,
+      "bottom_exposure": 95,
+      "bottom_layers": 10,
+      "transition_layers": 8,
+      "light_off": 0,
+      "bottom_light_off": 0,
+      "lift": 12,
+      "lift_speed": 30,
+      "bottom_lift": 15,
+      "bottom_lift_speed": 20,
+      "retract_speed": 250,
+      "bottom_retract_speed": 150,
+      "rest_after_retract": 3,
+      "pwm": 255,
+      "bottom_pwm": 255,
+      "density": 1.1,
+      "cost_per_ml": 0.033
+    }
+  }
+}

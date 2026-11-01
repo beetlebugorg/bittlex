@@ -83,27 +83,33 @@ parts:
         profile: taz-workhorse-se/pla-0.20-standard
         files: [bittle_platform/stl/print/cover_pegs.stl]
 
-  # Resin: the screw version with glued M2.5 nuts, each part alone in its resin orientation (plates.py)
-  # ChiTuBox profile: "Microcenter - ABS Like/Standard 50/50 Black" (0.05 mm, 18 s, bottom 95 s x 10)
+  # Resin: the screw version with glued M2.5 nuts, each part alone in its resin orientation (plates.py).
+  # The slice run slices with PrusaSlicer and writes a .cbddlp. The profile is the ChiTuBox profile
+  # "Microcenter - ABS Like/Standard 50/50 Black" (0.05 mm, 12 s, bottom 95 s x 10).
   - name: Pod body (resin)
     files: [bittle_pi_addon/stl/print/resin/pod_body.stl]
     printer: phenom
+    profile: peopoly-phenom/abs-like-0.05
     material: Grey standard 80% + Tenacious Flex black 20%
   - name: Pod panel (resin)
     files: [bittle_pi_addon/stl/print/resin/pod_panel.stl]
     printer: phenom
+    profile: peopoly-phenom/abs-like-0.05
     material: Grey standard 80% + Tenacious Flex black 20%
   - name: Pod door (resin)
     files: [bittle_pi_addon/stl/print/resin/pod_door.stl]
     printer: phenom
+    profile: peopoly-phenom/abs-like-0.05
     material: Grey standard 80% + Tenacious Flex black 20%
   - name: Cover (resin)
     files: [bittle_pi_addon/stl/print/resin/cover_screw.stl]
     printer: phenom
+    profile: peopoly-phenom/abs-like-0.05
     material: Grey standard 80% + Tenacious Flex black 20%
   - name: Starter plate (resin)
     files: [bittle_pi_addon/stl/print/resin/starter_plate_screw.stl]
     printer: phenom
+    profile: peopoly-phenom/abs-like-0.05
     material: Grey standard 80% + Tenacious Flex black 20%
 
 # The PDFs of the project. The project page shows each one with a picture of its first page.
