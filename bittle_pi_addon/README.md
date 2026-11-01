@@ -1,6 +1,6 @@
 # Bittle X Pi Add-on v0.26 - Build Guide
 
-Version 0.26, 2026-10-31. A sample add-on for the Bittle X platform v3.4 (../bittle_platform). It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. The case is one rounded box (the body) and a slide-on top panel. The body screws to a cover for screws, and the cover and the body clip onto the robot as one unit, in place of the stock cover. Every part goes in from the top. Two screws hold the panel. A dab of glue sets the amp.
+Version 0.26, 2026-11-01. A sample add-on for the Bittle X platform v3.4 (../bittle_platform). It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. The case is one rounded box (the body) and a slide-on top panel. The body screws to a cover for screws, and the cover and the body clip onto the robot as one unit, in place of the stock cover. Every part goes in from the top. Two screws hold the panel. A dab of glue sets the amp.
 
 ![The add-on on the robot: the port windows in the panel. The mic holes are in the right side, near the front.](doc/iso/hero-light.png)
 
@@ -11,7 +11,7 @@ Version 0.26, 2026-10-31. A sample add-on for the Bittle X platform v3.4 (../bit
 |---|---|---|---|
 | pod_body_screw.3mf (or .stl) | PLA | floor on the bed | 40 g |
 | pod_panel_screw.stl | PLA, second color | upside down: top on the bed | 21 g |
-| pod_door.stl | PLA | flat on its outer face | 1 g |
+| pod_door.stl | PLA | on its top edge, with a brim | 1 g |
 | cover_screw.stl | PLA | stand on the rear end, tree supports, 14-line brim | 10 g |
 | starter_plate_screw.stl (optional) | PLA | plate bottom on the bed | 5 g |
 
@@ -41,7 +41,7 @@ Each of the 6 bosses holds a threaded part for a screw: 4 in the floor (the cove
 
 The click-on version has no screws: pod_body.3mf, pod_body_fine.3mf and pod_panel.stl click onto cover_pegs.stl (../bittle_platform). Put the body on the pegs 7 mm behind its place and slide it forward until it clicks; a latch at the rear holds the panel. At 0.10 mm layers, print pod_body_fine in place of pod_body: it has a smaller slot gap (0.10 mm a side) and more click travel (0.375 mm). The fit test plates are in ../bittle_platform/stl/fit_fine/ (test 14). With the full pod on it, the click-on body is loose: the screw version replaces it.
 
-Print quality. The body and panel walls are 2.0 mm: with the offsets of the body profile, Cura slices 4 full lines of 0.5 mm. The body walls are vertical and its floor is on the bed. The only overhangs are the flat undersides of the two amp nubs (1.5 x 4 mm). The front-left cable notch is a 45 deg chamfer. The grille holes and the mic holes are teardrops (round, with a 45 deg point on top), so they print without bridges. The panel top edge round ends in a 45 deg chamfer at the bed, the port openings have 45 deg chamfers, and the lid hooks and the lugs in the body have 45 deg faces. The holes in the cover are teardrops, because the cover prints on its rear end. The door prints flat on its outer face.
+Print quality. The body and panel walls are 2.0 mm: with the offsets of the body profile, Cura slices 4 full lines of 0.5 mm. The body walls are vertical and its floor is on the bed. The only overhangs are the flat undersides of the two amp nubs (1.5 x 4 mm). The front-left cable notch is a 45 deg chamfer. The grille holes and the mic holes are teardrops (round, with a 45 deg point on top), so they print without bridges. The panel top edge round ends in a 45 deg chamfer at the bed, the port openings have 45 deg chamfers, and the lid hooks and the lugs in the body have 45 deg faces. The holes in the cover are teardrops, because the cover prints on its rear end. The door prints on its top edge: its outer face is a wall with the layers of the body walls, and the 45 deg strip at its bottom hangs on its inner face. The top ends of its ears slope at 45 deg. The door is 27 mm tall on a 2 mm edge: use a brim.
 
 
 ## Print plates

@@ -124,7 +124,7 @@ INFO = {
                   files=[("Print STL", AF + "pod_panel_screw.stl"), ("Print STL, 0.10 mm layers", AF + "pod_panel_screw_fine.stl"),
                          ("Build guide PDF", AF + "bittle_pi_addon_guide.pdf")]),
     "door": dict(text="The door: a piece of the left wall over the BiBoard plugs. An ear on each end goes down a groove in a post inside the body. "
-                      "The panel holds it down. It prints flat on its outer face.",
+                      "The panel holds it down. It prints on its top edge, so its outer face prints as a wall, the same as the body walls.",
                  attach="Slide it down into the two grooves before the panel goes on. "
                         "To reach the BiBoard plugs, take the panel off and lift the door out.",
                  files=[("Print STL", AF + "pod_door.stl"), ("Print STL, 0.10 mm layers", AF + "pod_door_fine.stl")]),

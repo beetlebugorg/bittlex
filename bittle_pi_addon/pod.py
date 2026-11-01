@@ -1139,6 +1139,10 @@ def build_door():
     plate = (body_outer() - body_cavity()) ^ mbox(IN_A_LOW - 1.0, A + 1, D["y0"] + D["gap_y"], SEAM - D["top_gap"],
                                                   D["z"][0] + D["gap"], D["z"][1] - D["gap"])
     ears = union([_plan_cut(_door_ear_cs(e, s), *D["ear"]["y"]) for e, s in _door_ends()])
+    # The door prints on its top edge (print_orient). The top ends of the ears slope down at 45 deg away from the
+    # plate, so each layer of an ear is on the layer under it.
+    y1, x0 = D["ear"]["y"][1], D["ear"]["x0"] - 1.0
+    ears -= prism_zp([(x0, y1 - (IN_A - x0)), (IN_A, y1), (IN_A, y1 + 5.0), (x0, y1 + 5.0)], -99.0, 99.0)
     return (plate + ears) - door_marks()
 
 
@@ -2438,7 +2442,7 @@ def print_orient(name, M, also=None):
     """Rotate to the print orientation and put the part on the bed (Z=0). also: another solid that gets the same
     move (returned as a second value)."""
     if name == "pod_door":
-        R = np.array([[0, 0, -1], [0, 1, 0], [1, 0, 0]], float)        # on its outer face (robot -X down)
+        R = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]], float)        # on its top edge (robot +Y down): the outer face is a vertical wall, as the body walls
     elif name == "pod_body":
         R = np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]], float)        # floor down
     elif name == "pod_panel":
