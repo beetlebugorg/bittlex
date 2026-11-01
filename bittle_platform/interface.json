@@ -15,7 +15,8 @@
   "bump_r": 1.5,
   "travel": 0.2,
   "preload": 0.05,
-  "free_end": 1.2
+  "free_end": 1.2,
+  "pad": 0.0
  },
  "ENVELOPE": {
   "z": [-37.8, 56.2],
@@ -68,6 +69,13 @@
  "PEG_ROOT_Y": 24.3,
  "PEG_SHAFT_D": 4.0,
  "PLUG_TOP": 48.0,
+ "SCREW_MOUNT": {
+  "screw": "M2.5 x 4",
+  "clr_d": 2.9,
+  "head_d": 5.4,
+  "web": 0.8,
+  "ring_d": 7.6
+ },
  "SLIDE": 7.0,
  "SLOT": {
   "x0": -27.75,
@@ -84,7 +92,7 @@
   "z1": -11.75
  },
  "TIP_DEG": 45.0,
- "VERSION": "3.3",
+ "VERSION": "3.4",
  "frame": "X lateral (+X robot right), Y up, Z length (-Z head end); mm; origin on the center line at the middle of the cover",
  "fit_sequence": "place 7 mm rearward (+Z) of the locked place, lower onto the pegs, slide 7 mm forward (-Z) until the detents click; remove: slide 7 mm rearward and lift",
  "keyholes": [

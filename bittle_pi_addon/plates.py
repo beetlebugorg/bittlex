@@ -1,8 +1,7 @@
 """Print plates: every part of the add-on and the platform cover on one bed, in its print orientation.
 
-  fdm_taz       LulzBot TAZ Workhorse (280 x 280 x 300), 0.5 mm nozzle, the "Bittle X" Cura profile. The parts are
-                the print STLs of pod.py and the platform. The cover stands on its rear end without the foot (the user
-                printed it best this way).
+  fdm_taz       LulzBot TAZ Workhorse (280 x 280 x 300), 0.5 mm nozzle. The screw version: the 0.20 mm print STLs
+                of pod.py. The cover stands on its rear end.
   resin_phenom  Peopoly Phenom, first model (276 x 155 x 400). The screw version with glued nuts (pod.py build_resin).
                 Each part is tilted, the cosmetic face away from the supports, and its lowest point is at Z 0. Lift
                 the parts 5 mm in the slicer and add supports there.
@@ -100,10 +99,11 @@ def load(path):
 
 
 def fdm_parts():
-    return dict(pod_body=load(os.path.join(P.OUT, "print", "pod_body.stl")),
-                pod_panel=load(os.path.join(P.OUT, "print", "pod_panel.stl")),
+    """The screw version (0.20 mm files of pod.py write_screw_parts)."""
+    return dict(pod_body=load(os.path.join(P.OUT, "print", "pod_body_screw.stl")),
+                pod_panel=load(os.path.join(P.OUT, "print", "pod_panel_screw.stl")),
                 pod_door=load(os.path.join(P.OUT, "print", "pod_door.stl")),
-                cover_pegs=load(os.path.join(PLATFORM_PRINT, "cover_pegs.stl")))     # no foot: it printed best (user)
+                cover_screw=load(os.path.join(P.OUT, "print", "cover_screw.stl")))
 
 
 def resin_parts():

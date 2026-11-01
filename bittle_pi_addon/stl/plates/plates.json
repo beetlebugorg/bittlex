@@ -20,8 +20,8 @@
      "color": "#e8641b"
     },
     {
-     "name": "cover_pegs",
-     "file": "fdm_taz/cover_pegs.stl",
+     "name": "cover_screw",
+     "file": "fdm_taz/cover_screw.stl",
      "color": "#26272b"
     },
     {

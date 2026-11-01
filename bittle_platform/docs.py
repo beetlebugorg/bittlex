@@ -227,7 +227,8 @@ def content():
       f"Version 3.3 cuts the Pi slot wider toward the center ({I.SLOT_WIDE['x1'] - I.SLOT_WIDE['x0']:g} mm, was {I.SLOT['x1'] - I.SLOT['x0']:g} mm): "
       "the BiBoard Dupont plugs did not fit. "
       f"It also makes the click travel smaller ({I.DET['travel']:g} mm, was 0.28 mm): the add-on slides on and off with less force. "
-      "Reprint the cover and the add-on plate. The pegs do not change.")
+      "Reprint the cover and the add-on plate. The pegs do not change. "
+      "Version 3.4 adds the screw mount, for a heavy add-on: 4 M2.5 screws at the peg places, in place of the pegs (section 3).")
     img("iso/platform-light.png", 0.6, "The platform (white) on the robot, with the starter plate on the pegs.")
 
     h("1. Key numbers")
@@ -256,7 +257,20 @@ def content():
          "Keep the weight low and near the center line. The pegs carry the whole add-on.",
          "For a plate of a different shape: subtract cad/keyhole_cutter.step, then add cad/detent_bumps.step. Both are in position."])
 
-    h("3. Printing")
+    S = I.SCREW_MOUNT
+    tip = I.MOUNT_Y0 - S["web"] + 4.0
+    h("3. Screw mount")
+    p("A heavy add-on can be loose on the pegs. The screw mount holds it with 4 screws. "
+      "The cover for screws (bittle_pi_addon/stl/print/cover_screw.stl) is the stock cover with no pegs. "
+      f"At each peg place it has a ring (R{S['ring_d'] / 2:g}) from the cover top up to Y {I.MOUNT_Y0:g}, the bottom of the add-on plate. "
+      f"An {S['screw']} screw goes up through a {S['clr_d']:g} mm hole in the ring from inside the cover. Its head is in a {S['head_d']:g} mm pocket, "
+      f"{S['web']:g} mm under the plate. The add-on and the cover then clip onto the robot as one unit.")
+    lst([f"Put an M2.5 thread at each peg place in your plate: a heat-set insert (FDM) or a glued M2.5 nut (resin). "
+         f"The screw tip is at Y {tip:.1f}: the thread must reach it.",
+         "Start from bittle_pi_addon/stl/print/starter_plate_screw.stl: the starter plate with 4 insert bosses (3.6 mm holes, 3.9 mm deep).",
+         "Keep your part out of keepout.stl, as for the pegs. The slide space of the pegs is not necessary."])
+
+    h("4. Printing")
     p("One Cura profile prints every part: \"Bittle X\" (cura/Bittle_X.curaprofile in the repository; import it in Cura). "
       "cura/install_profiles.py installs it, and a copy with the size compensation of each spool that the tolerance app measured.")
     tbl([["Part", "Orientation", "Supports"],
@@ -279,7 +293,7 @@ def content():
          "In add-ons, keep overhangs at 45 deg or less. Use chamfers, not round edges, on the bottom side.",
          f"The fits use {I.KEY_SLOT_GAP:g} (slot), {I.KEY_HOLE_GAP:g} (drop-in hole) and {I.PEG_HEAD_Y0 - I.MOUNT_Y1:.1f} (under the heads) clearance. Calibrate your printer if the plate does not slide on."])
 
-    h("4. Files")
+    h("5. Files")
     tbl([["File", "Content"],
          ["stl/print/", "the parts to print, in print orientation"],
          ["cad/starter_plate.step", "the start point for an add-on"],
@@ -291,7 +305,7 @@ def content():
     p("Open items: the BiBoard header height is an estimate from photos. The legs, the head and the robot balance are not modeled. "
       "The Petoi cover is a mesh, so cover_pegs is STL only.")
 
-    h("5. Bittle X V2 back touch sensor")
+    h("6. Bittle X V2 back touch sensor")
     lst(["On a Bittle X V2, the back touch sensor is a flexible circuit that is glued to the inside of the cover top. "
          "It has touch areas on the left, the right, the center and near the tail "
          "(docs.petoi.com/extensible-modules/back-touch-sensor).",
@@ -303,7 +317,7 @@ def content():
          "needs pegs held from inside the cover, where the circuit is. A later interface with sockets in a thicker top can avoid this."])
     img("petoi_touch_areas.png", 0.45, "Bittle X V2 touch areas (red boxes). Image: Petoi, docs.petoi.com/extensible-modules/back-touch-sensor.")
 
-    h("6. License")
+    h("7. License")
     p("The designs and this document are CC BY 4.0, and the code is MIT (Jeremy Collins). "
       "The cover, the side shoulder and the front plate are Petoi files from github.com/PetoiCamp/NonCodeFiles. "
       "Petoi publishes them without a stated license, and cover_pegs.stl is made from the Petoi cover. "

@@ -17,7 +17,7 @@ Frame (the Petoi reference STL frame), units mm:
   Origin: on the robot center line, at the middle of the cover length.
 """
 
-VERSION = "3.3"
+VERSION = "3.4"
 
 # --------------------------------------------------------------------------
 # Stock cover (measured from the Petoi STL)
@@ -95,6 +95,11 @@ KEY_LEAD = 0.4                  # 45 deg chamfer on the top and bottom edges of 
 # build.py detent_force() gives the slide force and the strain.
 # v3.3: travel 0.28 -> 0.20 (the user found the add-on hard to slide on and off).
 DET = dict(beam_w=1.2, slit_w=0.8, arm=7.5, bump_r=1.5, travel=0.20, preload=0.05, free_end=1.2, pad=0.0)   # pad > 0: build.py clamp_pads()
+# Screw mount (v3.4): an alternative to the pegs, for a heavy add-on. The cover for screws (bittle_pi_addon pod.py
+# build_cover_screw) has no pegs. At each peg place it has a ring from the cover top up to MOUNT_Y0, a clr_d hole and a
+# pocket (head_d) for the screw head, web under MOUNT_Y0. An M2.5 x 4 screw goes up from inside the cover: its head is
+# at Y MOUNT_Y0 - web, and its tip at Y MOUNT_Y0 - web + 4. The add-on plate has a thread (an insert or a nut) there.
+SCREW_MOUNT = dict(screw="M2.5 x 4", clr_d=2.9, head_d=5.4, web=0.8, ring_d=7.6)
 E_PLA = 2400.0                  # MPa, for the detent force estimate
 MU_PLA = 0.3                    # PLA on PLA friction, for the detent force estimate
 

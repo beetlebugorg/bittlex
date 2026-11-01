@@ -19,10 +19,14 @@ MD = os.path.join(SITE, "models")
 
 # id, label, group, source file, colour, explode offset (dx, dy, dz), extra transform
 PARTS = [
-    ("panel", "Top panel (second color)", "Printed", "stl/installed/pod_panel.stl", "#e8641b", (0, 45, 0), None),
-    ("body", "Add-on body", "Printed", "stl/installed/pod_body.stl", "#f2f2ef", (0, 10, 0), None),
-    ("door", "Door (left wall)", "Printed", "stl/installed/pod_door.stl", "#f2f2ef", (0, 10, 0), None),
-    ("cover", "Platform: cover with pegs", "Printed", "../bittle_platform/stl/installed/cover_pegs.stl", "#34363b", (0, 0, 0), None),
+    ("panel", "Top panel (second color)", "Printed", "stl/screw/installed/pod_panel.stl", "#e8641b", (0, 45, 0), None),
+    ("body", "Add-on body", "Printed", "stl/screw/installed/pod_body.stl", "#f2f2ef", (0, 10, 0), None),
+    ("door", "Door (left wall)", "Printed", "stl/screw/installed/pod_door.stl", "#f2f2ef", (0, 10, 0), None),
+    ("cover", "Cover for screws", "Printed", "stl/screw/installed/cover_screw.stl", "#34363b", (0, 0, 0), None),
+    ("mount_screws", "Cover screws M2.5 x 4", "Hardware", "stl/screw/installed/mount_screws.stl", "#5b5e66", (0, 0, 0), None),
+    ("mount_inserts", "Floor inserts or nuts M2.5", "Hardware", "stl/screw/installed/mount_inserts.stl", "#c9a227", (0, 0, 0), None),
+    ("panel_screws", "Panel screws M2.5 x 12", "Hardware", "stl/screw/installed/panel_screws.stl", "#5b5e66", (0, 0, 0), None),
+    ("panel_inserts", "Post inserts or nuts M2.5", "Hardware", "stl/screw/installed/panel_inserts.stl", "#c9a227", (0, 0, 0), None),
     ("shoulder_r", "Side shoulder R", "Robot", "../bittle_platform/reference/Bittle_SideShoulder.stl", "#f2a71c", (0, 0, 0), None),
     ("shoulder_l", "Side shoulder L", "Robot", "../bittle_platform/reference/Bittle_SideShoulder.stl", "#f2a71c", (0, 0, 0), "mirror_x"),
     ("front_plate", "Front plate", "Robot", "../bittle_platform/reference/Bittle_FrontPlate.stl", "#26272b", (0, 0, 0), None),
@@ -39,7 +43,7 @@ PARTS = [
 ALIAS = dict(pizero="pizero", pisugar_s="pisugar", battery="battery", sd_card="sd_card", pi_plugs="pi_plugs", amp_ns4168="amp",
              speaker="speaker", mic_sph0645="mic", biboard_header="header", biboard_plug="bb_plug")
 # Exploded view (pod.py explode_plan): a stage (reverse build order), a lift out of the open top, then a move aside.
-EXPLODE = json.load(open(os.path.join(ROOT, "stl", "explode.json")))
+EXPLODE = json.load(open(os.path.join(ROOT, "stl", "screw", "explode.json")))     # the screw version (pod.py write_screw_parts)
 PARTS = [p[:5] + (EXPLODE["parts"].get(os.path.basename(p[3])[:-4]),) + p[6:] for p in PARTS]
 GROUPS = {}
 for _d in json.load(open(os.path.join(ROOT, "stl", "models", "parts.json"))):
@@ -56,7 +60,8 @@ DARK_MODELS = ("biboard_header",)
 TAGS = dict(pizero="Pi + PiSugar S", pisugar_s="Pi + PiSugar S", battery="Pi + PiSugar S", sd_card="Pi + PiSugar S", stack_screws="Pi + PiSugar S",
             pi_plugs="Pi header plugs", amp_ns4168="Amp", speaker="Speaker", mic_sph0645="Mic", biboard_header="BiBoard header",
             wires_speaker="Speaker lead", wires_splice="Splices", wires_amp="Amp cable",
-            panel="Top panel", body="Body", door="Door", cover="Platform cover")
+            panel="Top panel", body="Body", door="Door", cover="Cover for screws", mount_screws="Cover screws",
+            mount_inserts="Inserts or nuts", panel_screws="Panel screws", panel_inserts="Inserts or nuts")
 
 
 def finish(pid, group):
@@ -87,50 +92,49 @@ def expand(ids):
 
 # Checks of pod.py and the platform (the forces in the part cards and the steps). Standard library only.
 CHECKS = json.load(open(os.path.join(ROOT, "stl", "checks.json")))
-CLICK_N, SNAP = CHECKS["clicks"]["lock_N"], CHECKS["snap"]
-ADDON_V = "0.25"
+ADDON_V = "0.26"
 PLATFORM_V = json.load(open(os.path.join(PROJ, "bittle_platform", "interface.json")))["VERSION"]
 
 # Text for the part card in the viewer: what the part is, how it attaches, downloads (relative to site/viewer/).
 PF, AF = "../files/platform/", "../files/addon/"
 INFO = {
-    "cover": dict(text="The platform. It is the stock Petoi back cover with 4 teardrop pegs on its flat top, 24 x 20 mm on the center line. "
-                       "The keyholes in an add-on have the same teardrop shape, so the add-on goes on one way only. "
-                       "The peg roots stop inside the 1.4 mm wall, so the inside of the cover does not change.",
-                  attach="It goes on the robot in place of the stock cover.",
-                  files=[("Print STL, no foot (recommended)", PF + "cover_pegs.stl"), ("Print STL, with foot", PF + "cover_pegs_foot.stl"),
-                         ("Pegs STEP", PF + "pegs.step"),
+    "cover": dict(text="The cover for screws: the stock Petoi back cover with a ring on its flat top at each of the 4 platform peg places, "
+                       "24 x 20 mm on the center line. An M2.5 x 4 screw goes up through each ring from inside the cover, and its head is in a pocket in the cover wall. "
+                       "The Grove notch and the Pi slot are one opening at the front left.",
+                  attach="Screw the body to it from inside the cover. Then clip the cover and the body onto the robot as one unit, in place of the stock cover.",
+                  files=[("Print STL", AF + "cover_screw.stl"), ("Print STL, 0.10 mm layers", AF + "cover_screw_fine.stl"),
                          ("Platform spec PDF", PF + "bittle_platform_spec.pdf")]),
-    "body": dict(text="The body of the Pi add-on: one rounded box with a flat floor. The floor has the 4 teardrop keyholes, each with two "
-                      "spring beams that center the peg. Inside: grooves for the speaker and the Pi stack, a post and a ledge with slots for the mic, and a slot bar for the amp. "
+    "body": dict(text="The body of the Pi add-on: one rounded box with a flat floor. The floor has a boss at each of the 4 peg places, for an M2.5 "
+                      "heat-set insert (FDM) or a glued M2.5 nut (resin). Inside: grooves for the speaker and the Pi stack, a post and a ledge with slots for the mic, and a slot bar for the amp. "
+                      "The speaker posts have a boss for the panel screws. "
                       "The BiBoard header comes up through a notch in the floor, at the front of the left well. "
-                      "Two nubs on the right wall hold the amp. The only cable hole at the base is the notch at the front left, over the notch in the cover. "
+                      "Two nubs on the right wall hold the amp. The only cable hole at the base is the notch at the front left, over the opening in the cover. "
                       "A door in the left wall is over the BiBoard plugs: lift it out, and a finger reaches them from the side. "
-                      "It prints floor down without supports.",
-                 attach="Click it on empty: put it on the pegs 7 mm behind its place, grille to the rear, then slide it 7 mm forward until it clicks. "
-                        "To remove it, take the panel off, lift the door out and pull the BiBoard plugs off. Then slide the body 7 mm rearward and lift it.",
-                 files=[("Print STL", AF + "pod_body.stl"), ("STEP (mesh)", AF + "pod_body.step")]),
+                      "It prints floor down.",
+                 attach="Put in the 6 inserts or nuts. Then screw the empty body to the cover with 4 M2.5 x 4 screws from inside the cover. "
+                        "To remove the add-on, take the panel off, lift the door out and pull the BiBoard plugs off. Then unclip the cover from the robot.",
+                 files=[("Print 3MF", AF + "pod_body_screw.3mf"), ("Print 3MF, 0.10 mm layers", AF + "pod_body_screw_fine.3mf")]),
     "panel": dict(text="The top panel, in a second color. It has the soft top edge and openings shaped to each plug body. "
                        "The Pi power, Pi data and PiSugar charge ports and the PiSugar button share one rounded rectangle: press the button with a fingertip or a pen tip. "
-                       "It slides on: hooks under it go under lugs in the front and side walls, and a latch tongue at the rear clicks over a rib. "
+                       "It slides on: hooks under it go under lugs in the front and side walls. Two M2.5 x 12 screws go down through it into the speaker posts. "
                        "Forks under it hold the Pi stack, the speaker and the amp down. "
-                       "It prints upside down on its top without supports.",
-                  attach=f"Put it down 5 mm behind its place, then slide it forward until the latch clicks (about {SNAP['slide_on_N']:g} N). "
-                         f"To open, lift the rear edge at the finger notch (about {SNAP['lift_N']:g} N), slide it 5 mm rearward and lift it.",
-                  files=[("Print STL", AF + "pod_panel.stl"), ("STEP (mesh)", AF + "pod_panel.step"),
+                       "It prints upside down on its top.",
+                  attach="Put it down 5 mm behind its place, slide it forward, and put in the two panel screws. "
+                         "To open, take out the two screws, slide it 5 mm rearward and lift it.",
+                  files=[("Print STL", AF + "pod_panel_screw.stl"), ("Print STL, 0.10 mm layers", AF + "pod_panel_screw_fine.stl"),
                          ("Build guide PDF", AF + "bittle_pi_addon_guide.pdf")]),
     "door": dict(text="The door: a piece of the left wall over the BiBoard plugs. An ear on each end goes down a groove in a post inside the body. "
-                      "The panel holds it down. The labels BIBOARD and PIN 40 are on its inner face. It prints flat on its outer face.",
-                 attach="Slide it down into the two grooves, labels to the inside, before the panel goes on. "
+                      "The panel holds it down. It prints flat on its outer face.",
+                 attach="Slide it down into the two grooves before the panel goes on. "
                         "To reach the BiBoard plugs, take the panel off and lift the door out.",
-                 files=[("Print STL", AF + "pod_door.stl"), ("STEP (mesh)", AF + "pod_door.step")]),
+                 files=[("Print STL", AF + "pod_door.stl"), ("Print STL, 0.10 mm layers", AF + "pod_door_fine.stl")]),
     "pizero": dict(text="Raspberry Pi Zero 2 W, on its long edge: ports up, GPIO header down to the left (toward the BiBoard), SD card to the rear. Model: PiSugar (GPL-3.0).",
                    attach="With the PiSugar S it slides down into the groove of the two end posts. The screw heads go down channels in the posts."),
     "pisugar": dict(text="PiSugar S battery board. Its USB-C charge port, button and power switch are at the top. Its AUTO switch is under the cell. "
                          "Fit model drawn from the PiSugar PCB drawing (part heights estimated).",
                     attach="It is screwed to the Pi. The two boards go into the end grooves together."),
     "battery": dict(text="The 1200 mAh cell of the PiSugar S, on the right side of the stack.",
-                    attach="It sits on the PiSugar S, on two metal discs. It stands 1.5 mm above the peg heads."),
+                    attach="It is on the PiSugar S, on two metal discs. It stands 0.3 mm above the floor boss under it."),
     "pi_plugs": dict(text="The soldered 2x20 Pi header with Dupont housings on the 12 pins in use (pin map: the wiring blueprint).",
                      attach="Push the jumpers onto the Pi header before the stack goes in."),
     "amp": dict(text="NULLLAB NS4168 I2S amp, on edge along the right wall, upright, its screw terminal at the top. Its parts face the battery.",
@@ -213,14 +217,18 @@ STEPS = [
     dict(title="The robot", show=["shoulder_r", "shoulder_l", "front_plate", "rear_plate", "header", "head", "neck_mount", "hip_servos",
                                   "robot_battery", "tail"] + [f"{p}_{k}" for k in ("lf", "rf", "lr", "rr") for p in ("thigh", "shank")], view="stepiso",
          text="The Bittle X without its back cover: the head is at the front, the tail at the rear. The BiBoard header stands up at the front left."),
-    dict(title="Fit the platform", view="stepiso", show=["cover"], start={"cover": [0, 40, 0]},
-         text="Fit the platform cover in place of the stock cover. It has 4 pegs on its top."),
-    dict(title="Put the body on", view="build", show=["body"], start={"body": [0, 35, 7]}, end={"body": [0, 0, 7]},
-         text="Put the empty body on the pegs 7 mm behind its place, grille to the rear. "
-              "The teardrop peg heads go through the teardrop holes. Turned the wrong way, the body does not go down."),
-    dict(title="Slide to lock", view="build", start={"body": [0, 0, 7]},
-         text=f"Push the body 7 mm forward until it clicks (about {CLICK_N:g} N). Two spring beams at each peg push the peg into a V stop, which centers it. "
-              "The BiBoard header is now in the notch at the front of the left well."),
+    dict(title="Inserts or nuts", view="stepiso", show=["body", "mount_inserts", "panel_inserts"],
+         start={"body": [0, 40, 0], "mount_inserts": [0, 75, 0], "panel_inserts": [0, 75, 0]},
+         end={"body": [0, 40, 0], "mount_inserts": [0, 40, 0], "panel_inserts": [0, 40, 0]},
+         text="Put an M2.5 insert or nut into each of the 4 floor bosses and the 2 speaker post bosses. "
+              "FDM: press each heat-set insert in flush with a soldering iron. Resin: put an M2.5 nut into each hex pocket with a drop of superglue."),
+    dict(title="Screw the body to the cover", view="stepiso", show=["cover", "mount_screws"],
+         start={"cover": [0, 20, 0], "mount_screws": [0, 0, 0]}, end={"cover": [0, 40, 0], "mount_screws": [0, 40, 0]},
+         text="Put the empty body on the cover, grille to the rear. Put an M2.5 x 4 screw up through each ring from inside the cover, "
+              "into the insert or the nut, and tighten it."),
+    dict(title="Clip onto the robot", view="stepiso", start={k: [0, 40, 0] for k in ["body", "mount_inserts", "panel_inserts", "cover", "mount_screws"]},
+         text="Clip the cover and the body onto the robot as one unit, in place of the stock cover. "
+              "The BiBoard header comes up through the opening in the cover and the notch at the front of the left well."),
     dict(title="Speaker", view="build", show=["speaker"], start={"speaker": [0, 40, 0]},
          text="Push the speaker down into the two side grooves at the rear, body to the rear (to the grille)."),
     dict(title="Mic", view="buildfront", show=["mic"], start={"mic": [0, 40, 0]},
@@ -237,13 +245,13 @@ STEPS = [
               "Then plug the wires one at a time, as the next steps show."),
 ] + WIRE_STEPS + [
     dict(title="Door", view="build", show=["door"], highlight=["door"], start={"door": [0, 40, 0]},
-         text="Slide the door down into the two grooves of the opening in the left wall, labels to the inside. "
+         text="Slide the door down into the two grooves of the opening in the left wall. "
               "It stands on the wall under it. The panel holds it down."),
-    dict(title="Panel", view="build", show=["panel"], start={"panel": [0, 35, 5]},
-         text="Put the panel down 5 mm behind its place, then slide it forward until the latch at the rear clicks. "
+    dict(title="Panel", view="build", show=["panel", "panel_screws"], start={"panel": [0, 35, 5], "panel_screws": [0, 60, 5]},
+         text="Put the panel down 5 mm behind its place, slide it forward, and put in the two M2.5 x 12 panel screws. "
               "The PiSugar power switch is in the HDMI opening, beside the plug: move it with a pen tip or a toothpick. The forks under the panel hold "
               "the stack, the speaker and the amp. The ports are in the shaped openings. Press the PiSugar button through the large opening with a fingertip or a pen tip. "
-              "To open, lift the rear edge at the finger notch and slide the panel rearward."),
+              "To open, take out the two screws and slide the panel rearward."),
 ]
 
 
@@ -376,6 +384,8 @@ def build_home():
         put(P["pdf"], "Specification (PDF)" if P["key"] == "platform" else "Build guide (PDF)", "primary")
         put(P["zip"], "Full package (zip)", "primary")
         for f in sorted(os.listdir(os.path.join(src, "stl", "print"))):
+            if not os.path.isfile(os.path.join(src, "stl", "print", f)):
+                continue                                    # stl/print/resin/: the resin parts are in the plates
             note = {"cover_pegs.stl": " (no foot, recommended)", "cover_pegs_foot.stl": " (alternative)"}.get(f, "")
             put(os.path.join("stl", "print", f), f"Print: {f[:-4]}{note}")
         plates = os.path.join(src, "stl", "plates")
@@ -450,7 +460,7 @@ footer a { color:inherit; }
   <h1>Bittle X Platform</h1>
   <p>The 3D model for the Bittle X hardware and software of <a href="https://github.com/LineChef">LineChef</a>
   (<a href="https://github.com/LineChef/BittleX">LineChef/BittleX</a>).</p>
-  <p>A peg platform on the stock Petoi Bittle X back cover, and a Raspberry Pi add-on that clicks onto it. Download the documents, the print files and the CAD below.</p>
+  <p>A platform on the stock Petoi Bittle X back cover, and a Raspberry Pi add-on that screws to a cover for screws. Download the documents, the print files and the CAD below.</p>
 </header>
 <a class="viewer" href="viewer/">Open the 3D viewer &rarr;</a>
 {{CARDS}}

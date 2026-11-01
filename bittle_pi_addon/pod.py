@@ -34,7 +34,7 @@ from build123d import Box, Cylinder, Pos, Rot, export_stl
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(ROOT))            # the folder that holds bittle_platform/
-from bittle_platform import interface as PI          # platform v3.3: cover, pegs, keyholes
+from bittle_platform import interface as PI          # platform v3.4: cover, pegs, keyholes, screw mount
 REF = os.path.join(ROOT, "reference")                # vendor models (Pi Zero)
 PREF = os.path.join(os.path.dirname(ROOT), "bittle_platform", "reference")   # Petoi robot parts
 OUT = os.path.join(ROOT, "stl")
@@ -852,7 +852,8 @@ def write_body_3mf(body, path):
 # button or pan head screw goes up through the cover from inside. The head is in a pocket in the cover wall and does not
 # go down to the BiBoard. A ring on the cover top holds the pod floor, so the pod has no play on the cover.
 # The boss top is 0.3 under the battery (x = +12) and 0.8 under the Pi plugs (x = -12): use screws of 5 mm or shorter.
-SCREW_MOUNT = dict(insert_d=3.6, insert_depth=3.9, boss_d=7.0, top=30.2, clr_d=2.9, head_d=5.4, web=0.8, ring_d=7.6)
+SCREW_MOUNT = dict(insert_d=3.6, insert_depth=3.9, boss_d=7.0, top=30.2,
+                   **{k: v for k, v in PI.SCREW_MOUNT.items() if k != "screw"})     # the cover side: platform v3.4
 MOUNT = "keyhole"               # "keyhole" (platform pegs) or "screw" (build_body_screw, build_panel_screw)
 # Panel screws (screw mount): no latch. An M2.5 x 4 insert in a boss on the top of each speaker post, and an M2.5 x 12
 # screw down through a column in the panel. The boss top is gap under the column: the screw pulls the panel down,

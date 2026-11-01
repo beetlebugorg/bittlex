@@ -57,27 +57,31 @@ PANEL = ["panel"]
 STEPS = []
 
 
-def step(title, new, cam, lines, check=None, lift=None, note=None, only=None):
+def step(title, new, cam, lines, check=None, lift=None, note=None, only=None, base=None):
     """only: show just these parts of the ones already in place (a clear view into a crowded corner).
+    base: parts that come in with this step but do not move in its figure (the body under its inserts).
     iso_render.py draws the figure of each step from before and new (cam and lift are not used there)."""
-    before = sum((s["new"] for s in STEPS), list(ROBOT))
+    before = sum((s["new"] + s["base"] for s in STEPS), list(ROBOT)) + list(base or [])
     if only is not None:
         before = list(ROBOT) + [k for k in before if k in only]
-    STEPS.append(dict(title=title, before=before, new=new, cam=cam, lines=lines, check=check, lift=lift, note=note))
+    STEPS.append(dict(title=title, before=before, new=new, cam=cam, lines=lines, check=check, lift=lift, note=note, base=list(base or [])))
 
 
 def build_steps():
     STEPS.clear()
-    S, K = PI.SLIDE, CHECKS["clicks"]
-    step("Fit the platform cover", ["cover"], "cover",
+    step("Inserts or nuts", ["mount_inserts", "panel_inserts"], "high",
+         ["Put an M2.5 insert or nut into each of the 6 bosses: 4 in the floor, 2 on the speaker posts.",
+          "FDM (PLA): press each heat-set insert in flush with a soldering iron.",
+          "Resin: put an M2.5 nut into each hex pocket, with a drop of superglue on its edge."],
+         note="Page 4 has the hardware, the tools and the steps for each way.", base=["body"])
+    step("Screw the body to the cover", ["mount_screws"], "below",
+         ["Put the empty body on the cover for screws, the grille to the rear.",
+          "From inside the cover, put an M2.5 x 4 screw up through each of the 4 rings into the insert or the nut.",
+          "Tighten the 4 screws. The floor is on the rings."])
+    step("Clip onto the robot", [], "iso",
          ["Remove the stock back cover of the Bittle X.",
-          "Put the platform cover in its place. The Pi slot and the BiBoard header are at the front left.",
-          "Pass the BiBoard header up through the slot."])
-    step("Click the body on", ["body"], "iso",
-         [f"Put the empty body on the pegs, {S:g} mm behind its place, the grille to the rear.",
-          f"Push it {S:g} mm forward until it clicks (about {K['lock_N']:g} N).",
-          "The BiBoard header now stands in the notch at the front of the left well."],
-         check="Turned the wrong way, the body does not go down onto the pegs.")
+          "Clip the cover and the body onto the robot as one unit, in place of the stock cover.",
+          "The BiBoard header comes up through the opening in the cover and the notch at the front of the left well."])
     step("Speaker", SPK, "rear",
          ["Push the two wings of the speaker down into the side grooves at the rear.",
           "The speaker body goes to the rear, toward the grille."])
@@ -120,14 +124,14 @@ def build_steps():
           "The two +5V sockets stay empty: the PiSugar powers the Pi."], only=["body"] + STACK + UART_PI,
          note="The other wires are not shown here, for a clear view into the front-left corner.")
     step("Door", ["door"], "door",
-         ["Slide the door down into the two grooves of the opening in the left wall. The labels face in.",
+         ["Slide the door down into the two grooves of the opening in the left wall.",
           "It stands on the wall under it. The panel holds it down."])
-    step("Panel", ["panel"], "iso",
-         [f"Put the panel down {pod.LID_SLIDE:g} mm behind its place.",
-          f"Slide it forward until the latch at the rear clicks (about {CHECKS['snap']['slide_on_N']:g} N).",
+    step("Panel", ["panel", "panel_screws"], "iso",
+         [f"Put the panel down {pod.LID_SLIDE:g} mm behind its place, and slide it forward.",
+          "Put the two M2.5 x 12 screws down through the panel into the speaker posts.",
           "The PiSugar power switch is in the HDMI opening, beside the plug. Move it with a pen tip or a toothpick.",
           "Press the PiSugar button through the large opening with a fingertip or a pen tip."],
-         check="To open: lift the rear edge at the finger notch and slide the panel rearward.")
+         check="To open: take out the two screws and slide the panel rearward.")
 
 
 def images():
@@ -343,20 +347,21 @@ def cover(img):
     return (f'<section class="page cover"><div class="art"><img src="{img}"></div><div class="title">'
             f'<div class="kicker">Build guide</div><h1>Bittle X<br>Pi Add-on</h1>'
             f'<div class="lead">A Raspberry Pi Zero 2 W with a battery, a speaker and a microphone, in one rounded box '
-            f'that clicks onto the back of the Petoi Bittle X.</div>'
-            f'<div class="meta"><div><b>Add-on v{docs.VERSION}</b>{docs.DATE}</div><div><b>Platform v{PI.VERSION}</b>pegs on the stock cover</div>'
+            f'that screws to a new back cover of the Petoi Bittle X.</div>'
+            f'<div class="meta"><div><b>Add-on v{docs.VERSION}</b>{docs.DATE}</div><div><b>4 + 2 M2.5 screws</b>inserts (FDM) or glued nuts (resin)</div>'
             f'<div><b>{CHECKS["balance"]["mass_g"]:.0f} g</b>with the electronics</div><div><b>No supports</b>for the add-on parts (FDM)</div></div>'
             f'</div><div class="bar"></div></section>')
 
 
 def overview(img, n):
-    n_steps = (len(STEPS) + 1) // 2                      # build_html: 2 steps on each page, from page 6
+    n_steps = (len(STEPS) + 1) // 2                      # build_html: 2 steps on each page, from page 7
     rows = "".join(f"<div><span>{t}</span><span>{p}</span></div>" for t, p in (
-        ("What you build", 2), ("Parts to print", 3), ("Electronics and cables", 4), ("Pin maps and hardware", 5), ("Assembly", 6),
-        ("Wire table", 6 + n_steps), ("Checks, opening and removal", 7 + n_steps)))
+        ("What you build", 2), ("Parts to print", 3), ("Inserts or nuts", 4), ("Electronics and cables", 5), ("Pin maps and hardware", 6),
+        ("Assembly", 7), ("Wire table", 7 + n_steps), ("Checks, opening and removal", 8 + n_steps)))
     body = (f'<div class="kicker">Overview</div><h2>What you build</h2>'
-            f'<div class="grid2"><div><p class="lead">The add-on is a body that clicks onto the platform pegs, a slide-on top panel. Every part goes into the body from the top, in the order of this guide. No tools are necessary, '
-            f'except a soldering iron for the two splices and a dab of glue for the amp.</p>'
+            f'<div class="grid2"><div><p class="lead">The add-on is a body that screws to a cover for screws, and a slide-on top panel with two screws. '
+            f'The cover and the body clip onto the robot as one unit, in place of the stock cover. Every part goes into the body from the top, in the order of this guide. '
+            f'You need a screwdriver, a soldering iron for the splices (and the inserts of an FDM print), and a dab of glue for the amp.</p>'
             f'<h3>Directions in this guide</h3><p>Front is the head end of the robot. Left and right are the robot\'s left and right. '
             f'The Pi plugs and the BiBoard header are in the <b>left well</b>. The amp and the mic are on the <b>right wall</b>. '
             f'The speaker is at the rear.</p>'
@@ -372,40 +377,71 @@ def print_parts(n):
     vol = sum(v["cup_volume_mm3"] for v in R.values())
     cups = ("The resin check found no cups (trapped resin) in these orientations." if vol == 0 else
             f"The resin check found cups (trapped resin, {vol:g} mm³ in total). See resin_check.json.")
-    rows = [("pod_body", "Body", "PLA, white", "floor on the bed"), ("pod_panel", "Top panel", "PLA, second color", "upside down: top on the bed"),
-            ("pod_door", "Door", "PLA, white", "flat on its outer face")]
-    tr = "".join(f"<tr><td><b>{t}</b><br><span class='muted'>stl/print/{f}.stl</span></td><td>{m}</td><td>{o}</td>"
-                 f"<td class='n'>{docs.pod_mass(f) if f in ('pod_body', 'pod_panel', 'pod_door') else '< 1'} g</td></tr>"
-                 for f, t, m, o in rows)
+    rows = [("pod_body_screw", "pod_body", "Body", "3mf", "floor on the bed"),
+            ("pod_panel_screw", "pod_panel", "Top panel (second color)", "stl", "upside down: top on the bed"),
+            ("pod_door", "pod_door", "Door", "stl", "flat on its outer face"),
+            ("cover_screw", "cover_screw", "Cover for screws", "stl", "on its rear end: tree supports, 14-line brim")]
+    tr = "".join(f"<tr><td><b>{t}</b><br><span class='muted'>stl/print/{f}.{x}</span></td><td>{o}</td>"
+                 f"<td class='n'>{docs.pod_mass(m)} g</td></tr>" for f, m, t, x, o in rows)
+    RF = pod.RESIN_FIT
     body = (f'<div class="kicker">1</div><h2>Parts to print</h2>'
-            f'<p class="lead">Print the add-on parts without supports, in the orientation of the files in stl/print/. '
-            f'The platform cover is in the platform package: print cover_pegs.stl (no foot) with tree supports and a 14-line brim. '
-            f'cover_pegs_foot.stl is the alternative. Its foot teeth leave a spot on the cover where they break off.</p>'
-            f'<table><tr><th>Part</th><th>Material</th><th>On the bed</th><th>Mass</th></tr>{tr}</table>'
-            f'<h3>Settings</h3><div class="grid2"><p>0.2 mm layers, 0.25 mm first layer. Walls 2 mm: 4 lines of 0.5 mm. '
-            f'Small holes print about 0.2 mm under size. The fits allow for it.</p>'
-            f'<p>The panel prints top down: its openings are on the bed. The body prints floor down: '
-            f'its labels and its route grooves face up.</p></div>'
+            f'<p class="lead">Print the parts in PLA, in the orientation of the files in stl/print/. '
+            f'Each file is for 0.20 mm layers. For 0.10 mm layers, print the *_fine file of the same name.</p>'
+            f'<table><tr><th>Part</th><th>On the bed</th><th>Mass</th></tr>{tr}</table>'
+            f'<h3>Settings</h3><div class="grid2"><p>Slice with the profiles in profiles/taz-workhorse-se: pla-0.20-standard, or pla-0.10-fine for the *_fine files. '
+            f'Use a brim. printdeck.yml has the settings of each part. Walls 2 mm: 4 lines of 0.5 mm. '
+            f'The fine panel has smaller hook gaps ({pod.LID_SCREW["gap"]:g} mm).</p>'
+            f'<p>pod_body_screw.3mf has support blockers on the two amp nubs: with support on, the nubs get none. '
+            f'The panel prints top down: its openings are on the bed. starter_plate_screw.stl (optional) has the same 4 bosses: '
+            f'use it to test the inserts or nuts on the cover.</p></div>'
             f'<h3>Print plates</h3>'
-            f'<p>stl/plates/ has every part and the platform cover on one bed, in its print orientation. '
-            f'Each 3MF has one object for each part.</p>'
+            f'<p>stl/plates/ has every part on one bed, in its print orientation. Each 3MF has one object for each part.</p>'
             f'<table><tr><th>Printer</th><th>File</th><th>Orientation</th></tr>'
             f'<tr><td>FDM: LulzBot TAZ Workhorse, 0.5 mm nozzle</td><td>fdm_taz.3mf</td>'
-            f'<td>As in stl/print/. Use the "Bittle X" Cura profile. The cover stands on its rear end: turn on tree supports and a 14-line brim.</td></tr>'
+            f'<td>The screw parts as in stl/print/. The cover stands on its rear end: turn on tree supports and a 14-line brim.</td></tr>'
             f'<tr><td>Resin: Peopoly Phenom (first model)</td><td>resin_phenom.3mf</td>'
-            f'<td>The body, the panel and the door are tipped 45 deg. The cover stands on its rear end. Lift the parts 5 mm in the slicer and add supports.</td></tr></table>'
+            f'<td>The resin parts with nut pockets. The body, the panel, the door and the starter plate are tipped 45 deg. '
+            f'The cover stands on its rear end. Lift the parts 5 mm in the slicer and add supports. stl/print/resin/ has each part alone.</td></tr></table>'
             f'<div class="grid2"><div><h3>Resin supports</h3><ul style="margin:0;padding-left:5mm">'
-            f'<li>Body: the floor is toward the plate. Put the supports on the floor underside. '
-            f'Keep them out of the keyhole slots and off the click beams. Sand the marks flat.</li>'
+            f'<li>Body: the floor is toward the plate. Put the supports on the floor underside, off the screw holes. Sand the marks flat.</li>'
             f'<li>Panel: the open side is toward the plate. The top face has no marks.</li>'
-            f'<li>Cover: it stands on its rear end, the points of the peg heads down. Put the supports on the rear edge only.</li>'
+            f'<li>Cover: it stands on its rear end. Put the supports on the rear edge only.</li>'
             f'<li>Door: the outer face is up, tipped 45 deg. The supports go on the inner face and the ears.</li>'
             f'<li>{cups}</li></ul></div>'
             f'<div><h3>Resin fits</h3><ul style="margin:0;padding-left:5mm">'
-            f'<li>The fits are for FDM. In resin, the holes print closer to size.</li>'
-            f'<li>The slide-on fits and the amp slot are a little looser.</li>'
-            f'<li>Use a tough resin (ABS-like) for the click beams and the latch tongue.</li>'
+            f'<li>The resin parts use glued nuts in place of inserts (page 4).</li>'
+            f'<li>Door gap {RF["door_gap"]:g} mm, amp slot gap {RF["amp_clr"]:g} mm (a best guess).</li>'
+            f'<li>Print the starter plate first to test the nut pockets.</li>'
             f'<li>Wash the parts in IPA and post-cure them before the fit test.</li></ul></div></div>')
+    return page(body, n)
+
+
+def fasteners(n):
+    SM, NM = pod.SCREW_MOUNT, pod.NUT_MOUNT
+    tip, nut_top = pod.FLOOR_Y0 - SM["web"] + 4.0, NM["floor_y"] + NM["t"]
+    body = (f'<div class="kicker">2</div><h2>Inserts or nuts</h2>'
+            f'<p class="lead">Six bosses hold the threads for the M2.5 screws: 4 in the floor for the cover screws, '
+            f'and 2 on the speaker posts for the panel screws. An FDM print (PLA) uses heat-set inserts. '
+            f'A resin print uses M2.5 nuts with superglue. The screws are the same for both.</p>'
+            f'<table><tr><th></th><th>FDM print (PLA): heat-set inserts</th><th>Resin print: glued nuts</th></tr>'
+            f'<tr><td><b>Parts</b></td><td>stl/print/: pod_body_screw, pod_panel_screw, cover_screw</td>'
+            f'<td>stl/print/resin/, or the resin plate</td></tr>'
+            f'<tr><td><b>In the bosses</b></td><td>6 x M2.5 heat-set insert, 4 mm long. Holes {SM["insert_d"]:g} mm, {SM["insert_depth"]:g} mm deep. Bosses {SM["boss_d"]:g} mm.</td>'
+            f'<td>6 x M2.5 hex nut, {NM["af"]:g} mm across the flats, {NM["t"]:g} mm thick. Hex pockets. Bosses {NM["boss_d"]:g} mm.</td></tr>'
+            f'<tr><td><b>Screws</b></td><td colspan="2">4 x M2.5 x 4 button or pan head (cover). 2 x M2.5 x 12 (panel).</td></tr>'
+            f'<tr><td><b>Tools</b></td><td>Soldering iron (an insert tip helps), screwdriver</td><td>Superglue, screwdriver</td></tr></table>'
+            f'<div class="grid2"><div><h3>Heat-set inserts (FDM)</h3><ol>'
+            f'<li>Put an insert on the hole of a boss.</li>'
+            f'<li>Heat it with the soldering iron, and press it in straight until it is flush with the top of the boss.</li>'
+            f'<li>Do the 4 floor bosses and the 2 speaker post bosses.</li>'
+            f'<li>Let the plastic cool before you put in a screw.</li></ol></div>'
+            f'<div><h3>Glued nuts (resin)</h3><ol>'
+            f'<li>Put a nut flat into the hex pocket at the top of a boss, and push it to the bottom.</li>'
+            f'<li>Put a drop of superglue on the edge of the nut. Keep the glue off the thread.</li>'
+            f'<li>Do the 4 floor bosses and the 2 speaker post bosses.</li>'
+            f'<li>Let the glue set before you put in a screw.</li></ol></div></div>'
+            f'<p class="callout" style="margin-top:4mm">Floor nuts: the nut is at the bottom of its pocket. The M2.5 x 4 cover screw goes fully '
+            f'through it (screw tip at Y {tip:.1f}, nut top at Y {nut_top:.1f}). Speaker post nuts: the panel column is over the nut and holds it in its pocket.</p>')
     return page(body, n)
 
 
@@ -418,7 +454,7 @@ def cables(n):
     mic = [(W[("mic", k)]["color"], k, "f", f"Pi {W[('mic', k)]['to']}" if W[("mic", k)]["to"].startswith("pin") else W[("mic", k)]["to"], "f")
            for k in ("3V", "GND", "BCLK", "DOUT", "LRCL", "SEL")]
     mic = [(c, f"mic {k}", "f", t + (" · 15 cm" if k in ("3V", "GND") else ""), "f") for (c, k, l, t, m) in mic]
-    body = (f'<div class="kicker">2</div><h2>Electronics and cables</h2>'
+    body = (f'<div class="kicker">3</div><h2>Electronics and cables</h2>'
             f'<p class="lead">Each cable below shows its two ends. Some have one plug at one end and many at the other: '
             f'match each end before you plug it in.</p>'
             f'<div class="card"><h4>Amp cable <span class="tag o">1 plug → 5 sockets</span></h4>'
@@ -444,7 +480,7 @@ def pin_maps(n):
     amp = [(lab, W[("amp", lab)]["color"]) for lab in ("G", "V", "BCLK", "LRC", "DIN")]
     bb = [("TX2", W[("uart", "TX2")]["color"]), ("RX2", W[("uart", "RX2")]["color"]), ("GND", W[("uart", "GND")]["color"]),
           ("+5V", None), ("+5V", None)]
-    body = (f'<div class="kicker">3</div><h2>Pin maps and hardware</h2>'
+    body = (f'<div class="kicker">4</div><h2>Pin maps and hardware</h2>'
             f'<p class="lead">Every pin in use, in the color of its wire.</p>'
             f'<h3>Pi Zero 2 W, 40-pin header</h3>{pi_header_svg()}'
             f'<div class="grid3" style="margin-top:4mm">'
@@ -458,7 +494,8 @@ def pin_maps(n):
             f'<tr><td>Female-female Dupont jumper, 10 cm</td><td class="n">4 + 2</td><td>mic (4) and the Pi ends of the splices (2)</td></tr>'
             f'<tr><td>Female-female Dupont jumper, 15 cm</td><td class="n">2</td><td>mic GND and 3V</td></tr>'
             f'<tr><td>Heat shrink, white</td><td class="n">2</td><td>splice sleeves</td></tr>'
-            f'<tr><td>Glue (a dab)</td><td class="n"></td><td>amp</td></tr></table>')
+            f'<tr><td>Glue (a dab)</td><td class="n"></td><td>amp</td></tr>'
+            f'<tr><td>M2.5 screws, inserts or nuts</td><td class="n">6 + 6</td><td>the mount and the panel (page 4)</td></tr></table>')
     return page(body, n)
 
 
@@ -476,40 +513,41 @@ def wire_table(n):
             [("speaker", "+"), ("speaker", "-")]
     tr = "".join(f"<tr><td>{swatch(W[k]['color'])}{E(W[k]['from'])}</td><td>{E(W[k]['to'])}</td>"
                  f"<td>{E(k[0])}</td><td class='n'>{W[k]['length_mm']:.0f} mm</td><td>{E(W[k].get('slack') or '')}</td></tr>" for k in order)
-    body = (f'<div class="kicker">5</div><h2>Wire table</h2><p class="lead">Every wire, from end to end. Lengths are between the '
+    body = (f'<div class="kicker">6</div><h2>Wire table</h2><p class="lead">Every wire, from end to end. Lengths are between the '
             f'housings, as modeled; a jumper longer than the route lays its excess in the loop shown.</p>'
             f'<table><tr><th>From</th><th>To</th><th>Group</th><th>Length</th><th>Excess</th></tr>{tr}</table>')
     return page(body, n)
 
 
 def checks_page(n):
-    K, S, B = CHECKS["clicks"], CHECKS["snap"], CHECKS["balance"]
+    B = CHECKS["balance"]
     mo = json.load(open(os.path.join(pod.OUT, "motion.json")))
     h0, h1 = mo["head"]["free"]
-    body = (f'<div class="kicker">6</div><h2>Checks, opening and removal</h2>'
+    body = (f'<div class="kicker">7</div><h2>Checks, opening and removal</h2>'
             f'<div class="grid2"><div><h3>What the model checks</h3><ul>'
             f'<li>No printed part and no board touch, except where a fit is meant to touch.</li>'
             f'<li>Every part goes in from the top, in the order of this guide.</li>'
             f'<li>No two wires pass through each other. No designed bend is tighter than {pod.R_BEND:g} mm.</li>'
             f'<li>The head turns from {h0} to {h1} deg without contact.</li>'
-            f'<li>Platform click: about {K["lock_N"]:g} N on, {K["unlock_N"]:g} N off. Panel latch: about {S["slide_on_N"]:g} N.</li>'
+            f'<li>The cover and the body go straight down onto the robot together. Each screw is clear of the boards.</li>'
             f'<li>Mass {B["mass_g"]:.0f} g; center of mass {abs(B["com"][2]):.1f} mm from the robot center.</li></ul></div>'
-            f'<div><h3>Open the panel</h3><p>Lift the rear edge at the finger notch (about {S["lift_N"]:g} N), slide the panel '
+            f'<div><h3>Open the panel</h3><p>Take out the two panel screws, slide the panel '
             f'{pod.LID_SLIDE:g} mm rearward and lift it.</p>'
-            f'<h3>Remove the add-on</h3><p>Open the panel. Lift the door out of the left wall. Pull the three BiBoard plugs off from the side. Slide the body {PI.SLIDE:g} mm rearward and lift it.</p>'
+            f'<h3>Remove the add-on</h3><p>Open the panel. Lift the door out of the left wall. Pull the three BiBoard plugs off from the side. Unclip the cover from the robot: the body comes off with it. '
+            f'To take the body off the cover, take out the 4 screws from inside the cover.</p>'
             f'<h3>Change the SD card</h3><p>Open the panel and lift the speaker out of its grooves; the card is at the rear end of the Pi.</p>'
-            f'<h3>Files</h3><p class="muted">stl/print: the parts to print. stl/plates: the print plates. cad/: STEP files. README.md: the full reference. '
+            f'<h3>Files</h3><p class="muted">stl/print: the parts to print (stl/print/resin: the resin parts). stl/plates: the print plates. cad/: STEP files. README.md: the full reference. '
             f'Designs CC BY 4.0, code MIT; see LICENSE.md and ATTRIBUTION.md.</p></div></div>')
     return page(body, n)
 
 
 def build_html(imgs):
-    pages = [cover(imgs["hero"]), overview(imgs["exploded"], 2), print_parts(3), cables(4), pin_maps(5)]
-    n = 6
+    pages = [cover(imgs["hero"]), overview(imgs["exploded"], 2), print_parts(3), fasteners(4), cables(5), pin_maps(6)]
+    n = 7
     per = 2
     for k in range(0, len(STEPS), per):
         chunk = "".join(step_html(i + 1, STEPS[i], imgs[i + 1]) for i in range(k, min(k + per, len(STEPS))))
-        head = '<div class="kicker">4</div><h2>Assembly</h2>' if k == 0 else ""
+        head = '<div class="kicker">5</div><h2>Assembly</h2>' if k == 0 else ""
         pages.append(page(head + chunk, n))
         n += 1
     pages.append(wire_table(n))
