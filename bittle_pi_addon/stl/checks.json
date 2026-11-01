@@ -1813,22 +1813,22 @@
   [
    "door pushed out 0.3mm (must touch)",
    "pod_body",
-   0.28155956827960804
+   0.2758170038538382
   ],
   [
    "door pushed in 0.3mm (must touch)",
    "pod_body",
-   1.5374999083578362
+   1.240624925680442
   ],
   [
    "door pushed forward 0.3mm (must touch)",
    "pod_body",
-   6.543450643125477
+   6.445523861129939
   ],
   [
    "door pushed rearward 0.3mm (must touch)",
    "pod_body",
-   6.543244227652491
+   6.445317473511772
   ],
   [
    "door pushed down 0.3mm (must touch)",
@@ -2253,7 +2253,7 @@
     "g": 0.6,
     "com": [
      -33.5,
-     43.4,
+     43.3,
      -15.6
     ]
    },

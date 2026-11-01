@@ -379,7 +379,7 @@ def print_parts(n):
             f"The resin check found cups (trapped resin, {vol:g} mm³ in total). See resin_check.json.")
     rows = [("pod_body_screw", "pod_body", "Body", "3mf", "floor on the bed"),
             ("pod_panel_screw", "pod_panel", "Top panel (second color)", "stl", "upside down: top on the bed"),
-            ("pod_door", "pod_door", "Door", "stl", "flat on its outer face"),
+            ("pod_door", "pod_door", "Door", "stl", "on its top edge, with a brim"),
             ("cover_screw", "cover_screw", "Cover for screws", "stl", "on its rear end: tree supports, 14-line brim")]
     tr = "".join(f"<tr><td><b>{t}</b><br><span class='muted'>stl/print/{f}.{x}</span></td><td>{o}</td>"
                  f"<td class='n'>{docs.pod_mass(m)} g</td></tr>" for f, m, t, x, o in rows)

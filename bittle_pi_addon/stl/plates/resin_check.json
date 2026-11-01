@@ -216,7 +216,7 @@
  "pod_door": {
   "height": 24.7,
   "peel_max_mm2": 52.8,
-  "peel_max_z": 19.1,
+  "peel_max_z": 17.4,
   "cup_volume_mm3": 0.0,
   "cup_layers": 0,
   "cup_max_mm2": 0.0,

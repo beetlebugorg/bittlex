@@ -44,7 +44,7 @@ def content():
     tbl([["File (stl/print/)", "Material", "Orientation", "Mass"],
          ["pod_body_screw.3mf (or .stl)", "PLA", "floor on the bed", f"{pod_mass('pod_body')} g"],
          ["pod_panel_screw.stl", "PLA, second color", "upside down: top on the bed", f"{pod_mass('pod_panel')} g"],
-         ["pod_door.stl", "PLA", "flat on its outer face", f"{pod_mass('pod_door')} g"],
+         ["pod_door.stl", "PLA", "on its top edge, with a brim", f"{pod_mass('pod_door')} g"],
          ["cover_screw.stl", "PLA", "stand on the rear end, tree supports, 14-line brim", f"{pod_mass('cover_screw')} g"],
          ["starter_plate_screw.stl (optional)", "PLA", "plate bottom on the bed", f"{pod_mass('starter_plate_screw', ('print',))} g"],
          ], [62, 34, 58, 16])
@@ -81,7 +81,9 @@ def content():
       "The body walls are vertical and its floor is on the bed. The only overhangs are the flat undersides of the two amp nubs (1.5 x 4 mm). "
       "The front-left cable notch is a 45 deg chamfer. The grille holes and the mic holes are teardrops (round, with a 45 deg point on top), so they print without bridges. "
       "The panel top edge round ends in a 45 deg chamfer at the bed, the port openings have 45 deg chamfers, and the lid hooks and the lugs in the body have 45 deg faces. "
-      "The holes in the cover are teardrops, because the cover prints on its rear end. The door prints flat on its outer face.")
+      "The holes in the cover are teardrops, because the cover prints on its rear end. "
+      "The door prints on its top edge: its outer face is a wall with the layers of the body walls, and the 45 deg strip at its bottom hangs on its inner face. "
+      "The top ends of its ears slope at 45 deg. The door is 27 mm tall on a 2 mm edge: use a brim.")
 
     h("Print plates")
     p("stl/plates/ has every part on one bed, in its print orientation. "
