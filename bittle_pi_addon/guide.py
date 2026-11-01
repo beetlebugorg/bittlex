@@ -70,13 +70,13 @@ def step(title, new, cam, lines, check=None, lift=None, note=None, only=None, ba
 def build_steps():
     STEPS.clear()
     step("Inserts or nuts", ["mount_inserts", "panel_inserts"], "high",
-         ["Put an M2.5 insert or nut into each of the 6 bosses: 4 in the floor, 2 on the speaker posts.",
-          "FDM (PLA): press each heat-set insert in flush with a soldering iron.",
+         ["Put an insert or a nut into each of the 6 bosses: 4 in the floor, 2 on the speaker posts.",
+          "FDM (PLA): press each M3 heat-set insert in flush with a soldering iron.",
           "Resin: put an M2.5 nut into each hex pocket, with a drop of superglue on its edge."],
          note="Page 4 has the hardware, the tools and the steps for each way.", base=["body"])
     step("Screw the body to the cover", ["mount_screws"], "below",
          ["Put the empty body on the cover for screws, the grille to the rear.",
-          "From inside the cover, put an M2.5 x 4 screw up through each of the 4 rings into the insert or the nut.",
+          "From inside the cover, put a screw up through each of the 4 rings into the insert or the nut: M3 x 4 (FDM) or M2.5 x 4 (resin).",
           "Tighten the 4 screws. The floor is on the rings."])
     step("Clip onto the robot", [], "iso",
          ["Remove the stock back cover of the Bittle X.",
@@ -128,7 +128,7 @@ def build_steps():
           "It stands on the wall under it. The panel holds it down."])
     step("Panel", ["panel", "panel_screws"], "iso",
          [f"Put the panel down {pod.LID_SLIDE:g} mm behind its place, and slide it forward.",
-          "Put the two M2.5 x 12 screws down through the panel into the speaker posts.",
+          "Put the two panel screws down through the panel into the speaker posts: M3 x 12 (FDM) or M2.5 x 12 (resin).",
           "The PiSugar power switch is in the HDMI opening, beside the plug. Move it with a pen tip or a toothpick.",
           "Press the PiSugar button through the large opening with a fingertip or a pen tip."],
          check="To open: take out the two screws and slide the panel rearward.")
@@ -348,7 +348,7 @@ def cover(img):
             f'<div class="kicker">Build guide</div><h1>Bittle X<br>Pi Add-on</h1>'
             f'<div class="lead">A Raspberry Pi Zero 2 W with a battery, a speaker and a microphone, in one rounded box '
             f'that screws to a new back cover of the Petoi Bittle X.</div>'
-            f'<div class="meta"><div><b>Add-on v{docs.VERSION}</b>{docs.DATE}</div><div><b>4 + 2 M2.5 screws</b>inserts (FDM) or glued nuts (resin)</div>'
+            f'<div class="meta"><div><b>Add-on v{docs.VERSION}</b>{docs.DATE}</div><div><b>4 + 2 screws</b>M3 inserts (FDM) or M2.5 nuts (resin)</div>'
             f'<div><b>{CHECKS["balance"]["mass_g"]:.0f} g</b>with the electronics</div><div><b>No supports</b>for the add-on parts (FDM)</div></div>'
             f'</div><div class="bar"></div></section>')
 
@@ -420,15 +420,15 @@ def fasteners(n):
     SM, NM = pod.SCREW_MOUNT, pod.NUT_MOUNT
     tip, nut_top = pod.FLOOR_Y0 - SM["web"] + 4.0, NM["floor_y"] + NM["t"]
     body = (f'<div class="kicker">2</div><h2>Inserts or nuts</h2>'
-            f'<p class="lead">Six bosses hold the threads for the M2.5 screws: 4 in the floor for the cover screws, '
-            f'and 2 on the speaker posts for the panel screws. An FDM print (PLA) uses heat-set inserts. '
-            f'A resin print uses M2.5 nuts with superglue. The screws are the same for both.</p>'
+            f'<p class="lead">Six bosses hold the threads for the screws: 4 in the floor for the cover screws, '
+            f'and 2 on the speaker posts for the panel screws. An FDM print (PLA) uses M3 heat-set inserts. '
+            f'A resin print uses M2.5 nuts with superglue.</p>'
             f'<table><tr><th></th><th>FDM print (PLA): heat-set inserts</th><th>Resin print: glued nuts</th></tr>'
             f'<tr><td><b>Parts</b></td><td>stl/print/: pod_body_screw, pod_panel_screw, cover_screw</td>'
             f'<td>stl/print/resin/, or the resin plate</td></tr>'
-            f'<tr><td><b>In the bosses</b></td><td>6 x M2.5 heat-set insert, 4 mm long. Holes {SM["insert_d"]:g} mm, {SM["insert_depth"]:g} mm deep. Bosses {SM["boss_d"]:g} mm.</td>'
+            f'<tr><td><b>In the bosses</b></td><td>6 x M3 heat-set insert. Holes {SM["insert_d"]:g} mm, {SM["insert_depth"]:g} mm deep: too big for M2.5 inserts. Bosses {SM["boss_d"]:g} mm.</td>'
             f'<td>6 x M2.5 hex nut, {NM["af"]:g} mm across the flats, {NM["t"]:g} mm thick. Hex pockets. Bosses {NM["boss_d"]:g} mm.</td></tr>'
-            f'<tr><td><b>Screws</b></td><td colspan="2">4 x M2.5 x 4 button or pan head (cover). 2 x M2.5 x 12 (panel).</td></tr>'
+            f'<tr><td><b>Screws</b></td><td>4 x M3 x 4 button or pan head (cover). 2 x M3 x 12 (panel).</td><td>4 x M2.5 x 4 button or pan head (cover). 2 x M2.5 x 12 (panel).</td></tr>'
             f'<tr><td><b>Tools</b></td><td>Soldering iron (an insert tip helps), screwdriver</td><td>Superglue, screwdriver</td></tr></table>'
             f'<div class="grid2"><div><h3>Heat-set inserts (FDM)</h3><ol>'
             f'<li>Put an insert on the hole of a boss.</li>'
@@ -495,7 +495,7 @@ def pin_maps(n):
             f'<tr><td>Female-female Dupont jumper, 15 cm</td><td class="n">2</td><td>mic GND and 3V</td></tr>'
             f'<tr><td>Heat shrink, white</td><td class="n">2</td><td>splice sleeves</td></tr>'
             f'<tr><td>Glue (a dab)</td><td class="n"></td><td>amp</td></tr>'
-            f'<tr><td>M2.5 screws, inserts or nuts</td><td class="n">6 + 6</td><td>the mount and the panel (page 4)</td></tr></table>')
+            f'<tr><td>Screws, and inserts or nuts</td><td class="n">6 + 6</td><td>M3 (FDM) or M2.5 (resin): page 4</td></tr></table>')
     return page(body, n)
 
 

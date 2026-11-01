@@ -23,10 +23,10 @@ PARTS = [
     ("body", "Add-on body", "Printed", "stl/screw/installed/pod_body.stl", "#f2f2ef", (0, 10, 0), None),
     ("door", "Door (left wall)", "Printed", "stl/screw/installed/pod_door.stl", "#f2f2ef", (0, 10, 0), None),
     ("cover", "Cover for screws", "Printed", "stl/screw/installed/cover_screw.stl", "#34363b", (0, 0, 0), None),
-    ("mount_screws", "Cover screws M2.5 x 4", "Hardware", "stl/screw/installed/mount_screws.stl", "#5b5e66", (0, 0, 0), None),
-    ("mount_inserts", "Floor inserts or nuts M2.5", "Hardware", "stl/screw/installed/mount_inserts.stl", "#c9a227", (0, 0, 0), None),
-    ("panel_screws", "Panel screws M2.5 x 12", "Hardware", "stl/screw/installed/panel_screws.stl", "#5b5e66", (0, 0, 0), None),
-    ("panel_inserts", "Post inserts or nuts M2.5", "Hardware", "stl/screw/installed/panel_inserts.stl", "#c9a227", (0, 0, 0), None),
+    ("mount_screws", "Cover screws M3 x 4 (resin: M2.5)", "Hardware", "stl/screw/installed/mount_screws.stl", "#5b5e66", (0, 0, 0), None),
+    ("mount_inserts", "Floor inserts M3 or nuts M2.5", "Hardware", "stl/screw/installed/mount_inserts.stl", "#c9a227", (0, 0, 0), None),
+    ("panel_screws", "Panel screws M3 x 12 (resin: M2.5)", "Hardware", "stl/screw/installed/panel_screws.stl", "#5b5e66", (0, 0, 0), None),
+    ("panel_inserts", "Post inserts M3 or nuts M2.5", "Hardware", "stl/screw/installed/panel_inserts.stl", "#c9a227", (0, 0, 0), None),
     ("shoulder_r", "Side shoulder R", "Robot", "../bittle_platform/reference/Bittle_SideShoulder.stl", "#f2a71c", (0, 0, 0), None),
     ("shoulder_l", "Side shoulder L", "Robot", "../bittle_platform/reference/Bittle_SideShoulder.stl", "#f2a71c", (0, 0, 0), "mirror_x"),
     ("front_plate", "Front plate", "Robot", "../bittle_platform/reference/Bittle_FrontPlate.stl", "#26272b", (0, 0, 0), None),
@@ -99,24 +99,24 @@ PLATFORM_V = json.load(open(os.path.join(PROJ, "bittle_platform", "interface.jso
 PF, AF = "../files/platform/", "../files/addon/"
 INFO = {
     "cover": dict(text="The cover for screws: the stock Petoi back cover with a ring on its flat top at each of the 4 platform peg places, "
-                       "24 x 20 mm on the center line. An M2.5 x 4 screw goes up through each ring from inside the cover, and its head is in a pocket in the cover wall. "
+                       "24 x 20 mm on the center line. An M3 x 4 screw (M2.5 x 4 for the resin version) goes up through each ring from inside the cover, and its head is in a pocket in the cover wall. "
                        "The Grove notch and the Pi slot are one opening at the front left.",
                   attach="Screw the body to it from inside the cover. Then clip the cover and the body onto the robot as one unit, in place of the stock cover.",
                   files=[("Print STL", AF + "cover_screw.stl"), ("Print STL, 0.10 mm layers", AF + "cover_screw_fine.stl"),
                          ("Platform spec PDF", PF + "bittle_platform_spec.pdf")]),
-    "body": dict(text="The body of the Pi add-on: one rounded box with a flat floor. The floor has a boss at each of the 4 peg places, for an M2.5 "
+    "body": dict(text="The body of the Pi add-on: one rounded box with a flat floor. The floor has a boss at each of the 4 peg places, for an M3 "
                       "heat-set insert (FDM) or a glued M2.5 nut (resin). Inside: grooves for the speaker and the Pi stack, a post and a ledge with slots for the mic, and a slot bar for the amp. "
                       "The speaker posts have a boss for the panel screws. "
                       "The BiBoard header comes up through a notch in the floor, at the front of the left well. "
                       "Two nubs on the right wall hold the amp. The only cable hole at the base is the notch at the front left, over the opening in the cover. "
                       "A door in the left wall is over the BiBoard plugs: lift it out, and a finger reaches them from the side. "
                       "It prints floor down.",
-                 attach="Put in the 6 inserts or nuts. Then screw the empty body to the cover with 4 M2.5 x 4 screws from inside the cover. "
+                 attach="Put in the 6 inserts or nuts. Then screw the empty body to the cover with 4 screws from inside the cover (M3 x 4, or M2.5 x 4 for nuts). "
                         "To remove the add-on, take the panel off, lift the door out and pull the BiBoard plugs off. Then unclip the cover from the robot.",
                  files=[("Print 3MF", AF + "pod_body_screw.3mf"), ("Print 3MF, 0.10 mm layers", AF + "pod_body_screw_fine.3mf")]),
     "panel": dict(text="The top panel, in a second color. It has the soft top edge and openings shaped to each plug body. "
                        "The Pi power, Pi data and PiSugar charge ports and the PiSugar button share one rounded rectangle: press the button with a fingertip or a pen tip. "
-                       "It slides on: hooks under it go under lugs in the front and side walls. Two M2.5 x 12 screws go down through it into the speaker posts. "
+                       "It slides on: hooks under it go under lugs in the front and side walls. Two M3 x 12 screws (M2.5 x 12 for the resin version) go down through it into the speaker posts. "
                        "Forks under it hold the Pi stack, the speaker and the amp down. "
                        "It prints upside down on its top.",
                   attach="Put it down 5 mm behind its place, slide it forward, and put in the two panel screws. "
@@ -220,11 +220,11 @@ STEPS = [
     dict(title="Inserts or nuts", view="stepiso", show=["body", "mount_inserts", "panel_inserts"],
          start={"body": [0, 40, 0], "mount_inserts": [0, 75, 0], "panel_inserts": [0, 75, 0]},
          end={"body": [0, 40, 0], "mount_inserts": [0, 40, 0], "panel_inserts": [0, 40, 0]},
-         text="Put an M2.5 insert or nut into each of the 4 floor bosses and the 2 speaker post bosses. "
-              "FDM: press each heat-set insert in flush with a soldering iron. Resin: put an M2.5 nut into each hex pocket with a drop of superglue."),
+         text="Put an insert or a nut into each of the 4 floor bosses and the 2 speaker post bosses. "
+              "FDM: press each M3 heat-set insert in flush with a soldering iron. Resin: put an M2.5 nut into each hex pocket with a drop of superglue."),
     dict(title="Screw the body to the cover", view="stepiso", show=["cover", "mount_screws"],
          start={"cover": [0, 20, 0], "mount_screws": [0, 0, 0]}, end={"cover": [0, 40, 0], "mount_screws": [0, 40, 0]},
-         text="Put the empty body on the cover, grille to the rear. Put an M2.5 x 4 screw up through each ring from inside the cover, "
+         text="Put the empty body on the cover, grille to the rear. Put a screw up through each ring from inside the cover (M3 x 4, or M2.5 x 4 for nuts), "
               "into the insert or the nut, and tighten it."),
     dict(title="Clip onto the robot", view="stepiso", start={k: [0, 40, 0] for k in ["body", "mount_inserts", "panel_inserts", "cover", "mount_screws"]},
          text="Clip the cover and the body onto the robot as one unit, in place of the stock cover. "
@@ -248,7 +248,7 @@ STEPS = [
          text="Slide the door down into the two grooves of the opening in the left wall. "
               "It stands on the wall under it. The panel holds it down."),
     dict(title="Panel", view="build", show=["panel", "panel_screws"], start={"panel": [0, 35, 5], "panel_screws": [0, 60, 5]},
-         text="Put the panel down 5 mm behind its place, slide it forward, and put in the two M2.5 x 12 panel screws. "
+         text="Put the panel down 5 mm behind its place, slide it forward, and put in the two panel screws (M3 x 12, or M2.5 x 12 for nuts). "
               "The PiSugar power switch is in the HDMI opening, beside the plug: move it with a pen tip or a toothpick. The forks under the panel hold "
               "the stack, the speaker and the amp. The ports are in the shaped openings. Press the PiSugar button through the large opening with a fingertip or a pen tip. "
               "To open, take out the two screws and slide the panel rearward."),

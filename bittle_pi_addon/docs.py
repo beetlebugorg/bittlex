@@ -58,14 +58,13 @@ def content():
       "starter_plate_screw.stl is the starter plate of the platform with the same 4 bosses: use it to start an add-on of your own, or to test the inserts or nuts on the cover.")
 
     h("Inserts or nuts")
-    p("Each of the 6 bosses holds a threaded part for an M2.5 screw: 4 in the floor (the cover screws) and 2 on the speaker posts (the panel screws). "
-      "The FDM parts use heat-set inserts. The resin parts use M2.5 nuts with superglue in place of the inserts. "
-      "The screws are the same for both.")
+    p("Each of the 6 bosses holds a threaded part for a screw: 4 in the floor (the cover screws) and 2 on the speaker posts (the panel screws). "
+      "The FDM parts use M3 heat-set inserts: the holes are too big for M2.5 inserts. The resin parts use M2.5 nuts with superglue.")
     tbl([["", "FDM print (PLA): heat-set inserts", "Resin print: glued nuts"],
          ["Files", "stl/print/: pod_body_screw, pod_panel_screw, cover_screw", "stl/print/resin/, or the resin plate (stl/plates/resin_phenom)"],
-         ["In the bosses", f"6 x M2.5 heat-set insert, 4 mm long ({SM['insert_d']:g} mm holes, {SM['insert_depth']:g} mm deep; bosses {SM['boss_d']:g} mm)",
+         ["In the bosses", f"6 x M3 heat-set insert ({SM['insert_d']:g} mm holes, {SM['insert_depth']:g} mm deep; bosses {SM['boss_d']:g} mm)",
           f"6 x M2.5 hex nut ({NM['af']:g} mm across the flats, {NM['t']:g} mm thick) in hex pockets; bosses {NM['boss_d']:g} mm"],
-         ["Screws", "4 x M2.5 x 4 button or pan head (cover), 2 x M2.5 x 12 (panel)", "the same"],
+         ["Screws", "4 x M3 x 4 button or pan head (cover), 2 x M3 x 12 (panel)", "4 x M2.5 x 4 button or pan head (cover), 2 x M2.5 x 12 (panel)"],
          ["Tools", "soldering iron (an insert tip helps), screwdriver", "superglue, screwdriver"],
          ], [24, 73, 73])
     lst(["FDM: heat each insert with the soldering iron and press it in straight, flush with the top of the boss. Let it cool before you put in a screw.",
@@ -137,7 +136,7 @@ def content():
       "Grooves in the floor are under the amp cable and the mic wire run. "
       "The door is a piece of the left wall over the BiBoard plugs. With the panel off, lift the door out: a finger reaches the plugs from the side.")
     lst(["Put the 6 inserts or nuts into the bosses: 4 in the floor and 2 on the speaker posts (see Inserts or nuts)." + st(2),
-         "Put the empty body on the cover for screws, grille to the rear. Put an M2.5 x 4 screw up through each of the 4 rings from inside the cover, "
+         "Put the empty body on the cover for screws, grille to the rear. Put a screw up through each of the 4 rings from inside the cover (M3 x 4 for inserts, M2.5 x 4 for nuts), "
          "into the insert or the nut, and tighten it." + st(3),
          "Remove the stock back cover. Clip the cover and the body onto the robot as one unit. "
          "The BiBoard header comes up through the opening in the cover and the notch at the front of the left well." + st(4),
@@ -151,7 +150,7 @@ def content():
          "then the BiBoard ends. The viewer has one step for each wire." + st(9) + st(19),
          "Slide the door down into the two grooves of the opening in the left wall. The panel holds it down." + st(20),
          f"Put the panel down {pod.LID_SLIDE:g} mm behind its place, then slide it forward. The hooks under the panel go under the lugs in the walls. "
-         "Put the two M2.5 x 12 screws down through the panel into the speaker posts." + st(21),
+         "Put the two panel screws down through the panel into the speaker posts (M3 x 12 for inserts, M2.5 x 12 for nuts)." + st(21),
          f"Open: take out the two panel screws, slide the panel {pod.LID_SLIDE:g} mm rearward and lift it. "
          "Remove: open the panel, lift the door out, pull the BiBoard plugs off from the side, and unclip the cover from the robot. "
          "To take the body off the cover, take out the 4 screws from inside the cover."])

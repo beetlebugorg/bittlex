@@ -858,7 +858,9 @@ MOUNT = "keyhole"               # "keyhole" (platform pegs) or "screw" (build_bo
 # Panel screws (screw mount): no latch. An M2.5 x 4 insert in a boss on the top of each speaker post, and an M2.5 x 12
 # screw down through a column in the panel. The boss top is gap under the column: the screw pulls the panel down,
 # and the front and side hooks press up on their lugs (no rattle). The hook gaps are smaller (LID_SCREW, 0.1 mm layers).
-PANEL_SCREW = dict(x=27.5, z=SPK_ZE + SPK["ear_t"] / 2, boss_d=7.0, col_d=6.8, gap=0.1, cb_d=5.0, cb_depth=2.0)
+# M3 panel screws (user: the M2.5 insert holes were too big, so the FDM print has M3 inserts in the same holes).
+# clr_d: an M3 clearance hole (FDM holes print about 0.2 under). cb: an M3 button or pan head. col_d: a 0.8 wall around cb.
+PANEL_SCREW = dict(x=27.5, z=SPK_ZE + SPK["ear_t"] / 2, boss_d=7.0, col_d=8.0, gap=0.1, clr_d=3.5, cb_d=6.4, cb_depth=2.4)
 LID_SCREW = dict(gap=0.05, gap_y=0.05, front_gap=0.02)
 
 
@@ -950,7 +952,7 @@ def panel_screw_columns():
     """Columns from the panel top down to the seam over the speaker posts, with the screw holes and a counterbore."""
     P, S = PANEL_SCREW, SCREW_MOUNT
     col = union([b3d_to_manifold(cyl_y(sx * P["x"], P["z"], SEAM, PANEL_IN + 0.01, P["col_d"] / 2)) for sx in (-1, 1)])
-    holes = union([b3d_to_manifold(cyl_y(sx * P["x"], P["z"], SEAM - 1.0, TOP + 1.0, S["clr_d"] / 2)) +
+    holes = union([b3d_to_manifold(cyl_y(sx * P["x"], P["z"], SEAM - 1.0, TOP + 1.0, P["clr_d"] / 2)) +
                    b3d_to_manifold(cyl_y(sx * P["x"], P["z"], TOP - P["cb_depth"], TOP + 1.0, P["cb_d"] / 2)) for sx in (-1, 1)])
     return col, holes
 

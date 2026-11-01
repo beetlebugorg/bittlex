@@ -22,13 +22,13 @@ pod_body_screw.3mf has support blockers on the two amp nubs and at the middle of
 
 ## Inserts or nuts
 
-Each of the 6 bosses holds a threaded part for an M2.5 screw: 4 in the floor (the cover screws) and 2 on the speaker posts (the panel screws). The FDM parts use heat-set inserts. The resin parts use M2.5 nuts with superglue in place of the inserts. The screws are the same for both.
+Each of the 6 bosses holds a threaded part for a screw: 4 in the floor (the cover screws) and 2 on the speaker posts (the panel screws). The FDM parts use M3 heat-set inserts: the holes are too big for M2.5 inserts. The resin parts use M2.5 nuts with superglue.
 
 |  | FDM print (PLA): heat-set inserts | Resin print: glued nuts |
 |---|---|---|
 | Files | stl/print/: pod_body_screw, pod_panel_screw, cover_screw | stl/print/resin/, or the resin plate (stl/plates/resin_phenom) |
-| In the bosses | 6 x M2.5 heat-set insert, 4 mm long (3.6 mm holes, 3.9 mm deep; bosses 7 mm) | 6 x M2.5 hex nut (5 mm across the flats, 2 mm thick) in hex pockets; bosses 8 mm |
-| Screws | 4 x M2.5 x 4 button or pan head (cover), 2 x M2.5 x 12 (panel) | the same |
+| In the bosses | 6 x M3 heat-set insert (3.6 mm holes, 3.9 mm deep; bosses 7 mm) | 6 x M2.5 hex nut (5 mm across the flats, 2 mm thick) in hex pockets; bosses 8 mm |
+| Screws | 4 x M3 x 4 button or pan head (cover), 2 x M3 x 12 (panel) | 4 x M2.5 x 4 button or pan head (cover), 2 x M2.5 x 12 (panel) |
 | Tools | soldering iron (an insert tip helps), screwdriver | superglue, screwdriver |
 
 1. FDM: heat each insert with the soldering iron and press it in straight, flush with the top of the boss. Let it cool before you put in a screw.
@@ -81,7 +81,7 @@ Balance. The add-on weighs 114 g (weighed parts; printed parts at 50 % fill). It
 The 3D viewer shows each step with animation: [https://beetlebugorg.github.io/bittlex/viewer/#step=1](https://beetlebugorg.github.io/bittlex/viewer/#step=1). Grooves in the floor are under the amp cable and the mic wire run. The door is a piece of the left wall over the BiBoard plugs. With the panel off, lift the door out: a finger reaches the plugs from the side.
 
 1. Put the 6 inserts or nuts into the bosses: 4 in the floor and 2 on the speaker posts (see Inserts or nuts). ([viewer step 2](https://beetlebugorg.github.io/bittlex/viewer/#step=2))
-2. Put the empty body on the cover for screws, grille to the rear. Put an M2.5 x 4 screw up through each of the 4 rings from inside the cover, into the insert or the nut, and tighten it. ([viewer step 3](https://beetlebugorg.github.io/bittlex/viewer/#step=3))
+2. Put the empty body on the cover for screws, grille to the rear. Put a screw up through each of the 4 rings from inside the cover (M3 x 4 for inserts, M2.5 x 4 for nuts), into the insert or the nut, and tighten it. ([viewer step 3](https://beetlebugorg.github.io/bittlex/viewer/#step=3))
 3. Remove the stock back cover. Clip the cover and the body onto the robot as one unit. The BiBoard header comes up through the opening in the cover and the notch at the front of the left well. ([viewer step 4](https://beetlebugorg.github.io/bittlex/viewer/#step=4))
 4. Push the speaker down into the two side grooves at the rear, body to the rear. ([viewer step 5](https://beetlebugorg.github.io/bittlex/viewer/#step=5))
 5. Plug the six mic jumpers onto the mic header: 15 cm jumpers on GND and 3V. Drop the mic into the slots in the post and the ledge on the right wall near the front, port to the wall, header at the front. ([viewer step 6](https://beetlebugorg.github.io/bittlex/viewer/#step=6))
@@ -89,7 +89,7 @@ The 3D viewer shows each step with animation: [https://beetlebugorg.github.io/bi
 7. Set the PiSugar AUTO switch before the cell goes on the board: it is under the cell. Push the Pi + PiSugar S stack down into the end grooves. ([viewer step 8](https://beetlebugorg.github.io/bittlex/viewer/#step=8))
 8. Plug the wires one at a time, in the order of section 5: the splices, the Pi ends of the BiBoard jumpers, the amp cable, the mic jumpers, then the BiBoard ends. The viewer has one step for each wire. ([viewer step 9](https://beetlebugorg.github.io/bittlex/viewer/#step=9)) ([viewer step 19](https://beetlebugorg.github.io/bittlex/viewer/#step=19))
 9. Slide the door down into the two grooves of the opening in the left wall. The panel holds it down. ([viewer step 20](https://beetlebugorg.github.io/bittlex/viewer/#step=20))
-10. Put the panel down 5 mm behind its place, then slide it forward. The hooks under the panel go under the lugs in the walls. Put the two M2.5 x 12 screws down through the panel into the speaker posts. ([viewer step 21](https://beetlebugorg.github.io/bittlex/viewer/#step=21))
+10. Put the panel down 5 mm behind its place, then slide it forward. The hooks under the panel go under the lugs in the walls. Put the two panel screws down through the panel into the speaker posts (M3 x 12 for inserts, M2.5 x 12 for nuts). ([viewer step 21](https://beetlebugorg.github.io/bittlex/viewer/#step=21))
 11. Open: take out the two panel screws, slide the panel 5 mm rearward and lift it. Remove: open the panel, lift the door out, pull the BiBoard plugs off from the side, and unclip the cover from the robot. To take the body off the cover, take out the 4 screws from inside the cover.
 
 ![Step 1 of the build guide: Inserts or nuts. The parts of the step are green.](doc/iso/step01-light.png)
