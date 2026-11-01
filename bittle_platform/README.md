@@ -1,8 +1,8 @@
-# Bittle X Platform v3.3 - Interface Specification
+# Bittle X Platform v3.4 - Interface Specification
 
-Version 3.3, 2026-10-26. The platform is the stock Petoi Bittle X back cover with 4 teardrop pegs on its top. An add-on has a plate with 4 keyholes. Put it on the pegs, slide it 7 mm forward, and it clicks. To remove it, slide it 7 mm rearward and lift it. It comes off closed: the head is not in the way. The keyholes have the shape of the pegs, so the add-on goes on in one direction only. No tools, glue or tape are necessary. interface.json has all the numbers in machine-readable form.
+Version 3.4, 2026-10-31. The platform is the stock Petoi Bittle X back cover with 4 teardrop pegs on its top. An add-on has a plate with 4 keyholes. Put it on the pegs, slide it 7 mm forward, and it clicks. To remove it, slide it 7 mm rearward and lift it. It comes off closed: the head is not in the way. The keyholes have the shape of the pegs, so the add-on goes on in one direction only. No tools, glue or tape are necessary. interface.json has all the numbers in machine-readable form.
 
-Version 3.0 is not compatible with earlier versions: the pegs have a new shape and place, and the slide goes the other way. Version 3.1 adds a notch in the front edge of the cover, left side, for the Grove plug on the BiBoard (the head camera cable). Version 3.2 turns the cover model 180 deg to match the robot: the Pi slot (the BiBoard header) is at the front left, and the notch is on the front left, as on the robot. Reprint the cover: the pegs and the keyholes are the same as in 3.0. Keep add-on parts out of the plug space (GROVE_PLUG, in keepout.stl). Version 3.3 cuts the Pi slot wider toward the center (7 mm, was 3.5 mm): the BiBoard Dupont plugs did not fit. It also makes the click travel smaller (0.2 mm, was 0.28 mm): the add-on slides on and off with less force. Reprint the cover and the add-on plate. The pegs do not change.
+Version 3.0 is not compatible with earlier versions: the pegs have a new shape and place, and the slide goes the other way. Version 3.1 adds a notch in the front edge of the cover, left side, for the Grove plug on the BiBoard (the head camera cable). Version 3.2 turns the cover model 180 deg to match the robot: the Pi slot (the BiBoard header) is at the front left, and the notch is on the front left, as on the robot. Reprint the cover: the pegs and the keyholes are the same as in 3.0. Keep add-on parts out of the plug space (GROVE_PLUG, in keepout.stl). Version 3.3 cuts the Pi slot wider toward the center (7 mm, was 3.5 mm): the BiBoard Dupont plugs did not fit. It also makes the click travel smaller (0.2 mm, was 0.28 mm): the add-on slides on and off with less force. Reprint the cover and the add-on plate. The pegs do not change. Version 3.4 adds the screw mount, for a heavy add-on: 4 M2.5 screws at the peg places, in place of the pegs (section 3).
 
 ![The platform (white) on the robot, with the starter plate on the pegs.](doc/iso/platform-light.png)
 
@@ -37,7 +37,16 @@ Version 3.0 is not compatible with earlier versions: the pegs have a new shape a
 6. For a plate of a different shape: subtract cad/keyhole_cutter.step, then add cad/detent_bumps.step. Both are in position.
 
 
-## 3. Printing
+## 3. Screw mount
+
+A heavy add-on can be loose on the pegs. The screw mount holds it with 4 screws. The cover for screws (bittle_pi_addon/stl/print/cover_screw.stl) is the stock cover with no pegs. At each peg place it has a ring (R3.8) from the cover top up to Y 26, the bottom of the add-on plate. An M2.5 x 4 screw goes up through a 2.9 mm hole in the ring from inside the cover. Its head is in a 5.4 mm pocket, 0.8 mm under the plate. The add-on and the cover then clip onto the robot as one unit.
+
+1. Put an M2.5 thread at each peg place in your plate: a heat-set insert (FDM) or a glued M2.5 nut (resin). The screw tip is at Y 29.2: the thread must reach it.
+2. Start from bittle_pi_addon/stl/print/starter_plate_screw.stl: the starter plate with 4 insert bosses (3.6 mm holes, 3.9 mm deep).
+3. Keep your part out of keepout.stl, as for the pegs. The slide space of the pegs is not necessary.
+
+
+## 4. Printing
 
 One Cura profile prints every part: "Bittle X" (cura/Bittle_X.curaprofile in the repository; import it in Cura). cura/install_profiles.py installs it, and a copy with the size compensation of each spool that the tolerance app measured.
 
@@ -63,7 +72,7 @@ One Cura profile prints every part: "Bittle X" (cura/Bittle_X.curaprofile in the
 5. The fits use 0.35 (slot), 0.45 (drop-in hole) and 0.3 (under the heads) clearance. Calibrate your printer if the plate does not slide on.
 
 
-## 4. Files
+## 5. Files
 
 | File | Content |
 |---|---|
@@ -77,7 +86,7 @@ One Cura profile prints every part: "Bittle X" (cura/Bittle_X.curaprofile in the
 Open items: the BiBoard header height is an estimate from photos. The legs, the head and the robot balance are not modeled. The Petoi cover is a mesh, so cover_pegs is STL only.
 
 
-## 5. Bittle X V2 back touch sensor
+## 6. Bittle X V2 back touch sensor
 
 1. On a Bittle X V2, the back touch sensor is a flexible circuit that is glued to the inside of the cover top. It has touch areas on the left, the right, the center and near the tail (docs.petoi.com/extensible-modules/back-touch-sensor).
 2. The peg roots stop inside the 1.4 mm wall, so the inside of the cover does not change, except at the Grove notch at the front-left edge. Move the circuit from the stock cover to cover_pegs in the same way as on the stock cover.
@@ -87,7 +96,7 @@ Open items: the BiBoard header height is an estimate from photos. The legs, the 
 ![Bittle X V2 touch areas (red boxes). Image: Petoi, docs.petoi.com/extensible-modules/back-touch-sensor.](doc/petoi_touch_areas.png)
 
 
-## 6. License
+## 7. License
 
 The designs and this document are CC BY 4.0, and the code is MIT (Jeremy Collins). The cover, the side shoulder and the front plate are Petoi files from github.com/PetoiCamp/NonCodeFiles. Petoi publishes them without a stated license, and cover_pegs.stl is made from the Petoi cover. LICENSE.md and ATTRIBUTION.md in the repository give the details.
 

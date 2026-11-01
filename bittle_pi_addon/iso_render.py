@@ -36,7 +36,8 @@ THEMES = ("light", "dark")
 # for this project: from the front right, above.
 ISO = (1.3, 1.0, -1.5)
 DIRS = dict(iso=ISO, high=(1.0, 1.9, -1.3), rear=(0.7, 1.9, -1.4), mic=(-1.0, 1.7, 0.9), amp=(-1.4, 1.8, -0.5),
-            well=(-1.5, 1.25, 0.35), front_left=(-1.2, 1.6, -1.1), top=(0.35, 2.4, -0.9), door=(1.5, 1.1, -0.7))
+            well=(-1.5, 1.25, 0.35), front_left=(-1.2, 1.6, -1.1), top=(0.35, 2.4, -0.9), door=(1.5, 1.1, -0.7),
+            below=(1.3, -1.1, -1.5))
 
 
 # --------------------------------------------------------------------------
@@ -51,6 +52,8 @@ def part_table():
                               transform=tf, explode=ex)
     parts["starter_plate"] = dict(file="bittle_platform/stl/installed/starter_plate.stl", finish="print", tag="Starter plate",
                                   transform=None, explode=None)
+    parts["cover_pegs"] = dict(file="bittle_platform/stl/installed/cover_pegs.stl", finish="print", tag="Platform cover",
+                               transform=None, explode=None)          # the platform figure (the site shows the screw cover)
     return parts
 
 
@@ -58,8 +61,9 @@ PARTS = part_table()
 ROBOT = [p[0] for p in BS.PARTS if p[2] == "Robot" and not p[0].startswith("biboard_header")]
 TRUNK = ["shoulder_r", "shoulder_l", "front_plate", "rear_plate", "biboard_header__header"]
 PRINTED = ["cover", "body", "door", "panel"]
+HARDWARE = ["mount_screws", "mount_inserts", "panel_screws", "panel_inserts"]
 INSIDE = [k for k in PARTS if "__" in k and not k.startswith("biboard_header")]
-ALL = ROBOT + PRINTED + ["biboard_header__header"] + INSIDE
+ALL = ROBOT + PRINTED + HARDWARE + ["biboard_header__header"] + INSIDE
 PANEL = ["panel"]
 
 
@@ -78,8 +82,9 @@ UP = lambda h, back=0.0: (0.0, h, back)      # noqa: E731  up h mm, back mm towa
 
 # title: (offset of the new parts, view, extra moving parts, ghost the body, show the robot trunk)
 MOVES = {
-    "Fit the platform cover": (UP(45), "iso", [], False, True),
-    "Click the body on": (UP(40, PI.SLIDE), "iso", [], False, True),
+    "Inserts or nuts": (UP(30), "high", [], False, False),
+    "Screw the body to the cover": (UP(-22), "below", [], False, False),
+    "Clip onto the robot": (UP(40), "iso", ["cover", "body"] + HARDWARE[:2] + ["panel_inserts"], False, True),
     "Speaker": (UP(45), "rear", [], False, True),
     "Mic": (UP(42), "mic", [], False, True),
     "Amp and speaker lead": (UP(48), "amp", [], False, True),
@@ -93,7 +98,7 @@ MOVES = {
     "Panel": (UP(40, pod.LID_SLIDE), "iso", [], False, True),
 }
 # One tag for all the parts of a step (else one tag for each name)
-STEP_TAG = {"Mic": "Mic", "Pi + PiSugar S stack": "Pi + PiSugar S", "Panel": "Top panel"}
+STEP_TAG = {"Mic": "Mic", "Pi + PiSugar S stack": "Pi + PiSugar S", "Clip onto the robot": "Add-on on its cover"}
 
 
 def step_jobs():
@@ -122,7 +127,7 @@ def figure_jobs():
         e = PARTS[k]["explode"]
         if e:
             ex[k] = [a + b for a, b in zip(e[1], e[2])]
-    open_ = ROBOT + ["cover", "body", "door", "biboard_header__header"] + INSIDE
+    open_ = ROBOT + ["cover", "body", "door", "biboard_header__header"] + HARDWARE[:2] + ["panel_inserts"] + INSIDE
     return [
         dict(name="hero", show=ALL, dir=ISO, width=1500, height=2000),
         dict(name="exploded", show=ALL, offset=ex, dir=ISO, width=1600, height=2200),
@@ -131,7 +136,7 @@ def figure_jobs():
         dict(name="open", show=open_, dir=ISO, width=1600, height=1600),
         dict(name="wires", show=["cover", "body"] + INSIDE, ghost=["body"], dir=DIRS["well"], width=1600, height=1300,
              frame=["body"]),
-        dict(name="platform", show=ROBOT + ["cover", "starter_plate"], dir=ISO, width=1600, height=1600, out=PLATFORM_OUT),
+        dict(name="platform", show=ROBOT + ["cover_pegs", "starter_plate"], dir=ISO, width=1600, height=1600, out=PLATFORM_OUT),
     ]
 
 

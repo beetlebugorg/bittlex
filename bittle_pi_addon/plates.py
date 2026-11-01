@@ -1,13 +1,14 @@
 """Print plates: every part of the add-on and the platform cover on one bed, in its print orientation.
 
-  fdm_taz       LulzBot TAZ Workhorse (280 x 280 x 300), 0.5 mm nozzle, the "Bittle X" Cura profile. The parts are
-                the print STLs of pod.py and the platform. The cover stands on its rear end without the foot (the user
-                printed it best this way).
-  resin_phenom  Peopoly Phenom, first model (276 x 155 x 400). Each part is tilted, the cosmetic face away from the
-                supports, and its lowest point is at Z 0. Lift the parts 5 mm in the slicer and add supports there.
+  fdm_taz       LulzBot TAZ Workhorse (280 x 280 x 300), 0.5 mm nozzle. The screw version: the 0.20 mm print STLs
+                of pod.py. The cover stands on its rear end.
+  resin_phenom  Peopoly Phenom, first model (276 x 155 x 400). The screw version with glued nuts (pod.py build_resin).
+                Each part is tilted, the cosmetic face away from the supports, and its lowest point is at Z 0. Lift
+                the parts 5 mm in the slicer and add supports there.
 
 Outputs (stl/plates/): one STL per part and one STL of the full plate in each plate folder, a 3MF of each plate
-(one object for each part), plates.json (the desktop viewer reads it) and resin_check.json.
+(one object for each part), plates.json (the desktop viewer reads it) and resin_check.json. stl/print/resin/ has each
+resin part alone, in its resin orientation and at the middle of the bed.
 
 The resin check slices each resin part at RESIN_LAYER and reports, for each layer:
   cup: a void that is closed all around in the layer, over solid or over a closed void in the layer below. In a
@@ -34,8 +35,8 @@ PLATFORM_PRINT = os.path.join(os.path.dirname(ROOT), "bittle_platform", "stl", "
 GAP = 8.0                                              # between parts on a plate
 RESIN_LAYER = 0.25                                     # check layer (the print uses 0.05)
 CUP_MIN = 1.0                                          # mm2: smaller closed voids are not counted
-COLORS = dict(pod_door="#e9e9e6", pod_body="#e9e9e6", pod_panel="#e8641b", cover_pegs="#26272b",
-              coupon_tight="#9aa0a6", coupon_loose="#9aa0a6")
+COLORS = dict(pod_door="#e9e9e6", pod_body="#e9e9e6", pod_panel="#e8641b", cover_pegs="#26272b", cover_screw="#26272b",
+              starter_plate_screw="#9aa0a6")
 
 PLATES = {
     "fdm_taz": dict(label="FDM: LulzBot TAZ Workhorse, 0.5 mm nozzle", bed=(280.0, 280.0, 300.0)),
@@ -47,8 +48,8 @@ PLATES = {
 RESIN = {
     # Floor toward the plate, tipped 45 deg and 15 deg to the side. At 30 deg, or with no side tilt, the floor and the
     # walls close a cup (resin_check). The outer faces of the walls and the seam under the panel have no supports.
-    # Supports go on the flat floor underside: keep them out of the keyhole slots and off the click beams, and sand
-    # the marks flat (the floor slides on the cover).
+    # Supports go on the flat floor underside: keep them off the cover rings at the screw holes, and sand the marks
+    # flat (the floor is on the rings).
     "pod_body": dict(flip=False, tip=45.0, roll=15.0),
     # Open side toward the plate (as installed), tipped 45 deg and 15 deg to the side: the top face is the last face,
     # with no support marks.
@@ -59,7 +60,12 @@ RESIN = {
     # in the FDM print (user choice). The pegs print along their length; the supports go on the rear edge only, clear
     # of the fit faces of the pegs.
     "cover_pegs": dict(R0=[[1, 0, 0], [0, -1, 0], [0, 0, -1]], tip=0.0, roll=0.0),
+    # The screw cover: the same as the cover with the pegs.
+    "cover_screw": dict(R0=[[1, 0, 0], [0, -1, 0], [0, 0, -1]], tip=0.0, roll=0.0),
+    # The starter plate: the same as the body (the nut test of the screw mount).
+    "starter_plate_screw": dict(flip=False, tip=45.0, roll=15.0),
 }
+RESIN_PARTS = ("pod_body", "pod_panel", "pod_door", "cover_screw", "starter_plate_screw")    # pod.py build_resin()
 
 
 def rot(axis, deg):
@@ -93,46 +99,21 @@ def load(path):
 
 
 def fdm_parts():
-    return dict(pod_body=load(os.path.join(P.OUT, "print", "pod_body.stl")),
-                pod_panel=load(os.path.join(P.OUT, "print", "pod_panel.stl")),
+    """The screw version (0.20 mm files of pod.py write_screw_parts)."""
+    return dict(pod_body=load(os.path.join(P.OUT, "print", "pod_body_screw.stl")),
+                pod_panel=load(os.path.join(P.OUT, "print", "pod_panel_screw.stl")),
                 pod_door=load(os.path.join(P.OUT, "print", "pod_door.stl")),
-                cover_pegs=load(os.path.join(PLATFORM_PRINT, "cover_pegs.stl")))     # no foot: it printed best (user)
-
-
-# Resin fit coupons: starter plates (platform build.py) a step tighter and a step looser than pod.py RESIN_FIT.
-# Front rim notches: 1 = tight, 2 = loose. Try them on the cover with the body: they show the next step.
-RESIN_COUPONS = {"coupon_tight": dict(gap=0.05, travel=0.30, pad=0.05, notches=1),
-                 "coupon_loose": dict(gap=0.12, travel=0.20, pad=0.05, notches=2)}
-
-
-def coupon(fit):
-    from bittle_platform import build as BP
-    with P.fit_set(fit):
-        p = BP.starter_plate()
-    S, k = BP.STARTER, fit["notches"]
-    for j in range(k):
-        x = 3.0 * j - 1.5 * (k - 1)
-        p -= BP.box(x - 0.5, x + 0.5, S["rim_top"] - 1.0, S["rim_top"] + 1, S["z"][0] - 1, S["z"][0] + S["rim_w"] + 1)
-    return BP.to_m(p)
+                cover_screw=load(os.path.join(P.OUT, "print", "cover_screw.stl")))
 
 
 def resin_parts():
-    """The installed parts with the resin fit (pod.py RESIN_FIT: stl/installed/resin/), the cover and the fit
-    coupons."""
-    def inst(n):
-        r = os.path.join(P.OUT, "installed", "resin", f"{n}.stl")
-        return load(r if os.path.exists(r) else os.path.join(P.OUT, "installed", f"{n}.stl"))
-    out = {n: resin_orient(n, inst(n)) for n in RESIN}
-    for n, f in RESIN_COUPONS.items():
-        o = RESIN["pod_body"]
-        R = rot("y", o["roll"]) @ rot("x", o["tip"]) @ np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]], float)
-        out[n] = on_bed(coupon(f).transform(affine(R)))
-    return out
+    """The resin parts of pod.py build_resin() (stl/installed/resin/), in their resin orientation."""
+    return {n: resin_orient(n, load(os.path.join(P.OUT, "installed", "resin", f"{n}.stl"))) for n in RESIN_PARTS}
 
 
 # Resin plate: two columns, each part list from the back (+Y) to the front. A row is a list of parts side by side.
-RESIN_COLUMNS = [[["pod_body"], ["cover_pegs"]],
-                 [["pod_panel"], ["coupon_tight", "coupon_loose"], ["pod_door"]]]
+RESIN_COLUMNS = [[["pod_body"], ["cover_screw"]],
+                 [["pod_panel"], ["starter_plate_screw"], ["pod_door"]]]
 
 
 def column_layout(parts, bed, columns, gap=6.0):
@@ -289,6 +270,10 @@ def main():
         meta["plates"].append(entry)
         print(f"{pid}: {', '.join(placed)} on {bed[0]:g} x {bed[1]:g}")
         if pid == "resin_phenom":
+            r = os.path.join(P.OUT, "print", "resin")             # each part alone, for a plate of other parts
+            os.makedirs(r, exist_ok=True)
+            for n, M in parts.items():
+                P.save_stl(M, os.path.join(r, f"{n}.stl"))
             for n, M in parts.items():
                 r = resin_check(M)
                 report[n] = dict(r, orient=RESIN.get(n, "see plates.py"))

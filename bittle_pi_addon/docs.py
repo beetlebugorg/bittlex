@@ -16,7 +16,7 @@ import pod                                   # noqa: E402
 from bittle_platform import docs as PD       # noqa: E402  (writers shared with the platform)
 from bittle_platform import interface as PI  # noqa: E402
 
-VERSION = "0.25"
+VERSION = "0.26"
 DATE = datetime.date.today().isoformat()
 TITLE = f"Bittle X Pi Add-on v{VERSION} - Build Guide"
 VIEWER = "https://beetlebugorg.github.io/bittlex/viewer/"
@@ -25,7 +25,6 @@ CHECKS = json.load(open(os.path.join(pod.OUT, "checks.json")))
 
 def content():
     pr = CHECKS["printing"]
-    S, K = CHECKS["snap"], CHECKS["clicks"]
     MO = json.load(open(os.path.join(pod.OUT, "motion.json")))
     X = []
     h = lambda t: X.append(("h", t))
@@ -34,53 +33,77 @@ def content():
     img = lambda f, w=1.0, cap="": X.append(("img", f, w, cap))
     lst = lambda items: X.append(("list", items))
 
+    SM, NM = pod.SCREW_MOUNT, pod.NUT_MOUNT
     p(f"Version {VERSION}, {DATE}. A sample add-on for the Bittle X platform v{PI.VERSION} (../bittle_platform). "
       "It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. "
-      "The case is one rounded box (the body) and a slide-on top panel. The body clicks onto the platform pegs, and every part goes in from the top. "
-      "No tools are necessary. A dab of glue sets the amp. On FDM, the add-on parts print without supports.")
-    img("iso/hero-light.png", 0.5, "The add-on on the platform: the port windows in the panel. The mic holes are in the right side, near the front.")
+      "The case is one rounded box (the body) and a slide-on top panel. The body screws to a cover for screws, and the cover and the body clip onto "
+      "the robot as one unit, in place of the stock cover. Every part goes in from the top. Two screws hold the panel. A dab of glue sets the amp.")
+    img("iso/hero-light.png", 0.5, "The add-on on the robot: the port windows in the panel. The mic holes are in the right side, near the front.")
 
     h("1. Parts to print")
     tbl([["File (stl/print/)", "Material", "Orientation", "Mass"],
-         ["pod_body.stl", "PLA", "floor on the bed", f"{pod_mass('pod_body')} g"],
-         ["pod_panel.stl", "PLA, second color", "upside down: top on the bed", f"{pod_mass('pod_panel')} g"],
-         ["pod_door.stl", "PLA, white", "flat on its outer face", f"{pod_mass('pod_door')} g"],
-         ["cover_pegs.stl (../bittle_platform), recommended", "PLA", "stand on the rear end, tree supports, 14-line brim", "11 g"],
-         ["cover_pegs_foot.stl (../bittle_platform), alternative", "PLA", "stand on the rear end, foot on the bed", "11 g"],
+         ["pod_body_screw.3mf (or .stl)", "PLA", "floor on the bed", f"{pod_mass('pod_body')} g"],
+         ["pod_panel_screw.stl", "PLA, second color", "upside down: top on the bed", f"{pod_mass('pod_panel')} g"],
+         ["pod_door.stl", "PLA", "flat on its outer face", f"{pod_mass('pod_door')} g"],
+         ["cover_screw.stl", "PLA", "stand on the rear end, tree supports, 14-line brim", f"{pod_mass('cover_screw')} g"],
+         ["starter_plate_screw.stl (optional)", "PLA", "plate bottom on the bed", f"{pod_mass('starter_plate_screw', ('print',))} g"],
          ], [62, 34, 58, 16])
-    p("Print every part with the Cura profile \"Bittle X\" (../cura/Bittle_X.curaprofile; 0.20 mm layers, no supports, 6-line brim). "
-      "../cura/install_profiles.py installs it, and a copy with the size compensation of each spool that the tolerance app measured "
-      "(\"Bittle X - <spool>\"). The add-on parts need no supports. "
-      "Print the cover without the foot: the foot teeth leave a spot on the cover where they break off.")
+    p("Each part has a file for 0.20 mm layers and a *_fine file for 0.10 mm layers, for example pod_panel_screw.stl and pod_panel_screw_fine.stl. "
+      f"The fine panel has smaller hook gaps ({pod.LID_SCREW['gap']:g} mm). The other fine files are the same as the 0.20 mm files now. "
+      "Slice them with the profiles in ../profiles/taz-workhorse-se (pla-0.20-standard and pla-0.10-fine) and a brim. "
+      "printdeck.yml in the repository root has the profile and the settings of each part. "
+      "The old Cura profile \"Bittle X\" (../cura/Bittle_X.curaprofile; 0.20 mm layers) also works for the 0.20 mm files.")
+    p("pod_body_screw.3mf has support blockers on the two amp nubs and at the middle of the rear wall. "
+      "The nubs print without support, and the tall, narrow support under them fails. Open the 3MF in Cura and turn on support as usual. "
+      "starter_plate_screw.stl is the starter plate of the platform with the same 4 bosses: use it to start an add-on of your own, or to test the inserts or nuts on the cover.")
+
+    h("Inserts or nuts")
+    p("Each of the 6 bosses holds a threaded part for a screw: 4 in the floor (the cover screws) and 2 on the speaker posts (the panel screws). "
+      "The FDM parts use M3 heat-set inserts: the holes are too big for M2.5 inserts. The resin parts use M2.5 nuts with superglue.")
+    tbl([["", "FDM print (PLA): heat-set inserts", "Resin print: glued nuts"],
+         ["Files", "stl/print/: pod_body_screw, pod_panel_screw, cover_screw", "stl/print/resin/, or the resin plate (stl/plates/resin_phenom)"],
+         ["In the bosses", f"6 x M3 heat-set insert ({SM['insert_d']:g} mm holes, {SM['insert_depth']:g} mm deep; bosses {SM['boss_d']:g} mm)",
+          f"6 x M2.5 hex nut ({NM['af']:g} mm across the flats, {NM['t']:g} mm thick) in hex pockets; bosses {NM['boss_d']:g} mm"],
+         ["Screws", "4 x M3 x 4 button or pan head (cover), 2 x M3 x 12 (panel)", "4 x M2.5 x 4 button or pan head (cover), 2 x M2.5 x 12 (panel)"],
+         ["Tools", "soldering iron (an insert tip helps), screwdriver", "superglue, screwdriver"],
+         ], [24, 73, 73])
+    lst(["FDM: heat each insert with the soldering iron and press it in straight, flush with the top of the boss. Let it cool before you put in a screw.",
+         "Resin: put a nut flat into the hex pocket at the top of each boss and push it to the bottom. Put a drop of superglue on its edge. Keep the glue off the thread. Let the glue set.",
+         f"Floor: the nut is at the bottom of its pocket. The M2.5 x 4 cover screw goes fully through the nut (the screw tip is at Y {pod.FLOOR_Y0 - SM['web'] + 4:.1f}, the nut top at Y {NM['floor_y'] + NM['t']:.1f}).",
+         "Speaker posts: the panel column is over the nut and holds it in its pocket. The M2.5 x 12 panel screw goes through the nut."])
+
+    h("Click-on version")
+    p("The click-on version has no screws: pod_body.3mf, pod_body_fine.3mf and pod_panel.stl click onto cover_pegs.stl (../bittle_platform). "
+      "Put the body on the pegs 7 mm behind its place and slide it forward until it clicks; a latch at the rear holds the panel. "
+      "At 0.10 mm layers, print pod_body_fine in place of pod_body: it has a smaller slot gap (0.10 mm a side) and more click travel (0.375 mm). "
+      "The fit test plates are in ../bittle_platform/stl/fit_fine/ (test 14). With the full pod on it, the click-on body is loose: the screw version replaces it.")
     p(f"Print quality. The body and panel walls are 2.0 mm: with the offsets of the body profile, Cura slices 4 full lines of 0.5 mm. "
-      "The body walls are vertical and its floor is on the bed. The only overhangs "
-      f"({pr['pod_body']['overhang_mm2']:.0f} mm² in total) are the flat undersides of the two amp nubs (1.5 x 4 mm). "
+      "The body walls are vertical and its floor is on the bed. The only overhangs are the flat undersides of the two amp nubs (1.5 x 4 mm). "
       "The front-left cable notch is a 45 deg chamfer. The grille holes and the mic holes are teardrops (round, with a 45 deg point on top), so they print without bridges. "
-      "The panel top edge round ends in a 45 deg chamfer at the bed, the port openings have 45 deg chamfers, and the lid hooks and the lugs in the body have 45 deg faces. The latch tongue bends along the layers of the panel. "
-      f"Its overhangs ({pr['pod_panel']['overhang_mm2']:.0f} mm²) are short bridges at the lid hooks. "
-      "The door prints flat on its outer face.")
+      "The panel top edge round ends in a 45 deg chamfer at the bed, the port openings have 45 deg chamfers, and the lid hooks and the lugs in the body have 45 deg faces. "
+      "The holes in the cover are teardrops, because the cover prints on its rear end. The door prints flat on its outer face.")
 
     h("Print plates")
-    p("stl/plates/ has every part and the platform cover on one bed, in its print orientation. "
+    p("stl/plates/ has every part on one bed, in its print orientation. "
       "Each 3MF has one object for each part. Each plate folder has one STL for each part.")
     tbl([["Printer", "File", "Orientation"],
          ["FDM: LulzBot TAZ Workhorse (280 x 280 x 300), 0.5 mm nozzle", "fdm_taz.3mf or fdm_taz_plate.stl",
-          "The parts as in stl/print/. Use the \"Bittle X\" Cura profile. The cover stands on its rear end: turn on tree supports and a 14-line brim."],
+          "The screw parts as in stl/print/ (0.20 mm files). The cover stands on its rear end: turn on tree supports and a 14-line brim."],
          ["Resin: Peopoly Phenom, first model (276 x 155 x 400)", "resin_phenom.3mf or resin_phenom_plate.stl",
-          "The body, the panel and the door are tipped 45 deg, and the cover stands on its rear end. The lowest point is at Z 0. Lift the parts 5 mm in the slicer and add supports."],
+          "The screw version with nuts: the body, the panel, the door and the starter plate are tipped 45 deg, and the cover stands on its rear end. "
+          "The lowest point is at Z 0. Lift the parts 5 mm in the slicer and add supports. stl/print/resin/ has each part alone."],
          ], [50, 40, 80])
     RC = json.load(open(os.path.join(pod.OUT, "plates", "resin_check.json")))
     vol = sum(v["cup_volume_mm3"] for v in RC.values())
-    lst(["Body (resin): the floor is toward the plate. Put the supports on the floor underside. "
-         "Keep them out of the keyhole slots and off the click beams. Sand the marks flat: the floor slides on the cover.",
+    lst(["Body (resin): the floor is toward the plate. Put the supports on the floor underside, off the screw holes. Sand the marks flat: the floor is on the cover rings.",
          "Panel (resin): the open side is toward the plate. The top face has no support marks.",
-         "Cover (resin): it stands on its rear end, the points of the peg heads down. Put the supports on the rear edge only.",
+         "Cover (resin): it stands on its rear end. Put the supports on the rear edge only.",
          "Door (resin): the outer face is up, tipped 45 deg. The supports go on the inner face and the ears.",
          ("The resin check found no cups (trapped resin) in these orientations." if vol == 0 else
           f"The resin check found cups (trapped resin, {vol:g} mm³). See stl/plates/resin_check.json."),
-         "The fits are for FDM: holes print about 0.2 mm under size on FDM. In resin the holes print closer to size. "
-         "The slide-on fits and the amp slot are a little looser.",
-         "Use a tough resin (ABS-like) for the click beams and the latch tongue.",
+         f"The resin fit (pod.py RESIN_FIT, a best guess; stl/installed/resin/): door gap {pod.RESIN_FIT['door_gap']:g} mm, door post gap {pod.RESIN_FIT['door_clr']:g} mm, "
+         f"amp slot gap {pod.RESIN_FIT['amp_clr']:g} mm. The panel has the hook gaps for 0.10 mm layers ({pod.LID_SCREW['gap']:g} mm).",
+         "The starter plate (resin) has the same nut bosses. Print it first to test the nut pockets on the cover.",
          "Wash the parts in IPA and post-cure them before the fit test."])
 
     h("2. Electronics")
@@ -110,13 +133,13 @@ def content():
     h("3. Assembly")
     st = lambda n: f" ([viewer step {n}]({VIEWER}#step={n}))"
     p(f"The 3D viewer shows each step with animation: [{VIEWER}#step=1]({VIEWER}#step=1). "
-      "Labels are cut into the inside of the body: MIC, AMP and SPEAKER where each part goes, PIN 1 at the end "
-      "of the Pi header, and grooves in the floor under the amp cable and the mic wire run. "
-      "BIBOARD and PIN 40 are on the inner face of the door. "
+      "Grooves in the floor are under the amp cable and the mic wire run. "
       "The door is a piece of the left wall over the BiBoard plugs. With the panel off, lift the door out: a finger reaches the plugs from the side.")
-    lst(["Fit the platform cover in place of the stock cover." + st(2),
-         f"Put the empty body on the pegs {PI.SLIDE:g} mm behind its place, grille to the rear. Slide it {PI.SLIDE:g} mm forward until it clicks "
-         f"(about {K['lock_N']:g} N). The BiBoard header is now in the notch at the front of the left well." + st(3) + st(4),
+    lst(["Put the 6 inserts or nuts into the bosses: 4 in the floor and 2 on the speaker posts (see Inserts or nuts)." + st(2),
+         "Put the empty body on the cover for screws, grille to the rear. Put a screw up through each of the 4 rings from inside the cover (M3 x 4 for inserts, M2.5 x 4 for nuts), "
+         "into the insert or the nut, and tighten it." + st(3),
+         "Remove the stock back cover. Clip the cover and the body onto the robot as one unit. "
+         "The BiBoard header comes up through the opening in the cover and the notch at the front of the left well." + st(4),
          "Push the speaker down into the two side grooves at the rear, body to the rear." + st(5),
          "Plug the six mic jumpers onto the mic header: 15 cm jumpers on GND and 3V. Drop the mic into the slots in the post and the ledge "
          "on the right wall near the front, port to the wall, header at the front." + st(6),
@@ -125,11 +148,12 @@ def content():
          "Set the PiSugar AUTO switch before the cell goes on the board: it is under the cell. Push the Pi + PiSugar S stack down into the end grooves." + st(8),
          "Plug the wires one at a time, in the order of section 5: the splices, the Pi ends of the BiBoard jumpers, the amp cable, the mic jumpers, "
          "then the BiBoard ends. The viewer has one step for each wire." + st(9) + st(19),
-         "Slide the door down into the two grooves of the opening in the left wall, labels to the inside. The panel holds it down." + st(20),
-         f"Put the panel down {pod.LID_SLIDE:g} mm behind its place, then slide it forward until the latch clicks (about {S['slide_on_N']:g} N). "
-         "The hooks under the panel go under the lugs in the walls." + st(21),
-         f"Open: lift the rear edge of the panel at the finger notch (about {S['lift_N']:g} N), slide the panel {pod.LID_SLIDE:g} mm rearward and lift it. "
-         f"Remove: open the panel, lift the door out, pull the BiBoard plugs off from the side, slide the body {PI.SLIDE:g} mm rearward and lift it."])
+         "Slide the door down into the two grooves of the opening in the left wall. The panel holds it down." + st(20),
+         f"Put the panel down {pod.LID_SLIDE:g} mm behind its place, then slide it forward. The hooks under the panel go under the lugs in the walls. "
+         "Put the two panel screws down through the panel into the speaker posts (M3 x 12 for inserts, M2.5 x 12 for nuts)." + st(21),
+         f"Open: take out the two panel screws, slide the panel {pod.LID_SLIDE:g} mm rearward and lift it. "
+         "Remove: open the panel, lift the door out, pull the BiBoard plugs off from the side, and unclip the cover from the robot. "
+         "To take the body off the cover, take out the 4 screws from inside the cover."])
     import guide
     guide.build_steps()
     for i, s in enumerate(guide.STEPS, 1):
@@ -190,11 +214,11 @@ def content():
     h("6. Checks")
     h0, h1 = MO["head"]["free"]
     T = MO["tail"]
-    lst([f"Slide: the empty body is clear of the robot at the click point, half way and at the drop-on place. "
-         f"The clicks are about {K['lock_N']:g} N to lock and {K['unlock_N']:g} N to unlock (beam strain {K['strain_pct']:g} %).",
+    lst(["Mount: the cover and the body go straight down onto the robot together. The body has no contact on the way. "
+         "The cover touches the shoulders only at its clips, the same as the cover with the pegs. "
+         "Each cover screw goes through the cover and the floor into its insert or nut, clear of the boards. The floor is on the 4 cover rings.",
          f"Panel: it goes down {pod.LID_SLIDE:g} mm behind its place and slides forward without contact. "
-         f"The latch tongue lifts {S['lift_mm']:g} mm over the rib: about {S['slide_on_N']:g} N to slide on, {S['lift_N']:g} N to lift, strain {S['strain_pct']:g} %. "
-         "Lifted 0.3 mm, the hooks touch the lugs. Turned 180 deg, the panel does not go down.",
+         "Each panel screw goes down through the panel column and the post boss, clear of the boards.",
          "Install: the speaker and the stack each go straight down 40 mm without contact. The mic drops into its slots; the post, the ledge and a stop hold it. "
          "The amp tilts in under its nubs. "
          "Each wire, in its order, goes in from 40 mm above without contact with the parts and wires already in place "
@@ -204,7 +228,7 @@ def content():
          "Switch and button: the switch lever is under the HDMI opening over its full travel. The PiSugar button is under the large opening.",
          f"Robot: the head turns from {h0} to {h1} deg without contact. {len(MO['legs']['front']['addon'])} front and "
          f"{len(MO['legs']['rear']['addon'])} rear leg poses (of 504) touch the add-on, only when a thigh swings up over the back. "
-         f"The Petoi tail is {T['gap']:g} mm under the add-on, and {T['drop_on_gap']:g} mm at the drop-on place."])
+         f"The Petoi tail is {T['gap']:g} mm under the add-on."])
     p("Open items: the BiBoard header height is an estimate (measure it). The speaker size is a ruler measurement. "
       "The mic port is assumed at the board center; the 7 holes cover ±2.2 mm. The SD card is assumed 2.5 mm out of its holder. "
       "The heatsink and the screw heads (4.6 x 1.8 mm) are estimates. PiSugar has no 3D model of the PiSugar S: its fit model is drawn from the PCB drawing in the PiSugar docs. The part heights, the cell gap (3.3 mm) and the cell size (taken from the PiSugar 2 cell) are estimates. "
@@ -212,7 +236,9 @@ def content():
 
     h("7. Files and license")
     tbl([["File", "Content"],
-         ["stl/print/", "the parts in print orientation"],
+         ["stl/print/", "the parts in print orientation (the screw version, and the click-on version)"],
+         ["stl/print/resin/", "the resin parts (glued nuts), each one alone in its resin orientation"],
+         ["stl/screw/", "the screw version in the robot frame, with the screws and the inserts (desktop viewer: --stl stl/screw)"],
          ["stl/plates/", "print plates for the FDM and the resin printer (3MF, STL), plates.json, resin_check.json"],
          ["cad/*.step", "the parts as STEP (from the mesh)"],
          ["cad/assembly_step.zip", "one STEP file with the robot, the platform and the add-on in place, with named and colored parts"],
@@ -496,8 +522,9 @@ def _parts(a, view, left=False):
         a.text(r[0] + r[2] / 2, r[1] + r[3] / 2, name, ha="center", va="center", fontsize=5.6, color="#8a9099", zorder=1, clip_on=True)
 
 
-def pod_mass(name):
-    M = pod.mesh_to_manifold(pod.load_stl(os.path.join(pod.OUT, "installed", f"{name}.stl")))
+def pod_mass(name, folder=("screw", "installed")):
+    """The mass of a part in g (solid PLA), from stl/screw/installed/ (the screw version) or another folder."""
+    M = pod.mesh_to_manifold(pod.load_stl(os.path.join(pod.OUT, *folder, f"{name}.stl")))
     return f"{M.volume() * 1.24e-3:.0f}"
 
 

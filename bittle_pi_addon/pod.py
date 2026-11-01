@@ -34,7 +34,7 @@ from build123d import Box, Cylinder, Pos, Rot, export_stl
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(ROOT))            # the folder that holds bittle_platform/
-from bittle_platform import interface as PI          # platform v3.3: cover, pegs, keyholes
+from bittle_platform import interface as PI          # platform v3.4: cover, pegs, keyholes, screw mount
 REF = os.path.join(ROOT, "reference")                # vendor models (Pi Zero)
 PREF = os.path.join(os.path.dirname(ROOT), "bittle_platform", "reference")   # Petoi robot parts
 OUT = os.path.join(ROOT, "stl")
@@ -852,28 +852,54 @@ def write_body_3mf(body, path):
 # button or pan head screw goes up through the cover from inside. The head is in a pocket in the cover wall and does not
 # go down to the BiBoard. A ring on the cover top holds the pod floor, so the pod has no play on the cover.
 # The boss top is 0.3 under the battery (x = +12) and 0.8 under the Pi plugs (x = -12): use screws of 5 mm or shorter.
-SCREW_MOUNT = dict(insert_d=3.6, insert_depth=3.9, boss_d=7.0, top=30.2, clr_d=2.9, head_d=5.4, web=0.8, ring_d=7.6)
+SCREW_MOUNT = dict(insert_d=3.6, insert_depth=3.9, boss_d=7.0, top=30.2,
+                   **{k: v for k, v in PI.SCREW_MOUNT.items() if k != "screw"})     # the cover side: platform v3.4
 MOUNT = "keyhole"               # "keyhole" (platform pegs) or "screw" (build_body_screw, build_panel_screw)
 # Panel screws (screw mount): no latch. An M2.5 x 4 insert in a boss on the top of each speaker post, and an M2.5 x 12
 # screw down through a column in the panel. The boss top is gap under the column: the screw pulls the panel down,
 # and the front and side hooks press up on their lugs (no rattle). The hook gaps are smaller (LID_SCREW, 0.1 mm layers).
-PANEL_SCREW = dict(x=27.5, z=SPK_ZE + SPK["ear_t"] / 2, boss_d=7.0, col_d=6.8, gap=0.1, cb_d=5.0, cb_depth=2.0)
+# M3 panel screws (user: the M2.5 insert holes were too big, so the FDM print has M3 inserts in the same holes).
+# clr_d: an M3 clearance hole (FDM holes print about 0.2 under). cb: an M3 button or pan head. col_d: a 0.8 wall around cb.
+PANEL_SCREW = dict(x=27.5, z=SPK_ZE + SPK["ear_t"] / 2, boss_d=7.0, col_d=8.0, gap=0.1, clr_d=3.5, cb_d=6.4, cb_depth=2.4)
 LID_SCREW = dict(gap=0.05, gap_y=0.05, front_gap=0.02)
 
 
+# Nuts in place of the inserts, for resin (a soldering iron melts PLA, and a resin part cracks). An M2.5 nut (5.0
+# across the flats, 2.0 thick) goes into a hex pocket from the top of each boss, with a drop of superglue. The bosses
+# are 8.0 across, so the pocket corners have a 1.0 wall.
+# Floor: the nut is at Y 27.0 to 29.0. The M2.5 x 4 cover screw ends at Y 29.2, so it goes fully through the nut.
+# Speaker posts: the nut is at the top of the post, under the panel column. The M2.5 x 12 screw goes through it.
+NUT_MOUNT = dict(af=5.0, t=2.0, clr=0.1, boss_d=8.0, floor_y=27.0)
+FASTENER = "insert"             # "insert" (heat-set inserts, FDM) or "nut" (glued nuts, resin: build_resin)
+
+
+def hex_y(x, z, y0, y1, af):
+    """A hex prism along Y, af across the flats (two flats are parallel to X)."""
+    from build123d import RegularPolygon, extrude
+    return b3d_to_manifold(Pos(x, y0, z) * Rot(-90, 0, 0) * extrude(RegularPolygon(af / 2 / math.cos(math.pi / 6), 6), amount=y1 - y0))
+
+
+def boss_d(d):
+    return NUT_MOUNT["boss_d"] if FASTENER == "nut" else d
+
+
 def screw_bosses():
-    """The insert bosses on the floor top (design frame)."""
+    """The insert or nut bosses on the floor top (design frame)."""
     S = SCREW_MOUNT
-    return union([b3d_to_manifold(cyl_y(-px, pz, FLOOR_Y1 - 0.01, S["top"], S["boss_d"] / 2)) for px, pz in PEGS])
+    return union([b3d_to_manifold(cyl_y(-px, pz, FLOOR_Y1 - 0.01, S["top"], boss_d(S["boss_d"]) / 2)) for px, pz in PEGS])
 
 
 def screw_holes():
-    """The insert holes in the bosses and the screw holes through the floor (design frame)."""
-    S = SCREW_MOUNT
-    yi = S["top"] - S["insert_depth"]
+    """The insert holes or the nut pockets in the bosses, and the screw holes through the floor (design frame)."""
+    S, N = SCREW_MOUNT, NUT_MOUNT
     out = []
     for px, pz in PEGS:
-        out.append(b3d_to_manifold(cyl_y(-px, pz, yi, S["top"] + 1.0, S["insert_d"] / 2)))
+        if FASTENER == "nut":
+            yi = N["floor_y"]
+            out.append(hex_y(-px, pz, yi, S["top"] + 1.0, N["af"] + N["clr"]))
+        else:
+            yi = S["top"] - S["insert_depth"]
+            out.append(b3d_to_manifold(cyl_y(-px, pz, yi, S["top"] + 1.0, S["insert_d"] / 2)))
         out.append(b3d_to_manifold(cyl_y(-px, pz, FLOOR_Y0 - 1.0, yi + 0.01, S["clr_d"] / 2)))
     return union(out)
 
@@ -905,7 +931,7 @@ def build_starter_screw():
 def panel_screw_bosses():
     """Bosses on the tops of the speaker posts, up to gap under the seam (design frame; the posts are symmetric)."""
     P, S = PANEL_SCREW, SCREW_MOUNT
-    return union([b3d_to_manifold(cyl_y(sx * P["x"], P["z"], 50.0, SEAM - P["gap"], P["boss_d"] / 2)) for sx in (-1, 1)])
+    return union([b3d_to_manifold(cyl_y(sx * P["x"], P["z"], 50.0, SEAM - P["gap"], boss_d(P["boss_d"]) / 2)) for sx in (-1, 1)])
 
 
 def panel_screw_holes():
@@ -913,7 +939,11 @@ def panel_screw_holes():
     top = SEAM - P["gap"]
     out = []
     for sx in (-1, 1):
-        out.append(b3d_to_manifold(cyl_y(sx * P["x"], P["z"], top - S["insert_depth"] - 0.4, top + 1.0, S["insert_d"] / 2)))
+        if FASTENER == "nut":
+            N = NUT_MOUNT
+            out.append(hex_y(sx * P["x"], P["z"], top - N["t"] - 0.2, top + 1.0, N["af"] + N["clr"]))
+        else:
+            out.append(b3d_to_manifold(cyl_y(sx * P["x"], P["z"], top - S["insert_depth"] - 0.4, top + 1.0, S["insert_d"] / 2)))
         out.append(b3d_to_manifold(cyl_y(sx * P["x"], P["z"], top - S["insert_depth"] - 1.8, top, S["clr_d"] / 2)))
     return union(out)
 
@@ -922,7 +952,7 @@ def panel_screw_columns():
     """Columns from the panel top down to the seam over the speaker posts, with the screw holes and a counterbore."""
     P, S = PANEL_SCREW, SCREW_MOUNT
     col = union([b3d_to_manifold(cyl_y(sx * P["x"], P["z"], SEAM, PANEL_IN + 0.01, P["col_d"] / 2)) for sx in (-1, 1)])
-    holes = union([b3d_to_manifold(cyl_y(sx * P["x"], P["z"], SEAM - 1.0, TOP + 1.0, S["clr_d"] / 2)) +
+    holes = union([b3d_to_manifold(cyl_y(sx * P["x"], P["z"], SEAM - 1.0, TOP + 1.0, P["clr_d"] / 2)) +
                    b3d_to_manifold(cyl_y(sx * P["x"], P["z"], TOP - P["cb_depth"], TOP + 1.0, P["cb_d"] / 2)) for sx in (-1, 1)])
     return col, holes
 
@@ -2472,9 +2502,17 @@ RESIN_FIT = dict(gap=0.08, travel=0.25, pad=0.05, door_gap=0.12, door_clr=0.15, 
 
 
 def build_resin():
-    """The add-on parts (design frame) with RESIN_FIT, and the click values."""
-    with fit_set(RESIN_FIT) as f:
-        return dict(pod_body=build_body(), pod_door=build_door(), pod_panel=build_panel()), f
+    """The screw version for resin (robot frame), with RESIN_FIT and glued nuts in place of the inserts:
+    the body, the panel (the hook gaps for 0.10 mm layers), the door, the cover and the starter plate."""
+    global FASTENER
+    old, FASTENER = FASTENER, "nut"
+    try:
+        with fit_set(RESIN_FIT) as f:
+            parts = dict(pod_body=flip_x(build_body_screw()), pod_panel=flip_x(build_panel_screw(fine=True)),
+                         pod_door=flip_x(build_door()), cover_screw=build_cover_screw(), starter_plate_screw=build_starter_screw())
+    finally:
+        FASTENER = old
+    return parts, f
 
 
 def export_assembly(path, models):
@@ -2555,7 +2593,7 @@ def main(fast=False):
     os.makedirs(os.path.join(OUT, "installed", "resin"), exist_ok=True)
     resin, f = build_resin()
     for n, M in resin.items():
-        save_stl(flip_x(M), os.path.join(OUT, "installed", "resin", f"{n}.stl"))
+        save_stl(M, os.path.join(OUT, "installed", "resin", f"{n}.stl"))
     printing["resin"] = dict(fit=RESIN_FIT, click=f)
     printing["pod_body_fine"] = dict(fit=FINE_FIT, click=f)
     print(f"pod_body_fine (0.1 mm layers): gap {FINE_FIT['gap']}, click travel {FINE_FIT['travel']}, slide {f['lock_N']} N")

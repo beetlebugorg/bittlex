@@ -41,6 +41,9 @@ front-left edge lets the head camera plug out.
 - **Keep-out model.** [`keepout.stl`](bittle_platform/stl/installed/keepout.stl)
   shows the space that an add-on must keep clear: the robot, the peg heads
   and the BiBoard header.
+- **Screw mount.** A heavy add-on can screw to a cover for screws: 4 M2.5
+  screws at the peg places, up from inside the cover. The add-on and the
+  cover clip onto the robot as one unit.
 
 ## Example: the Pi add-on
 
@@ -50,16 +53,17 @@ front-left edge lets the head camera plug out.
 </picture>
 
 A Raspberry Pi with a battery, a speaker and a microphone, in one rounded box
-that clicks onto the platform.
+that screws to a cover for screws.
 
 - Raspberry Pi Zero 2 W with a PiSugar S battery (1200 mAh), on its long edge over the robot center, ports up
 - NS4168 I2S amp and a 3 W speaker at the rear, sound out of the rear grille
 - SPH0645 I2S microphone on the right side near the front, away from the speaker
-- One-piece body: it clicks onto the platform empty, then every part goes in from the top
+- One-piece body: it screws to the cover empty, the cover and the body clip onto the robot, then every part goes in from the top
+- Heat-set inserts hold the screws in an FDM print, and glued M2.5 nuts in a resin print
 - Serial link to the BiBoard: the Dupont plugs go onto the header at the front left, and all the wires stay inside
-- A slide-on top panel with openings over the plugs, the power switch and the PiSugar button
+- A slide-on top panel with two screws, and openings over the plugs, the power switch and the PiSugar button
 - A door in the left wall over the BiBoard plugs: take the panel off, lift the door out, and reach the plugs from the side
-- On FDM, the add-on parts print without supports. Print plates for an FDM and a resin printer are in `bittle_pi_addon/stl/plates/`
+- Print plates for an FDM and a resin printer are in `bittle_pi_addon/stl/plates/`
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="bittle_pi_addon/doc/iso/open-dark.png">

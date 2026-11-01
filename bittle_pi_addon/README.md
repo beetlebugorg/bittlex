@@ -1,64 +1,66 @@
-# Bittle X Pi Add-on v0.25 - Build Guide
+# Bittle X Pi Add-on v0.26 - Build Guide
 
-Version 0.25, 2026-10-26. A sample add-on for the Bittle X platform v3.3 (../bittle_platform). It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. The case is one rounded box (the body) and a slide-on top panel. The body clicks onto the platform pegs, and every part goes in from the top. No tools are necessary. A dab of glue sets the amp. On FDM, the add-on parts print without supports.
+Version 0.26, 2026-10-31. A sample add-on for the Bittle X platform v3.4 (../bittle_platform). It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. The case is one rounded box (the body) and a slide-on top panel. The body screws to a cover for screws, and the cover and the body clip onto the robot as one unit, in place of the stock cover. Every part goes in from the top. Two screws hold the panel. A dab of glue sets the amp.
 
-![The add-on on the platform: the port windows in the panel. The mic holes are in the right side, near the front.](doc/iso/hero-light.png)
+![The add-on on the robot: the port windows in the panel. The mic holes are in the right side, near the front.](doc/iso/hero-light.png)
 
 
 ## 1. Parts to print
 
 | File (stl/print/) | Material | Orientation | Mass |
 |---|---|---|---|
-| pod_body.3mf (or .stl) | PLA | floor on the bed | 39 g |
-| pod_body_fine.3mf (or .stl), for 0.10 mm layers | PLA | floor on the bed | 39 g |
-| pod_panel.stl | PLA, second color | upside down: top on the bed | 20 g |
-| pod_door.stl | PLA, white | flat on its outer face | 1 g |
-| cover_pegs.stl (../bittle_platform), recommended | PLA | stand on the rear end, tree supports, 14-line brim | 11 g |
-| cover_pegs_foot.stl (../bittle_platform), alternative | PLA | stand on the rear end, foot on the bed | 11 g |
+| pod_body_screw.3mf (or .stl) | PLA | floor on the bed | 40 g |
+| pod_panel_screw.stl | PLA, second color | upside down: top on the bed | 21 g |
+| pod_door.stl | PLA | flat on its outer face | 1 g |
+| cover_screw.stl | PLA | stand on the rear end, tree supports, 14-line brim | 10 g |
+| starter_plate_screw.stl (optional) | PLA | plate bottom on the bed | 5 g |
 
-Print every part with the Cura profile "Bittle X" (../cura/Bittle_X.curaprofile; 0.20 mm layers, no supports, 6-line brim). ../cura/install_profiles.py installs it, and a copy with the size compensation of each spool that the tolerance app measured ("Bittle X - <spool>"). The add-on parts need no supports. Print the cover without the foot: the foot teeth leave a spot on the cover where they break off.
+Each part has a file for 0.20 mm layers and a *_fine file for 0.10 mm layers, for example pod_panel_screw.stl and pod_panel_screw_fine.stl. The fine panel has smaller hook gaps (0.05 mm). The other fine files are the same as the 0.20 mm files now. Slice them with the profiles in ../profiles/taz-workhorse-se (pla-0.20-standard and pla-0.10-fine) and a brim. printdeck.yml in the repository root has the profile and the settings of each part. The old Cura profile "Bittle X" (../cura/Bittle_X.curaprofile; 0.20 mm layers) also works for the 0.20 mm files.
 
-At 0.10 mm layers, print pod_body_fine in place of pod_body. At fine layers the keyholes print near their true size, and the standard body is loose on the pegs. The fine body has a smaller slot gap (0.10 mm a side, standard 0.35) and more click travel (0.375 mm, standard 0.20). A 0.1 mm pad with a ramp on each click beam clamps the body down on the peg heads, so the body does not lift or tilt. The slide force is about 8 N. The fit test plates are in ../bittle_platform/stl/fit_fine/ (test 14). Only the floor keyholes change; the cover and its pegs stay the same.
+pod_body_screw.3mf has support blockers on the two amp nubs and at the middle of the rear wall. The nubs print without support, and the tall, narrow support under them fails. Open the 3MF in Cura and turn on support as usual. starter_plate_screw.stl is the starter plate of the platform with the same 4 bosses: use it to start an add-on of your own, or to test the inserts or nuts on the cover.
 
-The 3MF files (pod_body.3mf, pod_body_fine.3mf) have support blockers on the two amp nubs and on the latch rib of the rear wall. These print without support, and the tall, narrow support under them fails. Open the 3MF in Cura and turn on support as usual.
 
-Screw version (rev 0.26; viewer: --stl bittle_pi_addon/stl/screw). The pod screws to a cover with no pegs, and the pod and the cover clip onto the robot as one unit. The panel slides on as before, and two screws hold it in place of the latch.
+## Inserts or nuts
 
-Each screw part has a file for 0.20 mm layers and a *_fine file for 0.10 mm layers, for example pod_panel_screw.stl and pod_panel_screw_fine.stl. The fine panel has smaller hook gaps (0.05 mm). The other fine files are the same as the 0.20 mm files now.
+Each of the 6 bosses holds a threaded part for a screw: 4 in the floor (the cover screws) and 2 on the speaker posts (the panel screws). The FDM parts use M3 heat-set inserts: the holes are too big for M2.5 inserts. The resin parts use M2.5 nuts with superglue.
 
-| File (stl/print/) | Inserts and screws |
-|---|---|
-| cover_screw.stl: stand on the rear end, tree supports, 14-line brim | 4 x M2.5 x 4 or x 5 button or pan head screws, up from inside the cover |
-| pod_body_screw.3mf (or .stl): floor on the bed | 4 x M2.5 x 4 inserts in the floor bosses, 2 x M2.5 x 4 inserts in the speaker post bosses (3.6 mm holes) |
-| pod_panel_screw.stl: top on the bed | 2 x M2.5 x 12 screws down through the panel top, over the speaker posts |
-| starter_plate_screw.stl: plate bottom on the bed | the starter plate for the screw mount: 4 x M2.5 x 4 inserts in the bosses, for an add-on of your own |
+|  | FDM print (PLA): heat-set inserts | Resin print: glued nuts |
+|---|---|---|
+| Files | stl/print/: pod_body_screw, pod_panel_screw, cover_screw | stl/print/resin/, or the resin plate (stl/plates/resin_phenom) |
+| In the bosses | 6 x M3 heat-set insert (3.6 mm holes, 3.9 mm deep; bosses 7 mm) | 6 x M2.5 hex nut (5 mm across the flats, 2 mm thick) in hex pockets; bosses 8 mm |
+| Screws | 4 x M3 x 4 button or pan head (cover), 2 x M3 x 12 (panel) | 4 x M2.5 x 4 button or pan head (cover), 2 x M2.5 x 12 (panel) |
+| Tools | soldering iron (an insert tip helps), screwdriver | superglue, screwdriver |
 
-1. Press the 6 inserts in flush with a soldering iron.
-2. Screw the body to the cover from inside the cover. Then put in the electronics.
-3. Put the panel down 5 mm behind its place, slide it forward, and put in the two panel screws.
-4. Clip the cover onto the robot.
+1. FDM: heat each insert with the soldering iron and press it in straight, flush with the top of the boss. Let it cool before you put in a screw.
+2. Resin: put a nut flat into the hex pocket at the top of each boss and push it to the bottom. Put a drop of superglue on its edge. Keep the glue off the thread. Let the glue set.
+3. Floor: the nut is at the bottom of its pocket. The M2.5 x 4 cover screw goes fully through the nut (the screw tip is at Y 29.2, the nut top at Y 29.0).
+4. Speaker posts: the panel column is over the nut and holds it in its pocket. The M2.5 x 12 panel screw goes through the nut.
 
-Print quality. The body and panel walls are 2.0 mm: with the offsets of the body profile, Cura slices 4 full lines of 0.5 mm. The body walls are vertical and its floor is on the bed. The only overhangs (50 mm² in total) are the flat undersides of the two amp nubs (1.5 x 4 mm). The front-left cable notch is a 45 deg chamfer. The grille holes and the mic holes are teardrops (round, with a 45 deg point on top), so they print without bridges. The panel top edge round ends in a 45 deg chamfer at the bed, the port openings have 45 deg chamfers, and the lid hooks and the lugs in the body have 45 deg faces. The latch tongue bends along the layers of the panel. Its overhangs (7 mm²) are short bridges at the lid hooks. The door prints flat on its outer face.
+
+## Click-on version
+
+The click-on version has no screws: pod_body.3mf, pod_body_fine.3mf and pod_panel.stl click onto cover_pegs.stl (../bittle_platform). Put the body on the pegs 7 mm behind its place and slide it forward until it clicks; a latch at the rear holds the panel. At 0.10 mm layers, print pod_body_fine in place of pod_body: it has a smaller slot gap (0.10 mm a side) and more click travel (0.375 mm). The fit test plates are in ../bittle_platform/stl/fit_fine/ (test 14). With the full pod on it, the click-on body is loose: the screw version replaces it.
+
+Print quality. The body and panel walls are 2.0 mm: with the offsets of the body profile, Cura slices 4 full lines of 0.5 mm. The body walls are vertical and its floor is on the bed. The only overhangs are the flat undersides of the two amp nubs (1.5 x 4 mm). The front-left cable notch is a 45 deg chamfer. The grille holes and the mic holes are teardrops (round, with a 45 deg point on top), so they print without bridges. The panel top edge round ends in a 45 deg chamfer at the bed, the port openings have 45 deg chamfers, and the lid hooks and the lugs in the body have 45 deg faces. The holes in the cover are teardrops, because the cover prints on its rear end. The door prints flat on its outer face.
 
 
 ## Print plates
 
-stl/plates/ has every part and the platform cover on one bed, in its print orientation. Each 3MF has one object for each part. Each plate folder has one STL for each part.
+stl/plates/ has every part on one bed, in its print orientation. Each 3MF has one object for each part. Each plate folder has one STL for each part.
 
 | Printer | File | Orientation |
 |---|---|---|
-| FDM: LulzBot TAZ Workhorse (280 x 280 x 300), 0.5 mm nozzle | fdm_taz.3mf or fdm_taz_plate.stl | The parts as in stl/print/. Use the "Bittle X" Cura profile. The cover stands on its rear end: turn on tree supports and a 14-line brim. |
-| Resin: Peopoly Phenom, first model (276 x 155 x 400) | resin_phenom.3mf or resin_phenom_plate.stl | The body, the panel, the door and the two fit coupons are tipped 45 deg, and the cover stands on its rear end. The lowest point is at Z 0. Lift the parts 5 mm in the slicer and add supports. |
+| FDM: LulzBot TAZ Workhorse (280 x 280 x 300), 0.5 mm nozzle | fdm_taz.3mf or fdm_taz_plate.stl | The screw parts as in stl/print/ (0.20 mm files). The cover stands on its rear end: turn on tree supports and a 14-line brim. |
+| Resin: Peopoly Phenom, first model (276 x 155 x 400) | resin_phenom.3mf or resin_phenom_plate.stl | The screw version with nuts: the body, the panel, the door and the starter plate are tipped 45 deg, and the cover stands on its rear end. The lowest point is at Z 0. Lift the parts 5 mm in the slicer and add supports. stl/print/resin/ has each part alone. |
 
-1. Body (resin): the floor is toward the plate. Put the supports on the floor underside. Keep them out of the keyhole slots and off the click beams. Sand the marks flat: the floor slides on the cover.
+1. Body (resin): the floor is toward the plate. Put the supports on the floor underside, off the screw holes. Sand the marks flat: the floor is on the cover rings.
 2. Panel (resin): the open side is toward the plate. The top face has no support marks.
-3. Cover (resin): it stands on its rear end, the points of the peg heads down. Put the supports on the rear edge only.
+3. Cover (resin): it stands on its rear end. Put the supports on the rear edge only.
 4. Door (resin): the outer face is up, tipped 45 deg. The supports go on the inner face and the ears.
 5. The resin check found no cups (trapped resin) in these orientations.
-6. The resin plate has the resin fit (pod.py RESIN_FIT, a best guess; stl/installed/resin/). Keyholes: slot gap 0.08 mm a side, click travel 0.25 mm (about 2.8 N), and a 0.05 mm clamp pad. Door gap 0.12 mm, door post gap 0.15 mm, amp slot gap 0.15 mm. The lid hooks and the latch do not change.
-7. The two fit coupons are a step tighter (1 notch in the front rim: gap 0.05, click 0.30) and a step looser (2 notches: gap 0.12, click 0.20) than the body. Try them on the cover with the body. If the body is loose or tight, the coupon that fits shows the next fit.
-8. Use a tough resin (ABS-like) for the click beams and the latch tongue.
-9. Wash the parts in IPA and post-cure them before the fit test.
+6. The resin fit (pod.py RESIN_FIT, a best guess; stl/installed/resin/): door gap 0.12 mm, door post gap 0.15 mm, amp slot gap 0.15 mm. The panel has the hook gaps for 0.10 mm layers (0.05 mm).
+7. The starter plate (resin) has the same nut bosses. Print it first to test the nut pockets on the cover.
+8. Wash the parts in IPA and post-cure them before the fit test.
 
 
 ## 2. Electronics
@@ -76,44 +78,47 @@ Balance. The add-on weighs 114 g (weighed parts; printed parts at 50 % fill). It
 
 ## 3. Assembly
 
-The 3D viewer shows each step with animation: [https://beetlebugorg.github.io/bittlex/viewer/#step=1](https://beetlebugorg.github.io/bittlex/viewer/#step=1). Labels are cut into the inside of the body: MIC, AMP and SPEAKER where each part goes, PIN 1 at the end of the Pi header, and grooves in the floor under the amp cable and the mic wire run. BIBOARD and PIN 40 are on the inner face of the door. The door is a piece of the left wall over the BiBoard plugs. With the panel off, lift the door out: a finger reaches the plugs from the side.
+The 3D viewer shows each step with animation: [https://beetlebugorg.github.io/bittlex/viewer/#step=1](https://beetlebugorg.github.io/bittlex/viewer/#step=1). Grooves in the floor are under the amp cable and the mic wire run. The door is a piece of the left wall over the BiBoard plugs. With the panel off, lift the door out: a finger reaches the plugs from the side.
 
-1. Fit the platform cover in place of the stock cover. ([viewer step 2](https://beetlebugorg.github.io/bittlex/viewer/#step=2))
-2. Put the empty body on the pegs 7 mm behind its place, grille to the rear. Slide it 7 mm forward until it clicks (about 2.2 N). The BiBoard header is now in the notch at the front of the left well. ([viewer step 3](https://beetlebugorg.github.io/bittlex/viewer/#step=3)) ([viewer step 4](https://beetlebugorg.github.io/bittlex/viewer/#step=4))
-3. Push the speaker down into the two side grooves at the rear, body to the rear. ([viewer step 5](https://beetlebugorg.github.io/bittlex/viewer/#step=5))
-4. Plug the six mic jumpers onto the mic header: 15 cm jumpers on GND and 3V. Drop the mic into the slots in the post and the ledge on the right wall near the front, port to the wall, header at the front. ([viewer step 6](https://beetlebugorg.github.io/bittlex/viewer/#step=6))
-5. Plug the flat amp cable into the I2S connector at the front end of the amp and the speaker into its rear end. Put the bottom edge of the amp into the slot along the right wall, parts to the inside, tilt its top edge under the two nubs, and set it with a dab of glue. Let the amp cable hang out of the top. ([viewer step 7](https://beetlebugorg.github.io/bittlex/viewer/#step=7))
-6. Set the PiSugar AUTO switch before the cell goes on the board: it is under the cell. Push the Pi + PiSugar S stack down into the end grooves. ([viewer step 8](https://beetlebugorg.github.io/bittlex/viewer/#step=8))
-7. Plug the wires one at a time, in the order of section 5: the splices, the Pi ends of the BiBoard jumpers, the amp cable, the mic jumpers, then the BiBoard ends. The viewer has one step for each wire. ([viewer step 9](https://beetlebugorg.github.io/bittlex/viewer/#step=9)) ([viewer step 19](https://beetlebugorg.github.io/bittlex/viewer/#step=19))
-8. Slide the door down into the two grooves of the opening in the left wall, labels to the inside. The panel holds it down. ([viewer step 20](https://beetlebugorg.github.io/bittlex/viewer/#step=20))
-9. Put the panel down 5 mm behind its place, then slide it forward until the latch clicks (about 9.2 N). The hooks under the panel go under the lugs in the walls. ([viewer step 21](https://beetlebugorg.github.io/bittlex/viewer/#step=21))
-10. Open: lift the rear edge of the panel at the finger notch (about 5 N), slide the panel 5 mm rearward and lift it. Remove: open the panel, lift the door out, pull the BiBoard plugs off from the side, slide the body 7 mm rearward and lift it.
+1. Put the 6 inserts or nuts into the bosses: 4 in the floor and 2 on the speaker posts (see Inserts or nuts). ([viewer step 2](https://beetlebugorg.github.io/bittlex/viewer/#step=2))
+2. Put the empty body on the cover for screws, grille to the rear. Put a screw up through each of the 4 rings from inside the cover (M3 x 4 for inserts, M2.5 x 4 for nuts), into the insert or the nut, and tighten it. ([viewer step 3](https://beetlebugorg.github.io/bittlex/viewer/#step=3))
+3. Remove the stock back cover. Clip the cover and the body onto the robot as one unit. The BiBoard header comes up through the opening in the cover and the notch at the front of the left well. ([viewer step 4](https://beetlebugorg.github.io/bittlex/viewer/#step=4))
+4. Push the speaker down into the two side grooves at the rear, body to the rear. ([viewer step 5](https://beetlebugorg.github.io/bittlex/viewer/#step=5))
+5. Plug the six mic jumpers onto the mic header: 15 cm jumpers on GND and 3V. Drop the mic into the slots in the post and the ledge on the right wall near the front, port to the wall, header at the front. ([viewer step 6](https://beetlebugorg.github.io/bittlex/viewer/#step=6))
+6. Plug the flat amp cable into the I2S connector at the front end of the amp and the speaker into its rear end. Put the bottom edge of the amp into the slot along the right wall, parts to the inside, tilt its top edge under the two nubs, and set it with a dab of glue. Let the amp cable hang out of the top. ([viewer step 7](https://beetlebugorg.github.io/bittlex/viewer/#step=7))
+7. Set the PiSugar AUTO switch before the cell goes on the board: it is under the cell. Push the Pi + PiSugar S stack down into the end grooves. ([viewer step 8](https://beetlebugorg.github.io/bittlex/viewer/#step=8))
+8. Plug the wires one at a time, in the order of section 5: the splices, the Pi ends of the BiBoard jumpers, the amp cable, the mic jumpers, then the BiBoard ends. The viewer has one step for each wire. ([viewer step 9](https://beetlebugorg.github.io/bittlex/viewer/#step=9)) ([viewer step 19](https://beetlebugorg.github.io/bittlex/viewer/#step=19))
+9. Slide the door down into the two grooves of the opening in the left wall. The panel holds it down. ([viewer step 20](https://beetlebugorg.github.io/bittlex/viewer/#step=20))
+10. Put the panel down 5 mm behind its place, then slide it forward. The hooks under the panel go under the lugs in the walls. Put the two panel screws down through the panel into the speaker posts (M3 x 12 for inserts, M2.5 x 12 for nuts). ([viewer step 21](https://beetlebugorg.github.io/bittlex/viewer/#step=21))
+11. Open: take out the two panel screws, slide the panel 5 mm rearward and lift it. Remove: open the panel, lift the door out, pull the BiBoard plugs off from the side, and unclip the cover from the robot. To take the body off the cover, take out the 4 screws from inside the cover.
 
-![Step 1 of the build guide: Fit the platform cover. The parts of the step are green.](doc/iso/step01-light.png)
+![Step 1 of the build guide: Inserts or nuts. The parts of the step are green.](doc/iso/step01-light.png)
 
-![Step 2 of the build guide: Click the body on. The parts of the step are green.](doc/iso/step02-light.png)
+![Step 2 of the build guide: Screw the body to the cover. The parts of the step are green.](doc/iso/step02-light.png)
 
-![Step 3 of the build guide: Speaker. The parts of the step are green.](doc/iso/step03-light.png)
+![Step 3 of the build guide: Clip onto the robot. The parts of the step are green.](doc/iso/step03-light.png)
 
-![Step 4 of the build guide: Mic. The parts of the step are green.](doc/iso/step04-light.png)
+![Step 4 of the build guide: Speaker. The parts of the step are green.](doc/iso/step04-light.png)
 
-![Step 5 of the build guide: Amp and speaker lead. The parts of the step are green.](doc/iso/step05-light.png)
+![Step 5 of the build guide: Mic. The parts of the step are green.](doc/iso/step05-light.png)
 
-![Step 6 of the build guide: Pi + PiSugar S stack. The parts of the step are green.](doc/iso/step06-light.png)
+![Step 6 of the build guide: Amp and speaker lead. The parts of the step are green.](doc/iso/step06-light.png)
 
-![Step 7 of the build guide: Splices (BCLK and LRCLK). The parts of the step are green.](doc/iso/step07-light.png)
+![Step 7 of the build guide: Pi + PiSugar S stack. The parts of the step are green.](doc/iso/step07-light.png)
 
-![Step 8 of the build guide: BiBoard jumpers: Pi ends. The parts of the step are green.](doc/iso/step08-light.png)
+![Step 8 of the build guide: Splices (BCLK and LRCLK). The parts of the step are green.](doc/iso/step08-light.png)
 
-![Step 9 of the build guide: Amp cable. The parts of the step are green.](doc/iso/step09-light.png)
+![Step 9 of the build guide: BiBoard jumpers: Pi ends. The parts of the step are green.](doc/iso/step09-light.png)
 
-![Step 10 of the build guide: Mic jumpers. The parts of the step are green.](doc/iso/step10-light.png)
+![Step 10 of the build guide: Amp cable. The parts of the step are green.](doc/iso/step10-light.png)
 
-![Step 11 of the build guide: BiBoard ends. The parts of the step are green.](doc/iso/step11-light.png)
+![Step 11 of the build guide: Mic jumpers. The parts of the step are green.](doc/iso/step11-light.png)
 
-![Step 12 of the build guide: Door. The parts of the step are green.](doc/iso/step12-light.png)
+![Step 12 of the build guide: BiBoard ends. The parts of the step are green.](doc/iso/step12-light.png)
 
-![Step 13 of the build guide: Panel. The parts of the step are green.](doc/iso/step13-light.png)
+![Step 13 of the build guide: Door. The parts of the step are green.](doc/iso/step13-light.png)
+
+![Step 14 of the build guide: Panel. The parts of the step are green.](doc/iso/step14-light.png)
 
 On the top: the port openings are shaped to the plug bodies of common cables (plug + 1 mm). The Pi power, the Pi data and the PiSugar charge ports share one plain rounded rectangle. The HDMI opening also shows the PiSugar power switch, beside the plug. The lever is 5.7 mm under the panel: move it with a pen tip or a toothpick. The PiSugar button is in that rectangle too: press it with a fingertip or a pen tip.
 
@@ -183,12 +188,12 @@ Plug the jumpers one at a time, in this order. Each wire goes to its place befor
 
 ## 6. Checks
 
-1. Slide: the empty body is clear of the robot at the click point, half way and at the drop-on place. The clicks are about 2.2 N to lock and 2.2 N to unlock (beam strain 0.64 %).
-2. Panel: it goes down 5 mm behind its place and slides forward without contact. The latch tongue lifts 1 mm over the rib: about 9.2 N to slide on, 5 N to lift, strain 0.89 %. Lifted 0.3 mm, the hooks touch the lugs. Turned 180 deg, the panel does not go down.
+1. Mount: the cover and the body go straight down onto the robot together. The body has no contact on the way. The cover touches the shoulders only at its clips, the same as the cover with the pegs. Each cover screw goes through the cover and the floor into its insert or nut, clear of the boards. The floor is on the 4 cover rings.
+2. Panel: it goes down 5 mm behind its place and slides forward without contact. Each panel screw goes down through the panel column and the post boss, clear of the boards.
 3. Install: the speaker and the stack each go straight down 40 mm without contact. The mic drops into its slots; the post, the ledge and a stop hold it. The amp tilts in under its nubs. Each wire, in its order, goes in from 40 mm above without contact with the parts and wires already in place (small contacts of 2 to 3 mm³ stay where a wire slides under a loose service loop). Each Dupont housing slides off its pin without contact.
 4. Door: it slides down its grooves from 45 mm up without contact. Pushed 0.3 mm in any direction, it touches the body. Lifted 0.3 mm, it touches the panel. With the door out, a finger tip has space over the BiBoard plug.
 5. Switch and button: the switch lever is under the HDMI opening over its full travel. The PiSugar button is under the large opening.
-6. Robot: the head turns from -85 to 85 deg without contact. 18 front and 36 rear leg poses (of 504) touch the add-on, only when a thigh swings up over the back. The Petoi tail is 3.2 mm under the add-on, and 0.05 mm at the drop-on place.
+6. Robot: the head turns from -85 to 85 deg without contact. 18 front and 36 rear leg poses (of 504) touch the add-on, only when a thigh swings up over the back. The Petoi tail is 3.2 mm under the add-on.
 
 Open items: the BiBoard header height is an estimate (measure it). The speaker size is a ruler measurement. The mic port is assumed at the board center; the 7 holes cover ±2.2 mm. The SD card is assumed 2.5 mm out of its holder. The heatsink and the screw heads (4.6 x 1.8 mm) are estimates. PiSugar has no 3D model of the PiSugar S: its fit model is drawn from the PCB drawing in the PiSugar docs. The part heights, the cell gap (3.3 mm) and the cell size (taken from the PiSugar 2 cell) are estimates. To change the SD card, lift the stack out. The Pi power port and the PiSugar charge port are side by side: use one of them at a time.
 
@@ -197,7 +202,9 @@ Open items: the BiBoard header height is an estimate (measure it). The speaker s
 
 | File | Content |
 |---|---|
-| stl/print/ | the parts in print orientation |
+| stl/print/ | the parts in print orientation (the screw version, and the click-on version) |
+| stl/print/resin/ | the resin parts (glued nuts), each one alone in its resin orientation |
+| stl/screw/ | the screw version in the robot frame, with the screws and the inserts (desktop viewer: --stl stl/screw) |
 | stl/plates/ | print plates for the FDM and the resin printer (3MF, STL), plates.json, resin_check.json |
 | cad/*.step | the parts as STEP (from the mesh) |
 | cad/assembly_step.zip | one STEP file with the robot, the platform and the add-on in place, with named and colored parts |
