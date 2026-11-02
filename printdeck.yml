@@ -15,6 +15,9 @@ parts:
 
   # Pi add-on, screw version (rev 0.26)
   - name: Pod body (screw)
+    group: The pod
+    description: >-
+      The case of the Pi add-on: one rounded box with a flat floor. It holds the Pi Zero 2 W with the PiSugar S, the speaker, the amp and the mic. Press 6 M3 heat-set inserts into the bosses: 4 in the floor for the cover screws, and 2 on the speaker posts for the panel screws. Print it floor down. The 3MF has support blockers on the two amp nubs.
     printer: taz
     material: roll-4
     settings: {support_enable: true, adhesion_type: brim}
@@ -26,6 +29,9 @@ parts:
         profile: taz-workhorse-se/pla-0.20-standard
         files: [bittle_pi_addon/stl/print/pod_body_screw.3mf]
   - name: Pod panel (screw)
+    group: The pod
+    description: >-
+      The top panel. Its hooks go under lugs in the walls, and two M3 x 12 screws go down through it into the speaker posts. It has openings for the Pi ports, the PiSugar button and the power switch. Print it upside down, top on the bed. The fine variant has smaller hook gaps (0.05 mm).
     printer: taz
     material: roll-4
     settings: {adhesion_type: brim}
@@ -37,6 +43,9 @@ parts:
         profile: taz-workhorse-se/pla-0.20-standard
         files: [bittle_pi_addon/stl/print/pod_panel_screw.stl]
   - name: Cover (screw)
+    group: The cover
+    description: >-
+      The stock Bittle X back cover with no pegs, and a ring at each of the 4 peg places. Four M3 x 4 screws go up through the rings from inside the cover into the inserts in the body floor. The cover and the body then clip onto the robot as one unit. Print it on its rear end with tree supports and a 14-line brim.
     printer: taz
     material: roll-4
     settings: {support_enable: true, support_structure: tree, adhesion_type: brim, brim_line_count: 14}
@@ -48,6 +57,9 @@ parts:
         profile: taz-workhorse-se/pla-0.20-standard
         files: [bittle_pi_addon/stl/print/cover_screw.stl]
   - name: Pod door
+    group: The pod
+    description: >-
+      A piece of the left wall over the BiBoard plugs. Its ears slide down two grooves in the body, and the panel holds it down. Lift it out to reach the plugs from the side. Print it on its top edge with a brim: its outer face then has the layers of the body walls.
     printer: taz
     material: roll-4
     settings: {adhesion_type: brim}
@@ -59,6 +71,9 @@ parts:
         profile: taz-workhorse-se/pla-0.20-standard
         files: [bittle_pi_addon/stl/print/pod_door.stl]
   - name: Starter plate (screw)
+    group: Starter plates
+    description: >-
+      The platform starter plate with an M3 insert boss at each peg place, the same as the pod floor. Start an add-on of your own from it, or print it first to test the inserts and the screws on the cover.
     printer: taz
     material: roll-4
     settings: {adhesion_type: brim}
@@ -72,6 +87,9 @@ parts:
 
   # Platform
   - name: Platform cover
+    group: Click-on platform
+    description: >-
+      The stock Bittle X back cover with 4 teardrop pegs. A click-on add-on goes onto the pegs, slides 7 mm forward and clicks into place, with no screws. Print it on its rear end with tree supports and a 14-line brim.
     printer: taz
     material: roll-4
     settings: {support_enable: true, support_structure: tree, adhesion_type: brim, brim_line_count: 14}
@@ -87,26 +105,41 @@ parts:
   # The slice run slices with PrusaSlicer and writes a .cbddlp. The profile is the ChiTuBox profile
   # "Microcenter - ABS Like/Standard 50/50 Black" (0.05 mm, 12 s, bottom 95 s x 10).
   - name: Pod body (resin)
+    group: Resin
+    description: >-
+      The pod body for the Phenom resin printer. Each boss has a hex pocket for an M2.5 nut with a drop of superglue, in place of an insert. The bosses are 8 mm across. The part is tipped 45 deg for the print.
     files: [bittle_pi_addon/stl/print/resin/pod_body.stl]
     printer: phenom
     profile: peopoly-phenom/abs-like-0.05
     material: Grey standard 80% + Tenacious Flex black 20%
   - name: Pod panel (resin)
+    group: Resin
+    description: >-
+      The top panel for resin. Two M2.5 x 12 screws go down through it into the nuts in the speaker posts. The part is tipped 45 deg for the print.
     files: [bittle_pi_addon/stl/print/resin/pod_panel.stl]
     printer: phenom
     profile: peopoly-phenom/abs-like-0.05
     material: Grey standard 80% + Tenacious Flex black 20%
   - name: Pod door (resin)
+    group: Resin
+    description: >-
+      The door for resin. The part is tipped 45 deg for the print: the supports go on the inner face and the ears.
     files: [bittle_pi_addon/stl/print/resin/pod_door.stl]
     printer: phenom
     profile: peopoly-phenom/abs-like-0.05
     material: Grey standard 80% + Tenacious Flex black 20%
   - name: Cover (resin)
+    group: Resin
+    description: >-
+      The cover for resin. Four M2.5 x 4 screws go up through it into the nuts in the body floor. It stands on its rear end for the print: put the supports on the rear edge only.
     files: [bittle_pi_addon/stl/print/resin/cover_screw.stl]
     printer: phenom
     profile: peopoly-phenom/abs-like-0.05
     material: Grey standard 80% + Tenacious Flex black 20%
   - name: Starter plate (resin)
+    group: Resin
+    description: >-
+      The starter plate for resin, with the same nut pockets as the body. Print it first to test the nuts and the screws on the cover.
     files: [bittle_pi_addon/stl/print/resin/starter_plate_screw.stl]
     printer: phenom
     profile: peopoly-phenom/abs-like-0.05
@@ -118,3 +151,82 @@ docs:
     file: bittle_pi_addon/bittle_pi_addon_guide.pdf
   - name: Platform spec
     file: bittle_platform/bittle_platform_spec.pdf
+
+# The assemblies of the Parts tab: each model in its place, Z up (pod.py write_assembly).
+assemblies:
+  - name: Pi add-on (FDM)
+    description: >-
+      The pod on the cover for screws, with M3 heat-set inserts and M3 screws. The boards are simple shapes.
+    items:
+      - part: Cover (screw) (standard)
+        file: bittle_pi_addon/stl/assembly/fdm/cover_screw.stl
+        explode: [0, 0, -1]
+      - name: Cover screws M3 x 4
+        file: bittle_pi_addon/stl/assembly/fdm/mount_screws.stl
+        color: "#5b5e66"
+        explode: [0, 0, -1.6]
+      - name: Floor inserts M3
+        file: bittle_pi_addon/stl/assembly/fdm/mount_inserts.stl
+        color: "#c9a227"
+        explode: [0, 0, 0.4]
+      - part: Pod body (screw) (standard)
+        file: bittle_pi_addon/stl/assembly/fdm/pod_body.stl
+        explode: [0, 0, 0.2]
+      - name: Pi Zero 2 W + PiSugar S
+        file: bittle_pi_addon/stl/assembly/fdm/pi_stack.stl
+        color: "#1e7a3c"
+        explode: [-0.3, 0, 1.4]
+      - name: PiSugar S battery
+        file: bittle_pi_addon/stl/assembly/fdm/battery.stl
+        color: "#3b6fd8"
+        explode: [0.3, 0, 1.6]
+      - name: Speaker 3 W
+        file: bittle_pi_addon/stl/assembly/fdm/speaker.stl
+        color: "#6b4fb3"
+        explode: [0, -1, 1]
+      - name: Amp NS4168
+        file: bittle_pi_addon/stl/assembly/fdm/amp.stl
+        color: "#1a5a8c"
+        explode: [1, 0, 1]
+      - name: Mic SPH0645
+        file: bittle_pi_addon/stl/assembly/fdm/mic.stl
+        color: "#d03030"
+        explode: [1, 1, 1]
+      - name: Post inserts M3
+        file: bittle_pi_addon/stl/assembly/fdm/panel_inserts.stl
+        color: "#c9a227"
+        explode: [0, 0, 1.9]
+      - part: Pod door (standard)
+        file: bittle_pi_addon/stl/assembly/fdm/pod_door.stl
+        explode: [-1.5, 0, 0.6]
+      - part: Pod panel (screw) (standard)
+        file: bittle_pi_addon/stl/assembly/fdm/pod_panel.stl
+        explode: [0, 0, 2.6]
+      - name: Panel screws M3 x 12
+        file: bittle_pi_addon/stl/assembly/fdm/panel_screws.stl
+        color: "#5b5e66"
+        explode: [0, 0, 3.2]
+  - name: Pi add-on (resin)
+    description: >-
+      The resin parts, with M2.5 nuts glued into the bosses and M2.5 screws.
+    items:
+      - part: Cover (resin)
+        file: bittle_pi_addon/stl/assembly/resin/cover_screw.stl
+        explode: [0, 0, -1]
+      - name: Cover screws M2.5 x 4
+        file: bittle_pi_addon/stl/assembly/resin/mount_screws.stl
+        color: "#5b5e66"
+        explode: [0, 0, -1.6]
+      - part: Pod body (resin)
+        file: bittle_pi_addon/stl/assembly/resin/pod_body.stl
+        explode: [0, 0, 0.2]
+      - part: Pod door (resin)
+        file: bittle_pi_addon/stl/assembly/resin/pod_door.stl
+        explode: [-1.5, 0, 0.6]
+      - part: Pod panel (resin)
+        file: bittle_pi_addon/stl/assembly/resin/pod_panel.stl
+        explode: [0, 0, 2.6]
+      - name: Panel screws M2.5 x 12
+        file: bittle_pi_addon/stl/assembly/resin/panel_screws.stl
+        color: "#5b5e66"
+        explode: [0, 0, 3.2]

@@ -1027,6 +1027,36 @@ def write_screw_parts():
     json.dump(dict(stages=EXPLODE_STAGES + 1, parts=plan), open(os.path.join(d, "explode.json"), "w"), indent=1)
 
 
+# Assemblies for the Parts tab of Printdeck (printdeck.yml assemblies): each model in its place, in mm with Z up
+# (robot X right, robot -Z (the head) to +Y, robot Y up to +Z). The printed parts are simplified to ASSEMBLY_TOL,
+# and the bought boards are convex hulls, so the files stay small.
+ASSEMBLY_TOL = 0.05
+ASSEMBLY_ZUP = np.array([[1.0, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0]])
+ASSEMBLY_BOARDS = dict(pi_stack=("pizero", "pisugar_s", "sd_card", "stack_screws", "pi_plugs"), battery=("battery",),
+                       speaker=("speaker",), amp=("amp_ns4168",), mic=("mic_sph0645",))
+
+
+def write_assembly():
+    """Writes stl/assembly/fdm/ and stl/assembly/resin/ from stl/screw/installed/, stl/installed/resin/ and
+    stl/models/ (write_screw_parts and build_resin run first)."""
+    def put(M, folder, name, hull=False):
+        M = M.transform(ASSEMBLY_ZUP)
+        M = M.hull() if hull else M.simplify(ASSEMBLY_TOL)
+        save_stl(M, os.path.join(OUT, "assembly", folder, f"{name}.stl"))
+    load = lambda *p: mesh_to_manifold(load_stl(os.path.join(OUT, *p)))
+    for folder in ("fdm", "resin"):
+        os.makedirs(os.path.join(OUT, "assembly", folder), exist_ok=True)
+    for n in ("cover_screw", "pod_body", "pod_door", "pod_panel", "mount_screws", "mount_inserts", "panel_screws", "panel_inserts"):
+        put(load("screw", "installed", f"{n}.stl"), "fdm", n)
+    for n in ("cover_screw", "pod_body", "pod_door", "pod_panel"):
+        put(load("installed", "resin", f"{n}.stl"), "resin", n)
+    for n in ("mount_screws", "panel_screws"):
+        put(load("screw", "installed", f"{n}.stl"), "resin", n)
+    for n, models in ASSEMBLY_BOARDS.items():
+        M = union([load("models", f"{m}.stl") for m in models])
+        put(M, "fdm", n, hull=True)
+
+
 def battery_supports():
     """Blocks on the floor under the cell."""
     S = BAT_SUPPORT
@@ -2655,6 +2685,7 @@ def main(fast=False):
             print(f"  {a:34s} x {b:20s} {v:9.2f}")
     json.dump(dict(rows=rows, printing=printing, balance=bal, snap=snap, clicks=clicks),
               open(os.path.join(OUT, "checks.json"), "w"), indent=1)
+    write_assembly()
     if fast:
         return
     from build123d import export_step
