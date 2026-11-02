@@ -1,6 +1,8 @@
 # Printdeck builds: the printed parts of this repository.
 # The profiles are in profiles/ (copied from printdeck/profiles). All FDM parts print in black PLA (roll-4).
 project: bittlex
+# The picture of the project on the dashboard (iso_render.py cover: the add-on on the robot, 4:3, transparent)
+cover: bittle_pi_addon/doc/cover.png
 
 generate:
   python: "3.12"

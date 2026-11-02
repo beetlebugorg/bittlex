@@ -40,6 +40,24 @@ DIRS = dict(iso=ISO, high=(1.0, 1.9, -1.3), rear=(0.7, 1.9, -1.4), mic=(-1.0, 1.
             below=(1.3, -1.1, -1.5))
 
 
+COVER_DIR = (1.6, 0.9, -0.8)       # the cover picture of the Printdeck project: more from the side, for a 4:3 tile
+COVER = os.path.join(HERE, "doc", "cover.png")
+
+
+def make_cover(src=os.path.join(OUT, "cover-light.png"), size=(1200, 900)):
+    """The cover of the project for printdeck.yml: the cover render (transparent), padded to 4:3 and scaled to size."""
+    from PIL import Image
+    im = Image.open(src).convert("RGBA")
+    im = im.crop(im.getchannel("A").getbbox())
+    w, h = im.size
+    W, H = (w, round(w * 3 / 4)) if w * 3 >= h * 4 else (round(h * 4 / 3), h)
+    pad = round(0.03 * W)
+    canvas = Image.new("RGBA", (W + 2 * pad, H + 2 * pad), (0, 0, 0, 0))
+    canvas.paste(im, ((W + 2 * pad - w) // 2, (H + 2 * pad - h) // 2), im)
+    canvas.resize(size, Image.LANCZOS).save(COVER, optimize=True)
+    return COVER
+
+
 # --------------------------------------------------------------------------
 # Parts: the viewer part list (build_site.py) and the starter plate
 # --------------------------------------------------------------------------
@@ -136,6 +154,7 @@ def figure_jobs():
         dict(name="open", show=open_, dir=ISO, width=1600, height=1600),
         dict(name="wires", show=["cover", "body"] + INSIDE, ghost=["body"], dir=DIRS["well"], width=1600, height=1300,
              frame=["body"]),
+        dict(name="cover", show=ALL, dir=COVER_DIR, width=1600, height=1200),
         dict(name="platform", show=ROBOT + ["cover_pegs", "starter_plate"], dir=ISO, width=1600, height=1600, out=PLATFORM_OUT),
     ]
 
@@ -230,6 +249,8 @@ def main(which=None):
         jobs = [j for j in jobs if any(w in j["name"] for w in which)]
     for p in run(jobs):
         print(os.path.relpath(p, HERE))
+    if any(j["name"] == "cover" for j in jobs):
+        print(os.path.relpath(make_cover(), HERE))
 
 
 if __name__ == "__main__":
