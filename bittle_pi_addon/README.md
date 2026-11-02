@@ -204,6 +204,7 @@ Open items: the BiBoard header height is an estimate (measure it). The speaker s
 |---|---|
 | stl/print/ | the parts in print orientation (the screw version, and the click-on version) |
 | stl/print/resin/ | the resin parts (glued nuts), each one alone in its resin orientation |
+| stl/assembly/ | the assemblies of the Parts tab in Printdeck: each model in its place, Z up (pod.py write_assembly) |
 | stl/screw/ | the screw version in the robot frame, with the screws and the inserts (desktop viewer: --stl stl/screw) |
 | stl/plates/ | print plates for the FDM and the resin printer (3MF, STL), plates.json, resin_check.json |
 | cad/*.step | the parts as STEP (from the mesh) |
