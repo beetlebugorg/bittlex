@@ -109,7 +109,7 @@ parts:
   - name: Pod body (resin)
     group: Resin
     description: >-
-      The pod body for the Phenom resin printer. Each boss has a hex pocket for an M2.5 nut with a drop of superglue, in place of an insert. The bosses are 8 mm across. The part is tipped 45 deg for the print.
+      The pod body for the Phenom resin printer, in a mix of 80% Anycubic grey resin and 20% Siraya Tech Tenacious Flex black. Each boss has a hex pocket for an M2.5 nut with a drop of superglue, in place of an insert. The bosses are 8 mm across. The part is tipped 45 deg for the print.
     files: [bittle_pi_addon/stl/print/resin/pod_body.stl]
     printer: phenom
     profile: peopoly-phenom/abs-like-0.05
@@ -153,6 +153,13 @@ docs:
     file: bittle_pi_addon/bittle_pi_addon_guide.pdf
   - name: Platform spec
     file: bittle_platform/bittle_platform_spec.pdf
+
+# The resin of the resin parts: 80% Anycubic grey and 20% Siraya Tech Tenacious Flex black.
+materials:
+  "Grey standard 80% + Tenacious Flex black 20%":
+    buy:
+      Grey (80%): https://www.amazon.com/ANYCUBIC-UV-Curing-Precision-Excellent-Fluidity/dp/B079GR1L19
+      Flex black (20%): https://www.amazon.com/Siraya-Tech-Tenacious-Flex-Black/dp/B0BTNKX6BT
 
 # The assemblies of the Parts tab: each model in its place, Z up (pod.py write_assembly). The items are in assembly
 # order: the viewer removes the last item first. Adjacent items with the same explode vector move as one unit. The
