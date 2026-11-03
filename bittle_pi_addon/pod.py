@@ -985,7 +985,7 @@ def screw_hardware():
     """Display models of the screws and the inserts (robot frame; the places are symmetric in x)."""
     S, P = SCREW_MOUNT, PANEL_SCREW
     C = lambda x, z, y0, y1, r: b3d_to_manifold(cyl_y(x, z, y0, y1, r))
-    insert = lambda x, z, y1: C(x, z, y1 - S["insert_depth"], y1, 1.8) - C(x, z, y1 - 10.0, y1 + 1.0, 1.1)
+    insert = lambda x, z, y1: C(x, z, y1 - S["insert_depth"], y1, 1.8) - C(x, z, y1 - 10.0, y1 + 1.0, 1.3)   # bore: clear of the 1.25 screw model
     yh = FLOOR_Y0 - S["web"]                    # the cover screw heads bear here
     yp = TOP - P["cb_depth"]                    # the panel screw heads bear here
     xs = (-P["x"], P["x"])
