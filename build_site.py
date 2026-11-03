@@ -279,7 +279,7 @@ def main():
     pi = json.load(open(os.path.join(PROJ, "bittle_platform", "interface.json")))
     E = pi["ENVELOPE"]
     meta = dict(
-        title=f"Bittle X Pod for Pi Zero v{ADDON_V}, peg interface v{PLATFORM_V}",
+        title=f"Pod for Bittle X Robot v{ADDON_V}, peg interface v{PLATFORM_V}",
         explode_stages=EXPLODE["stages"],
         envelope=dict(width=2 * E["half_w_low"], length=round(E["z"][1] - E["z"][0], 1), top=E["top"],
                       above_cover=round(E["top"] - pi["COVER_TOP"], 1)),
@@ -316,7 +316,7 @@ PACKAGES = [
               "slide 7 mm forward and click into place. No tools, glue or tape are necessary. "
               "The spec gives every number that you need to design an add-on.",
          extra=["interface.json"]),
-    dict(key="addon", name=f"Bittle X Pod for Pi Zero v{ADDON_V}", dir="bittle_pi_addon", zip=f"bittle_pi_addon_v{ADDON_V}.zip",
+    dict(key="addon", name=f"Pod for Bittle X Robot v{ADDON_V}", dir="bittle_pi_addon", zip=f"bittle_pi_addon_v{ADDON_V}.zip",
          pdf="bittle_pi_addon_guide.pdf", img="doc/iso/hero-light.png", img2="doc/iso/open-light.png",
          text="The pod: Raspberry Pi Zero 2 W, PiSugar S (1200 mAh), NS4168 amp with a 3 W speaker, "
               "and an SPH0645 mic, in a rounded box with a slide-on top panel. "
@@ -425,7 +425,7 @@ PAGE = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bittle X Pod for Pi Zero</title>
+<title>Pod for Bittle X Robot</title>
 <style>
 :root { --bg:#fbfbf9; --fg:#16181a; --muted:#4a4f55; --card:#ffffff; --line:#e2e2dc; --accent:#0a7f63; --accent-fg:#ffffff; --grid:#ecece6; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0f1112; --fg:#eceeed; --muted:#b2b8b6; --card:#161a1c; --line:#262b2d; --accent:#3fd1a6; --accent-fg:#062018; --grid:rgba(236,238,237,0.04); } }
@@ -457,10 +457,10 @@ footer a { color:inherit; }
 <body>
 <main>
 <header>
-  <h1>Bittle X Pod for Pi Zero</h1>
+  <h1>Pod for Bittle X Robot</h1>
   <p>The 3D model for the Bittle X hardware and software of <a href="https://github.com/LineChef">LineChef</a>
   (<a href="https://github.com/LineChef/BittleX">LineChef/BittleX</a>).</p>
-  <p>A Raspberry Pi Zero pod for the Petoi Bittle X, and a pegged back cover for other add-ons. It is an unofficial add-on. Petoi did not make it. Download the documents, the print files and the CAD below.</p>
+  <p>A 3D-printed pod for the Petoi Bittle X. It holds a Raspberry Pi Zero 2 W, a PiSugar S battery, an amp, a speaker and a mic. The repository also has a pegged back cover for other add-ons. This is an independent community project. It is not affiliated with or endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC. Download the documents, the print files and the CAD below.</p>
 </header>
 <a class="viewer" href="viewer/">Open the 3D viewer &rarr;</a>
 {{CARDS}}

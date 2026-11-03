@@ -1,4 +1,4 @@
-"""Bittle X Pod for Pi Zero rev 0.26: one-piece body with a slide-on top panel.
+"""Pod for Bittle X Robot rev 0.26: one-piece body with a slide-on top panel.
 
 Frame = the robot frame of the peg interface (bittle_platform/interface.py):
   X = lateral (+X = robot right), Y = up, Z = length (-Z = head end). mm.

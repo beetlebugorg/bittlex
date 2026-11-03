@@ -94,3 +94,8 @@ body with it.
 `bittle_pi_addon/reference/logo/linechef.jpg` is the avatar of the GitHub
 account LineChef (github.com/LineChef). The repository licenses do not
 cover it. Since add-on rev 0.25, no part uses it.
+
+## Trademarks
+
+This is an independent community project. It is not affiliated with or
+endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC.

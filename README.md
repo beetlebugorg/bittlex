@@ -1,12 +1,15 @@
-# Bittle X Pod for Pi Zero
+# Pod for Bittle X Robot
 
 > This repository is only the 3D model for the Bittle X hardware and software of
 > [LineChef](https://github.com/LineChef). His project is
 > [LineChef/BittleX](https://github.com/LineChef/BittleX), and its documentation
 > site is [LineChef/react-bittlex](https://github.com/LineChef/react-bittlex).
 
-A Raspberry Pi Zero pod for the Petoi Bittle X robot dog, and a pegged back
-cover for other add-ons. It is an unofficial add-on for the Petoi Bittle X. Petoi did not make it.
+> This is an independent community project. It is not affiliated with or
+> endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC.
+
+A 3D-printed pod for the Petoi Bittle X robot dog. It holds a Raspberry Pi Zero 2 W, a PiSugar S battery, an amp, a speaker and a mic.
+The repository also has a pegged back cover for other add-ons.
 
 **[Website and 3D viewer](https://beetlebugorg.github.io/bittlex/)** ·
 [Peg interface spec (PDF)](bittle_platform/bittle_peg_spec.pdf) ·

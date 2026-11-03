@@ -335,7 +335,7 @@ td.n { white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 
 def page(body, n, cls=""):
-    return (f'<section class="page {cls}">{body}<div class="folio"><span>Bittle X Pod for Pi Zero v{docs.VERSION} · Build guide</span>'
+    return (f'<section class="page {cls}">{body}<div class="folio"><span>Pod for Bittle X Robot v{docs.VERSION} · Build guide</span>'
             f'<span>{n}</span></div></section>')
 
 
@@ -345,9 +345,8 @@ def swatch(c):
 
 def cover(img):
     return (f'<section class="page cover"><div class="art"><img src="{img}"></div><div class="title">'
-            f'<div class="kicker">Build guide</div><h1>Bittle X Pod<br>for Pi Zero</h1>'
-            f'<div class="lead">A Raspberry Pi Zero 2 W with a battery, a speaker and a microphone, in one rounded box '
-            f'that screws to a new back cover of the Petoi Bittle X. It is an unofficial add-on. Petoi did not make it.</div>'
+            f'<div class="kicker">Build guide</div><h1>Pod for<br>Bittle X Robot</h1>'
+            f'<div class="lead">A 3D-printed pod for the Petoi Bittle X. It holds a Raspberry Pi Zero 2 W, a PiSugar S battery, an amp, a speaker and a mic, and it screws to a new back cover of the robot. It is an independent community project. It is not affiliated with or endorsed by Petoi.</div>'
             f'<div class="meta"><div><b>Add-on v{docs.VERSION}</b>{docs.DATE}</div><div><b>4 + 2 screws</b>M3 inserts (FDM) or M2.5 nuts (resin)</div>'
             f'<div><b>{CHECKS["balance"]["mass_g"]:.0f} g</b>with the electronics</div><div><b>No supports</b>for the add-on parts (FDM)</div></div>'
             f'</div><div class="bar"></div></section>')
@@ -537,7 +536,7 @@ def checks_page(n):
             f'To take the body off the cover, take out the 4 screws from inside the cover.</p>'
             f'<h3>Change the SD card</h3><p>Open the panel and lift the speaker out of its grooves; the card is at the rear end of the Pi.</p>'
             f'<h3>Files</h3><p class="muted">stl/print: the parts to print (stl/print/resin: the resin parts). stl/plates: the print plates. cad/: STEP files. README.md: the full reference. '
-            f'Designs CC BY 4.0, code MIT; see LICENSE.md and ATTRIBUTION.md.</p></div></div>')
+            f'Designs CC BY 4.0, code MIT; see LICENSE.md and ATTRIBUTION.md. Bittle and Petoi are trademarks of Petoi LLC.</p></div></div>')
     return page(body, n)
 
 
@@ -553,7 +552,7 @@ def build_html(imgs):
     pages.append(wire_table(n))
     pages.append(checks_page(n + 1))
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
-            f'<title>Bittle X Pod for Pi Zero build guide</title><style>{CSS}</style></head><body>{"".join(pages)}</body></html>')
+            f'<title>Pod for Bittle X Robot build guide</title><style>{CSS}</style></head><body>{"".join(pages)}</body></html>')
 
 
 def main(render_images=True):

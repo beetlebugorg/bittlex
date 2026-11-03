@@ -1,6 +1,6 @@
-# Bittle X Pod for Pi Zero v0.26 - Build Guide
+# Pod for Bittle X Robot v0.26 - Build Guide
 
-Version 0.26, 2026-11-02. It is an unofficial add-on for the Petoi Bittle X. Petoi did not make it. It goes on the robot with the cover for screws (peg interface v3.4, ../bittle_platform). It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. The case is one rounded box (the body) and a slide-on top panel. The body screws to a cover for screws, and the cover and the body clip onto the robot as one unit, in place of the stock cover. Every part goes in from the top. Two screws hold the panel. A dab of glue sets the amp.
+Version 0.26, 2026-11-03. This is an independent community project. It is not affiliated with or endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC. It goes on the robot with the cover for screws (peg interface v3.4, ../bittle_platform). It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. The case is one rounded box (the body) and a slide-on top panel. The body screws to a cover for screws, and the cover and the body clip onto the robot as one unit, in place of the stock cover. Every part goes in from the top. Two screws hold the panel. A dab of glue sets the amp.
 
 ![The add-on on the robot: the port windows in the panel. The mic holes are in the right side, near the front.](doc/iso/hero-light.png)
 

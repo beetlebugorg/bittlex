@@ -215,7 +215,7 @@ def content():
     lst = lambda items: X.append(("list", items))
 
     p(f"Version {I.VERSION}, {DATE}. The pegged cover is the stock Petoi Bittle X back cover with 4 teardrop pegs on its top. "
-      "It is an unofficial add-on interface for the Petoi Bittle X. Petoi did not make it. "
+      "This is an independent community project. It is not affiliated with or endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC. "
       f"An add-on has a plate with 4 keyholes. Put it on the pegs, slide it {I.SLIDE:g} mm forward, and it clicks. "
       f"To remove it, slide it {I.SLIDE:g} mm rearward and lift it. It comes off closed: the head is not in the way. "
       "The keyholes have the shape of the pegs, so the add-on goes on in one direction only. "

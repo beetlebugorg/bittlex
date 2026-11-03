@@ -1,4 +1,4 @@
-"""Bittle X Pod for Pi Zero: README.md and the wiring figures. guide.py makes the PDF guide.
+"""Pod for Bittle X Robot: README.md and the wiring figures. guide.py makes the PDF guide.
 
 Run pod.py and render.py first, then:  python docs.py
 """
@@ -18,7 +18,7 @@ from bittle_platform import interface as PI  # noqa: E402
 
 VERSION = "0.26"
 DATE = datetime.date.today().isoformat()
-TITLE = f"Bittle X Pod for Pi Zero v{VERSION} - Build Guide"
+TITLE = f"Pod for Bittle X Robot v{VERSION} - Build Guide"
 VIEWER = "https://beetlebugorg.github.io/bittlex/viewer/"
 CHECKS = json.load(open(os.path.join(pod.OUT, "checks.json")))
 
@@ -34,7 +34,7 @@ def content():
     lst = lambda items: X.append(("list", items))
 
     SM, NM = pod.SCREW_MOUNT, pod.NUT_MOUNT
-    p(f"Version {VERSION}, {DATE}. It is an unofficial add-on for the Petoi Bittle X. Petoi did not make it. It goes on the robot with the cover for screws (peg interface v{PI.VERSION}, ../bittle_platform). "
+    p(f"Version {VERSION}, {DATE}. This is an independent community project. It is not affiliated with or endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC. It goes on the robot with the cover for screws (peg interface v{PI.VERSION}, ../bittle_platform). "
       "It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. "
       "The case is one rounded box (the body) and a slide-on top panel. The body screws to a cover for screws, and the cover and the body clip onto "
       "the robot as one unit, in place of the stock cover. Every part goes in from the top. Two screws hold the panel. A dab of glue sets the amp.")
