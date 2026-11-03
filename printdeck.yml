@@ -158,7 +158,7 @@ docs:
 assemblies:
   - name: Pi add-on (FDM)
     description: >-
-      The pod on the cover for screws, with M3 heat-set inserts and M3 screws. The boards are simple shapes.
+      The pod on the cover for screws, with M3 heat-set inserts and M3 screws, the boards and the wires.
     items:
       - part: Cover (screw) (standard)
         file: bittle_pi_addon/stl/assembly/fdm/cover_screw.stl
@@ -174,26 +174,198 @@ assemblies:
       - part: Pod body (screw) (standard)
         file: bittle_pi_addon/stl/assembly/fdm/pod_body.stl
         explode: [0, 0, 0.2]
-      - name: Pi Zero 2 W + PiSugar S
-        file: bittle_pi_addon/stl/assembly/fdm/pi_stack.stl
-        color: "#1e7a3c"
+      - name: PiSugar S board
+        file: bittle_pi_addon/stl/assembly/fdm/pisugar_s_e06aa3.stl
+        color: "#e06aa3"
         explode: [-0.3, 0, 1.4]
-      - name: PiSugar S battery
-        file: bittle_pi_addon/stl/assembly/fdm/battery.stl
-        color: "#3b6fd8"
+      - name: PiSugar S pins
+        file: bittle_pi_addon/stl/assembly/fdm/pisugar_s_d9b34a.stl
+        color: "#d9b34a"
+        explode: [-0.3, 0, 1.4]
+      - name: PiSugar S usb c, switch, button, disc
+        file: bittle_pi_addon/stl/assembly/fdm/pisugar_s_c9ccd1.stl
+        color: "#c9ccd1"
+        explode: [-0.3, 0, 1.4]
+      - name: PiSugar S parts
+        file: bittle_pi_addon/stl/assembly/fdm/pisugar_s_2b2d33.stl
+        color: "#2b2d33"
+        explode: [-0.3, 0, 1.4]
+      - name: Pi Zero 2 W board
+        file: bittle_pi_addon/stl/assembly/fdm/pizero_2e9b4f.stl
+        color: "#2e9b4f"
+        explode: [-0.3, 0, 1.4]
+      - name: Pi Zero 2 W heatsink
+        file: bittle_pi_addon/stl/assembly/fdm/pizero_c9ccd1.stl
+        color: "#c9ccd1"
+        explode: [-0.3, 0, 1.4]
+      - name: Battery cell
+        file: bittle_pi_addon/stl/assembly/fdm/battery_b9bcc2.stl
+        color: "#b9bcc2"
         explode: [0.3, 0, 1.6]
-      - name: Speaker 3 W
-        file: bittle_pi_addon/stl/assembly/fdm/speaker.stl
-        color: "#6b4fb3"
-        explode: [0, -1, 1]
-      - name: Amp NS4168
-        file: bittle_pi_addon/stl/assembly/fdm/amp.stl
-        color: "#1a5a8c"
+      - name: Battery flap
+        file: bittle_pi_addon/stl/assembly/fdm/battery_d9b34a.stl
+        color: "#d9b34a"
+        explode: [0.3, 0, 1.6]
+      - name: Battery disc
+        file: bittle_pi_addon/stl/assembly/fdm/battery_c9ccd1.stl
+        color: "#c9ccd1"
+        explode: [0.3, 0, 1.6]
+      - name: Battery lead0
+        file: bittle_pi_addon/stl/assembly/fdm/battery_d83a34.stl
+        color: "#d83a34"
+        explode: [0.3, 0, 1.6]
+      - name: Battery lead1
+        file: bittle_pi_addon/stl/assembly/fdm/battery_1d1d1f.stl
+        color: "#1d1d1f"
+        explode: [0.3, 0, 1.6]
+      - name: microSD card card
+        file: bittle_pi_addon/stl/assembly/fdm/sd_card_26272b.stl
+        color: "#26272b"
+        explode: [-0.3, 0, 1.4]
+      - name: Stack screws heads
+        file: bittle_pi_addon/stl/assembly/fdm/stack_screws_c8c8c8.stl
+        color: "#c8c8c8"
+        explode: [-0.3, 0, 1.4]
+      - name: Pi header header
+        file: bittle_pi_addon/stl/assembly/fdm/pi_plugs_1d1d1f.stl
+        color: "#1d1d1f"
+        explode: [-0.3, 0, 1.4]
+      - name: Pi header pins
+        file: bittle_pi_addon/stl/assembly/fdm/pi_plugs_d9b34a.stl
+        color: "#d9b34a"
+        explode: [-0.3, 0, 1.4]
+      - name: Amp NS4168 pcb
+        file: bittle_pi_addon/stl/assembly/fdm/amp_ns4168_1d1d1f.stl
+        color: "#1d1d1f"
         explode: [1, 0, 1]
-      - name: Mic SPH0645
-        file: bittle_pi_addon/stl/assembly/fdm/mic.stl
-        color: "#d03030"
+      - name: Amp NS4168 rings
+        file: bittle_pi_addon/stl/assembly/fdm/amp_ns4168_e8e8e8.stl
+        color: "#e8e8e8"
+        explode: [1, 0, 1]
+      - name: Amp NS4168 headers
+        file: bittle_pi_addon/stl/assembly/fdm/amp_ns4168_efe6d2.stl
+        color: "#efe6d2"
+        explode: [1, 0, 1]
+      - name: Amp NS4168 plugs
+        file: bittle_pi_addon/stl/assembly/fdm/amp_ns4168_fbf6ea.stl
+        color: "#fbf6ea"
+        explode: [1, 0, 1]
+      - name: Amp NS4168 terminal
+        file: bittle_pi_addon/stl/assembly/fdm/amp_ns4168_2f6fd6.stl
+        color: "#2f6fd6"
+        explode: [1, 0, 1]
+      - name: Amp NS4168 screws
+        file: bittle_pi_addon/stl/assembly/fdm/amp_ns4168_c8c8c8.stl
+        color: "#c8c8c8"
+        explode: [1, 0, 1]
+      - name: Amp NS4168 ic
+        file: bittle_pi_addon/stl/assembly/fdm/amp_ns4168_2a2a2a.stl
+        color: "#2a2a2a"
+        explode: [1, 0, 1]
+      - name: Mic SPH0645 pcb
+        file: bittle_pi_addon/stl/assembly/fdm/mic_sph0645_22303f.stl
+        color: "#22303f"
         explode: [1, 1, 1]
+      - name: Mic SPH0645 mic
+        file: bittle_pi_addon/stl/assembly/fdm/mic_sph0645_c8c8c8.stl
+        color: "#c8c8c8"
+        explode: [1, 1, 1]
+      - name: Mic SPH0645 header
+        file: bittle_pi_addon/stl/assembly/fdm/mic_sph0645_1d1d1f.stl
+        color: "#1d1d1f"
+        explode: [1, 1, 1]
+      - name: Speaker plate
+        file: bittle_pi_addon/stl/assembly/fdm/speaker_26272b.stl
+        color: "#26272b"
+        explode: [0, -1, 1]
+      - name: Speaker body
+        file: bittle_pi_addon/stl/assembly/fdm/speaker_3a3b40.stl
+        color: "#3a3b40"
+        explode: [0, -1, 1]
+      - name: Speaker grille
+        file: bittle_pi_addon/stl/assembly/fdm/speaker_5a5b60.stl
+        color: "#5a5b60"
+        explode: [0, -1, 1]
+      - name: BiBoard wire TX2
+        file: bittle_pi_addon/stl/assembly/fdm/wires_uart_9ea0a4.stl
+        color: "#9ea0a4"
+        explode: [0, 0, 1.2]
+      - name: BiBoard wire RX2
+        file: bittle_pi_addon/stl/assembly/fdm/wires_uart_f2f2ef.stl
+        color: "#f2f2ef"
+        explode: [0, 0, 1.2]
+      - name: BiBoard wire GND
+        file: bittle_pi_addon/stl/assembly/fdm/wires_uart_1d1d1f.stl
+        color: "#1d1d1f"
+        explode: [0, 0, 1.2]
+      - name: Amp wire G
+        file: bittle_pi_addon/stl/assembly/fdm/wires_amp_1d1d1f.stl
+        color: "#1d1d1f"
+        explode: [0, 0, 1.2]
+      - name: Amp wire V
+        file: bittle_pi_addon/stl/assembly/fdm/wires_amp_d83a34.stl
+        color: "#d83a34"
+        explode: [0, 0, 1.2]
+      - name: Amp wire BCLK
+        file: bittle_pi_addon/stl/assembly/fdm/wires_amp_3a6fd8.stl
+        color: "#3a6fd8"
+        explode: [0, 0, 1.2]
+      - name: Amp wire LRC
+        file: bittle_pi_addon/stl/assembly/fdm/wires_amp_2e9b4f.stl
+        color: "#2e9b4f"
+        explode: [0, 0, 1.2]
+      - name: Amp wire DIN
+        file: bittle_pi_addon/stl/assembly/fdm/wires_amp_f0c419.stl
+        color: "#f0c419"
+        explode: [0, 0, 1.2]
+      - name: Mic wire SEL
+        file: bittle_pi_addon/stl/assembly/fdm/wires_mic_7a4a2a.stl
+        color: "#7a4a2a"
+        explode: [0, 0, 1.2]
+      - name: Mic wire LRCL
+        file: bittle_pi_addon/stl/assembly/fdm/wires_mic_2e9b4f.stl
+        color: "#2e9b4f"
+        explode: [0, 0, 1.2]
+      - name: Mic wire DOUT
+        file: bittle_pi_addon/stl/assembly/fdm/wires_mic_e8641b.stl
+        color: "#e8641b"
+        explode: [0, 0, 1.2]
+      - name: Mic wire BCLK
+        file: bittle_pi_addon/stl/assembly/fdm/wires_mic_3a6fd8.stl
+        color: "#3a6fd8"
+        explode: [0, 0, 1.2]
+      - name: Mic wire GND
+        file: bittle_pi_addon/stl/assembly/fdm/wires_mic_1d1d1f.stl
+        color: "#1d1d1f"
+        explode: [0, 0, 1.2]
+      - name: Mic wire 3V
+        file: bittle_pi_addon/stl/assembly/fdm/wires_mic_d83a34.stl
+        color: "#d83a34"
+        explode: [0, 0, 1.2]
+      - name: Splice BCLK
+        file: bittle_pi_addon/stl/assembly/fdm/wires_splice_3a6fd8.stl
+        color: "#3a6fd8"
+        explode: [0, 0, 1.2]
+      - name: Splice LRCLK
+        file: bittle_pi_addon/stl/assembly/fdm/wires_splice_2e9b4f.stl
+        color: "#2e9b4f"
+        explode: [0, 0, 1.2]
+      - name: Speaker wire POS
+        file: bittle_pi_addon/stl/assembly/fdm/wires_speaker_d83a34.stl
+        color: "#d83a34"
+        explode: [0, 0, 1.2]
+      - name: Speaker wire NEG
+        file: bittle_pi_addon/stl/assembly/fdm/wires_speaker_1d1d1f.stl
+        color: "#1d1d1f"
+        explode: [0, 0, 1.2]
+      - name: Splice SLEEVES
+        file: bittle_pi_addon/stl/assembly/fdm/wires_splice_f2f2ef.stl
+        color: "#f2f2ef"
+        explode: [0, 0, 1.2]
+      - name: Dupont housings
+        file: bittle_pi_addon/stl/assembly/fdm/dupont_housings.stl
+        color: "#3a3b40"
+        explode: [0, 0, 1.2]
       - name: Post inserts M3
         file: bittle_pi_addon/stl/assembly/fdm/panel_inserts.stl
         color: "#c9a227"

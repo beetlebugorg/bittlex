@@ -1028,33 +1028,55 @@ def write_screw_parts():
 
 
 # Assemblies for the Parts tab of Printdeck (printdeck.yml assemblies): each model in its place, in mm with Z up
-# (robot X right, robot -Z (the head) to +Y, robot Y up to +Z). The printed parts are simplified to ASSEMBLY_TOL,
-# and the bought boards are convex hulls, so the files stay small.
+# (robot X right, robot -Z (the head) to +Y, robot Y up to +Z). The models are simplified to ASSEMBLY_TOL.
+# The boards and the wires come from stl/models/parts.json: the sub-parts of one model with the same color are one item,
+# and the Dupont housings of all the wires are one item (printdeck.yml has at most 60 items in an assembly).
 ASSEMBLY_TOL = 0.05
 ASSEMBLY_ZUP = np.array([[1.0, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0]])
-ASSEMBLY_BOARDS = dict(pi_stack=("pizero", "pisugar_s", "sd_card", "stack_screws", "pi_plugs"), battery=("battery",),
-                       speaker=("speaker",), amp=("amp_ns4168",), mic=("mic_sph0645",))
+ASSEMBLY_NAMES = dict(pisugar_s="PiSugar S", pizero="Pi Zero 2 W", battery="Battery", sd_card="microSD card", stack_screws="Stack screws",
+                      pi_plugs="Pi header", amp_ns4168="Amp NS4168", mic_sph0645="Mic SPH0645", speaker="Speaker",
+                      wires_uart="BiBoard wire", wires_amp="Amp wire", wires_mic="Mic wire", wires_splice="Splice", wires_speaker="Speaker wire")
+HOUSING = "#3a3b40"
+
+
+def assembly_items():
+    """The board and wire items of the FDM assembly: [(file name, item name, color, model, [sub-part files])]."""
+    import json
+    disp = [d for d in json.load(open(os.path.join(OUT, "models", "parts.json"))) if d["model"] in ASSEMBLY_NAMES]
+    items, housings = {}, []
+    for d in disp:
+        if d["model"].startswith("wires_") and d["color"].lower() == HOUSING:
+            housings.append(d["file"])
+            continue
+        items.setdefault((d["model"], d["color"].lower()), []).append(d)
+    out = []
+    for (model, color), ds in items.items():
+        subs = [d["sub"].replace("_", " ") for d in ds]
+        subs = [x.upper() if model.startswith("wires_") else x for x in subs]
+        out.append((f"{model}_{color[1:]}", f"{ASSEMBLY_NAMES[model]} {', '.join(subs)}", color, model, [d["file"] for d in ds]))
+    out.append(("dupont_housings", "Dupont housings", HOUSING, "wires", housings))
+    return out
 
 
 def write_assembly():
     """Writes stl/assembly/fdm/ and stl/assembly/resin/ from stl/screw/installed/, stl/installed/resin/ and
-    stl/models/ (write_screw_parts and build_resin run first)."""
-    def put(M, folder, name, hull=False):
-        M = M.transform(ASSEMBLY_ZUP)
-        M = M.hull() if hull else M.simplify(ASSEMBLY_TOL)
-        save_stl(M, os.path.join(OUT, "assembly", folder, f"{name}.stl"))
+    stl/models/ (write_screw_parts, build_resin and the models run first)."""
     load = lambda *p: mesh_to_manifold(load_stl(os.path.join(OUT, *p)))
+    put = lambda M, folder, name: save_stl(M.transform(ASSEMBLY_ZUP).simplify(ASSEMBLY_TOL), os.path.join(OUT, "assembly", folder, f"{name}.stl"))
     for folder in ("fdm", "resin"):
-        os.makedirs(os.path.join(OUT, "assembly", folder), exist_ok=True)
+        d = os.path.join(OUT, "assembly", folder)
+        os.makedirs(d, exist_ok=True)
+        for f in os.listdir(d):
+            if f.endswith(".stl"):
+                os.unlink(os.path.join(d, f))
     for n in ("cover_screw", "pod_body", "pod_door", "pod_panel", "mount_screws", "mount_inserts", "panel_screws", "panel_inserts"):
         put(load("screw", "installed", f"{n}.stl"), "fdm", n)
     for n in ("cover_screw", "pod_body", "pod_door", "pod_panel"):
         put(load("installed", "resin", f"{n}.stl"), "resin", n)
     for n in ("mount_screws", "panel_screws"):
         put(load("screw", "installed", f"{n}.stl"), "resin", n)
-    for n, models in ASSEMBLY_BOARDS.items():
-        M = union([load("models", f"{m}.stl") for m in models])
-        put(M, "fdm", n, hull=True)
+    for f, _, _, _, files in assembly_items():
+        put(union([load(x) for x in files]), "fdm", f)
 
 
 def battery_supports():
