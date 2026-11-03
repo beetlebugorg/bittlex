@@ -1060,7 +1060,8 @@ def assembly_items():
 
 def write_assembly():
     """Writes stl/assembly/fdm/ and stl/assembly/resin/ from stl/screw/installed/, stl/installed/resin/ and
-    stl/models/ (write_screw_parts, build_resin and the models run first)."""
+    stl/models/: python pod.py assembly, after pod.py. The generate step of printdeck.yml does not run it, because
+    the wire routes of pod.py differ a little on other computers, and the check compares the files byte for byte."""
     load = lambda *p: mesh_to_manifold(load_stl(os.path.join(OUT, *p)))
     put = lambda M, folder, name: save_stl(M.transform(ASSEMBLY_ZUP).simplify(ASSEMBLY_TOL), os.path.join(OUT, "assembly", folder, f"{name}.stl"))
     for folder in ("fdm", "resin"):
@@ -2707,7 +2708,6 @@ def main(fast=False):
             print(f"  {a:34s} x {b:20s} {v:9.2f}")
     json.dump(dict(rows=rows, printing=printing, balance=bal, snap=snap, clicks=clicks),
               open(os.path.join(OUT, "checks.json"), "w"), indent=1)
-    write_assembly()
     if fast:
         return
     from build123d import export_step
@@ -2722,4 +2722,7 @@ def main(fast=False):
 
 
 if __name__ == "__main__":
-    main(fast="fast" in sys.argv)
+    if "assembly" in sys.argv:      # the Parts tab models: run after pod.py (the wire routes differ a little on other computers)
+        write_assembly()
+    else:
+        main(fast="fast" in sys.argv)

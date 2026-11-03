@@ -161,7 +161,7 @@ materials:
       Grey (80%): https://www.amazon.com/ANYCUBIC-UV-Curing-Precision-Excellent-Fluidity/dp/B079GR1L19
       Flex black (20%): https://www.amazon.com/Siraya-Tech-Tenacious-Flex-Black/dp/B0BTNKX6BT
 
-# The assemblies of the Parts tab: each model in its place, Z up (pod.py write_assembly). The items are in assembly
+# The assemblies of the Parts tab: each model in its place, Z up (python bittle_pi_addon/pod.py assembly). The items are in assembly
 # order: the viewer removes the last item first. Adjacent items with the same explode vector move as one unit. The
 # body is the base (no explode), and the amp stays in it (it tilts out under its nubs). The panel slides 5.5 mm to the
 # rear, then the viewer lifts it.
