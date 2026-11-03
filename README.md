@@ -1,25 +1,25 @@
-# Bittle X Platform
+# Bittle X Pod for Pi Zero
 
 > This repository is only the 3D model for the Bittle X hardware and software of
 > [LineChef](https://github.com/LineChef). His project is
 > [LineChef/BittleX](https://github.com/LineChef/BittleX), and its documentation
 > site is [LineChef/react-bittlex](https://github.com/LineChef/react-bittlex).
 
-Click-on add-ons for the Petoi Bittle X robot dog. Print a new back cover
-with 4 teardrop pegs, then put hardware on your robot without tools, glue or tape.
+A Raspberry Pi Zero pod for the Petoi Bittle X robot dog, and a pegged back
+cover for other add-ons. It is an unofficial add-on for the Petoi Bittle X. Petoi did not make it.
 
 **[Website and 3D viewer](https://beetlebugorg.github.io/bittlex/)** ·
-[Platform spec (PDF)](bittle_platform/bittle_platform_spec.pdf) ·
-[Pi add-on guide (PDF)](bittle_pi_addon/bittle_pi_addon_guide.pdf)
+[Peg interface spec (PDF)](bittle_platform/bittle_peg_spec.pdf) ·
+[Pod build guide (PDF)](bittle_pi_addon/bittle_pi_addon_guide.pdf)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="bittle_platform/doc/iso/platform-dark.png">
-  <img src="bittle_platform/doc/iso/platform-light.png" alt="The platform on the robot, with the starter plate" width="360">
+  <img src="bittle_platform/doc/iso/platform-light.png" alt="The pegged cover on the robot, with the starter plate" width="360">
 </picture>
 
-## The platform
+## The pegged cover
 
-The platform is the stock Petoi back cover with 4 teardrop pegs on its flat top. It
+The pegged cover is the stock Petoi back cover with 4 teardrop pegs on its flat top. It
 goes on the robot in place of the stock cover. The inside of the cover does
 not change, so the BiBoard and the touch sensor fit as before. A notch in the
 front-left edge lets the head camera plug out.
@@ -45,11 +45,11 @@ front-left edge lets the head camera plug out.
   screws at the peg places, up from inside the cover. The add-on and the
   cover clip onto the robot as one unit.
 
-## Example: the Pi add-on
+## The pod
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="bittle_pi_addon/doc/iso/hero-dark.png">
-  <img src="bittle_pi_addon/doc/iso/hero-light.png" alt="The Pi add-on on the robot" width="320">
+  <img src="bittle_pi_addon/doc/iso/hero-light.png" alt="The pod on the robot" width="320">
 </picture>
 
 A Raspberry Pi with a battery, a speaker and a microphone, in one rounded box
@@ -67,19 +67,19 @@ that screws to a cover for screws.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="bittle_pi_addon/doc/iso/open-dark.png">
-  <img src="bittle_pi_addon/doc/iso/open-light.png" alt="Inside the Pi add-on" width="360">
+  <img src="bittle_pi_addon/doc/iso/open-light.png" alt="Inside the pod" width="360">
 </picture>
 
 ## Make your own add-on
 
-1. Read the [platform spec](bittle_platform/bittle_platform_spec.pdf). It is
+1. Read the [peg interface spec](bittle_platform/bittle_peg_spec.pdf). It is
    3 pages.
 2. Start from the starter plate, or cut the keyholes into your own plate
    with `keyhole_cutter.step` and `detent_bumps.step`.
 3. Keep your part out of `keepout.stl`.
 4. Print the plate face down on the bed.
 
-For a heavy add-on, use the screw mount of the Pi add-on (rev 0.26) in
+For a heavy add-on, use the screw mount of the pod (rev 0.26) in
 place of the keyholes. Start from
 `bittle_pi_addon/stl/print/starter_plate_screw.stl`. It has 4 bosses for
 M2.5 heat-set inserts, and 4 M2.5 x 4 screws hold it to
@@ -89,8 +89,8 @@ M2.5 heat-set inserts, and 4 M2.5 x 4 screws hold it to
 
 | Folder | Content |
 |---|---|
-| [`bittle_platform/`](bittle_platform) | The platform: spec, print files, CAD, build script |
-| [`bittle_pi_addon/`](bittle_pi_addon) | The Pi add-on: build guide, print files, CAD, build script |
+| [`bittle_platform/`](bittle_platform) | The pegged cover and the peg interface: spec, print files, CAD, build script |
+| [`bittle_pi_addon/`](bittle_pi_addon) | The pod: build guide, print files, CAD, build script |
 | [`web/`](web), `build_site.py` | The website and the 3D viewer |
 | [`profiles/`](profiles) | The Cura profiles of the printers, for Printdeck builds |
 | `printdeck.yml` | The printed parts, with the printer, the profile and the material of each |

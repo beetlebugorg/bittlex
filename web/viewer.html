@@ -446,7 +446,7 @@ $("lidop").addEventListener("input", e => {
 // ---- colors: any part can have any color. The printed parts have buttons for the filaments of the project.
 // The choice stays in this browser (localStorage) and goes into a link (#colors=body:navy,panel:e8641b).
 const FIL = { white: "#f2f2ef", gray: "#9ea0a4", orange: "#e8641b", navy: "#24345c", black: "#1d1d1f" };
-const PRINTED = [["body", "Body"], ["door", "Door"], ["panel", "Panel"], ["cover", "Platform cover"]].filter(([id]) => parts[id]);
+const PRINTED = [["body", "Body"], ["door", "Door"], ["panel", "Panel"], ["cover", "Cover"]].filter(([id]) => parts[id]);
 const DEF = Object.fromEntries(manifest.parts.map(p => [p.id, p.color]));
 const COL_KEY = "bittlex.colors";
 const norm = c => (FIL[c] || (c.startsWith("#") ? c : "#" + c)).toLowerCase();

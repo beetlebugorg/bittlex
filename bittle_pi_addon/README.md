@@ -1,6 +1,6 @@
-# Bittle X Pi Add-on v0.26 - Build Guide
+# Bittle X Pod for Pi Zero v0.26 - Build Guide
 
-Version 0.26, 2026-11-01. A sample add-on for the Bittle X platform v3.4 (../bittle_platform). It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. The case is one rounded box (the body) and a slide-on top panel. The body screws to a cover for screws, and the cover and the body clip onto the robot as one unit, in place of the stock cover. Every part goes in from the top. Two screws hold the panel. A dab of glue sets the amp.
+Version 0.26, 2026-11-02. It is an unofficial add-on for the Petoi Bittle X. Petoi did not make it. It goes on the robot with the cover for screws (peg interface v3.4, ../bittle_platform). It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. The case is one rounded box (the body) and a slide-on top panel. The body screws to a cover for screws, and the cover and the body clip onto the robot as one unit, in place of the stock cover. Every part goes in from the top. Two screws hold the panel. A dab of glue sets the amp.
 
 ![The add-on on the robot: the port windows in the panel. The mic holes are in the right side, near the front.](doc/iso/hero-light.png)
 
@@ -17,7 +17,7 @@ Version 0.26, 2026-11-01. A sample add-on for the Bittle X platform v3.4 (../bit
 
 Each part has a file for 0.20 mm layers and a *_fine file for 0.10 mm layers, for example pod_panel_screw.stl and pod_panel_screw_fine.stl. The fine panel has smaller hook gaps (0.05 mm). The other fine files are the same as the 0.20 mm files now. Slice them with the profiles in ../profiles/taz-workhorse-se (pla-0.20-standard and pla-0.10-fine) and a brim. printdeck.yml in the repository root has the profile and the settings of each part. The old Cura profile "Bittle X" (../cura/Bittle_X.curaprofile; 0.20 mm layers) also works for the 0.20 mm files.
 
-pod_body_screw.3mf has support blockers on the two amp nubs and at the middle of the rear wall. The nubs print without support, and the tall, narrow support under them fails. Open the 3MF in Cura and turn on support as usual. starter_plate_screw.stl is the starter plate of the platform with the same 4 bosses: use it to start an add-on of your own, or to test the inserts or nuts on the cover.
+pod_body_screw.3mf has support blockers on the two amp nubs and at the middle of the rear wall. The nubs print without support, and the tall, narrow support under them fails. Open the 3MF in Cura and turn on support as usual. starter_plate_screw.stl is the starter plate of the peg interface with the same 4 bosses: use it to start an add-on of your own, or to test the inserts or nuts on the cover.
 
 
 ## Inserts or nuts
@@ -208,7 +208,7 @@ Open items: the BiBoard header height is an estimate (measure it). The speaker s
 | stl/screw/ | the screw version in the robot frame, with the screws and the inserts (desktop viewer: --stl stl/screw) |
 | stl/plates/ | print plates for the FDM and the resin printer (3MF, STL), plates.json, resin_check.json |
 | cad/*.step | the parts as STEP (from the mesh) |
-| cad/assembly_step.zip | one STEP file with the robot, the platform and the add-on in place, with named and colored parts |
+| cad/assembly_step.zip | one STEP file with the robot, the pegged cover and the pod in place, with named and colored parts |
 | stl/installed/, stl/models/ | the parts and the electronics in the robot frame |
 | pod.py, motion.py, plates.py, render.py, docs.py | dimensions, build and checks; robot motion; print plates; pictures; this guide |
 

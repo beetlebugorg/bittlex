@@ -1,4 +1,4 @@
-"""The Bittle X robot around the platform: head, legs, battery and tail, in the robot frame (interface.py).
+"""The Bittle X robot around the pegged cover: head, legs, battery and tail, in the robot frame (interface.py).
 
 Source: Petoi's ROS model (reference/petoi_ros/, MIT). Its meshes are in one world frame, in mm:
 x = forward, y = left, z = up. Body frame = (-y, z - 22, -x). Check: the ROS front plate is at

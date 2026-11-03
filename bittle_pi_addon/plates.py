@@ -1,4 +1,4 @@
-"""Print plates: every part of the add-on and the platform cover on one bed, in its print orientation.
+"""Print plates: every part of the add-on and the pegged cover on one bed, in its print orientation.
 
   fdm_taz       LulzBot TAZ Workhorse (280 x 280 x 300), 0.5 mm nozzle. The screw version: the 0.20 mm print STLs
                 of pod.py. The cover stands on its rear end.

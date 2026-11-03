@@ -1,14 +1,14 @@
-"""Bittle X Pi add-on rev 0.25: one-piece body with a slide-on top panel.
+"""Bittle X Pod for Pi Zero rev 0.26: one-piece body with a slide-on top panel.
 
-Frame = the robot frame of the platform (bittle_platform/interface.py):
+Frame = the robot frame of the peg interface (bittle_platform/interface.py):
   X = lateral (+X = robot right), Y = up, Z = length (-Z = head end). mm.
 The parts are designed in a mirror of it (X turned over, see MIRROR_X); every output is in the robot frame.
 Left and right below are on the robot.
 
 Parts
-  cover_pegs : the platform (bittle_platform/): Petoi cover, unchanged, plus 4 pegs.
-  pod_body   : a rounded box (squircle plan, vertical walls, flat floor). The floor is the platform
-               mount plate: teardrop keyholes drop over the pegs 7 mm behind the locked place,
+  cover_pegs : the pegged cover (bittle_platform/): Petoi cover, unchanged, plus 4 pegs.
+  pod_body   : a rounded box (squircle plan, vertical walls, flat floor). The floor is the mount
+               plate of the peg interface: teardrop keyholes drop over the pegs 7 mm behind the locked place,
                slide forward, click. To remove it, slide it 7 mm rearward and lift it.
                The floor is flat: it does not follow the robot, so the cover and the pegs stay in view.
                Inside, every part goes in from the top: the mic (front wall), the Pi Zero 2 W +
@@ -19,7 +19,7 @@ Parts
                behind its place and slides forward: hooks go under lugs in the front and side walls, and
                a latch tongue at the rear clicks over a rib. Forks under the panel hold the stack,
                the speaker and the amp down. The PiSugar button is under the open port rectangle.
-Order: fit the platform cover, click the empty body on, put the parts in, plug in the wires, put the
+Order: fit the pegged cover, click the empty body on, put the parts in, plug in the wires, put the
 door in, slide the panel on.
 Print: no supports (print_orient() has the orientation of each part).
 """
@@ -34,14 +34,14 @@ from build123d import Box, Cylinder, Pos, Rot, export_stl
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(ROOT))            # the folder that holds bittle_platform/
-from bittle_platform import interface as PI          # platform v3.4: cover, pegs, keyholes, screw mount
+from bittle_platform import interface as PI          # peg interface v3.4: cover, pegs, keyholes, screw mount
 REF = os.path.join(ROOT, "reference")                # vendor models (Pi Zero)
 PREF = os.path.join(os.path.dirname(ROOT), "bittle_platform", "reference")   # Petoi robot parts
 OUT = os.path.join(ROOT, "stl")
 
 # Design frame: the robot frame with X turned over (a mirror). On the robot the BiBoard header is at the front left
-# (platform v3.2). In the design frame it is at the front right, so the parts keep the sides of rev 0.21. The stack
-# and the amp are turned on the robot; in the design frame that is a mirror of their models (STAND, the amp layout). The platform and the robot come in turned over; main() turns every output back to the robot frame.
+# (peg interface v3.2). In the design frame it is at the front right, so the parts keep the sides of rev 0.21. The stack
+# and the amp are turned on the robot; in the design frame that is a mirror of their models (STAND, the amp layout). The pegged cover and the robot come in turned over; main() turns every output back to the robot frame.
 MIRROR_X = np.diag([-1.0, 1, 1, 1])[:3, :]
 
 
@@ -74,7 +74,7 @@ R_PLAN, NEXP = 13.0, 5.0    # plan corner size and squircle exponent
 WALL = 2.0
 IN_A, ZF_IN, ZR_IN = A - WALL, Z0 + WALL, Z1 - WALL     # inner faces: 33.6, -35.8, 54.2
 IN_A_LOW = A_LOW - WALL                                 # 27.6: the inner face below the chamfer
-FLOOR_Y0, FLOOR_Y1 = PI.MOUNT_Y0, PI.MOUNT_Y1          # the floor is the platform mount plate
+FLOOR_Y0, FLOOR_Y1 = PI.MOUNT_Y0, PI.MOUNT_Y1          # the floor is the mount plate
 SEAM = 57.2                 # top of the body walls = bottom of the panel
 # Panel top: 4.3 over the highest port. Rev 0.24 had 63.2 (0.3 over it): the battery leads at the front and the
 # speaker leads at the rear had no room under the panel (user print).
@@ -83,7 +83,7 @@ RT = 4.0                    # round on the top edge; the last 45 deg of it is a 
 PANEL_T = 1.6
 PANEL_IN = TOP - PANEL_T    # 65.6, underside of the panel top
 
-# Pegs (on the cover) and keyholes (in the floor): platform interface v3.1
+# Pegs (on the cover) and keyholes (in the floor): peg interface v3.1
 PEGS = PI.PEGS
 SLIDE = PI.SLIDE            # the body drops on SLIDE rearward (+Z) of its place, then slides forward (-Z) to lock
 DET = PI.DET
@@ -273,8 +273,8 @@ LATCH = dict(hw=4.5, slit=0.6, root_z=35.5, rib_hw=3.0, rib_d=1.2, rib_top=59.8,
              hook_hw=3.5, ramp=1.0, gap=0.05)
 # Finger notch in the rear wall under the seam: lift the rear edge of the panel here.
 NOTCH = dict(hw=7.0, h=1.5, d=1.0)
-# Front-left notch, over the notch in the cover (platform GROVE_NOTCH): a 45 deg chamfer across the front bottom edge
-# of the body and an opening in the floor over the BiBoard Grove socket (platform GROVE_PLUG), so a Grove cable can
+# Front-left notch, over the notch in the cover (peg interface GROVE_NOTCH): a 45 deg chamfer across the front bottom edge
+# of the body and an opening in the floor over the BiBoard Grove socket (peg interface GROVE_PLUG), so a Grove cable can
 # come out under the front edge. h = height at the front face. The body has no other cable hole at its base.
 FRONT_NOTCH = dict(x=(12.5, 25.5), h=6.0, z1=-26.9)    # z1: rear end of the floor opening over the Grove plug
 FRONT_CABLE = dict(x=(14.0, 24.0), y=(FLOOR_Y0, FLOOR_Y0 + 3.5), z=(Z0 - 3.0, Z0 + 2.0))   # cable space (check)
@@ -612,7 +612,7 @@ def loft_rings(rings):
 # Parts
 # --------------------------------------------------------------------------
 def build_pegs():
-    """The platform pegs (bittle_platform/build.py)."""
+    """The pegs (bittle_platform/build.py)."""
     from bittle_platform import build as BP
     return BP.pegs()
 
@@ -853,8 +853,8 @@ def write_body_3mf(body, path):
 # go down to the BiBoard. A ring on the cover top holds the pod floor, so the pod has no play on the cover.
 # The boss top is 0.3 under the battery (x = +12) and 0.8 under the Pi plugs (x = -12): use screws of 5 mm or shorter.
 SCREW_MOUNT = dict(insert_d=3.6, insert_depth=3.9, boss_d=7.0, top=30.2,
-                   **{k: v for k, v in PI.SCREW_MOUNT.items() if k != "screw"})     # the cover side: platform v3.4
-MOUNT = "keyhole"               # "keyhole" (platform pegs) or "screw" (build_body_screw, build_panel_screw)
+                   **{k: v for k, v in PI.SCREW_MOUNT.items() if k != "screw"})     # the cover side: peg interface v3.4
+MOUNT = "keyhole"               # "keyhole" (pegs) or "screw" (build_body_screw, build_panel_screw)
 # Panel screws (screw mount): no latch. An M2.5 x 4 insert in a boss on the top of each speaker post, and an M2.5 x 12
 # screw down through a column in the panel. The boss top is gap under the column: the screw pulls the panel down,
 # and the front and side hooks press up on their lugs (no rattle). The hook gaps are smaller (LID_SCREW, 0.1 mm layers).
@@ -905,7 +905,7 @@ def screw_holes():
 
 
 def build_cover_screw():
-    """The platform cover (robot frame) with no pegs and no logo: a ring under the pod floor at each peg place, a screw hole,
+    """The cover for screws (robot frame): the stock cover with no pegs and no logo, a ring under the pod floor at each peg place, a screw hole,
     and a pocket for the screw head from inside. The holes are teardrops (the cover prints on its rear end)."""
     from bittle_platform import build as BP
     S = SCREW_MOUNT
@@ -922,7 +922,7 @@ def build_cover_screw():
 
 
 def build_starter_screw():
-    """The starter plate for the screw mount (robot frame): the platform starter base with an insert boss at each
+    """The starter plate for the screw mount (robot frame): the starter base with an insert boss at each
     peg place, as on the pod floor. It screws to the screw cover."""
     from bittle_platform import build as BP
     return (BP.to_m(BP.starter_base()) + screw_bosses()) - screw_holes()
@@ -2511,7 +2511,7 @@ def print_orient(name, M, also=None):
 
 
 # Keyhole fit for 0.1 mm layers (fit test 14, printed). At 0.1 mm the holes print near their true size,
-# so the platform fit (gap 0.35, travel 0.20) is loose. A 0.1 mm clamp pad on each beam removes the lift
+# so the peg fit (gap 0.35, travel 0.20) is loose. A 0.1 mm clamp pad on each beam removes the lift
 # and tilt on the 0.3 mm gap under the peg heads. The pegs on the cover do not change.
 FINE_FIT = dict(gap=0.10, travel=0.375, pad=0.10)
 
@@ -2573,7 +2573,7 @@ def build_resin():
 
 
 def export_assembly(path, models):
-    """One STEP file with the robot, the platform and the add-on in place: named, colored parts (no wires).
+    """One STEP file with the robot, the pegged cover and the add-on in place: named, colored parts (no wires).
     Exact B-rep for the pegs; simplified meshes for the rest (0.05 mm for the add-on, 0.15 mm for the
     robot, the cover and the boards)."""
     from build123d import Compound, Color, export_step
@@ -2701,7 +2701,7 @@ def main(fast=False):
     clicks = BP.detent_force()
     print(f"balance: {bal['mass_g']} g, center of mass x {bal['com'][0]} y {bal['com'][1]} z {bal['com'][2]}")
     print("panel latch:", snap)
-    print("platform clicks:", clicks)
+    print("peg clicks:", clicks)
     print("checks (mm^3, >0.05 shown):")
     for a, b, v in rows:
         if v > 0.05:

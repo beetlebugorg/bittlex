@@ -7,7 +7,7 @@ cover: bittle_pi_addon/doc/cover.png
 generate:
   python: "3.12"
   install: pip install -r requirements.txt
-  # "fast" skips the STEP export of pod.py. The platform build writes its STEP files.
+  # "fast" skips the STEP export of pod.py. The pegged cover build writes its STEP files.
   run: python bittle_platform/build.py && python bittle_pi_addon/pod.py fast && python bittle_pi_addon/plates.py
   check: true
 
@@ -15,11 +15,11 @@ parts:
   # Each FDM part has a "fine" variant (0.10 mm layers) and a "standard" variant (0.20 mm layers). A *_fine file
   # has the fit values for 0.10 mm layers. Only the screw panel is different now (smaller hook gaps).
 
-  # Pi add-on, screw version (rev 0.26)
+  # The pod, screw version (rev 0.26)
   - name: Pod body (screw)
     group: The pod
     description: >-
-      The case of the Pi add-on: one rounded box with a flat floor. It holds the Pi Zero 2 W with the PiSugar S, the speaker, the amp and the mic. Press 6 M3 heat-set inserts into the bosses: 4 in the floor for the cover screws, and 2 on the speaker posts for the panel screws. Print it floor down. The 3MF has support blockers on the two amp nubs.
+      The case of the pod: one rounded box with a flat floor. It holds the Pi Zero 2 W with the PiSugar S, the speaker, the amp and the mic. Press 6 M3 heat-set inserts into the bosses: 4 in the floor for the cover screws, and 2 on the speaker posts for the panel screws. Print it floor down. The 3MF has support blockers on the two amp nubs.
     printer: taz
     material: roll-4
     settings: {support_enable: true, adhesion_type: brim}
@@ -75,7 +75,7 @@ parts:
   - name: Starter plate (screw)
     group: Starter plates
     description: >-
-      The platform starter plate with an M3 insert boss at each peg place, the same as the pod floor. Start an add-on of your own from it, or print it first to test the inserts and the screws on the cover.
+      The starter plate of the peg interface with an M3 insert boss at each peg place, the same as the pod floor. Start an add-on of your own from it, or print it first to test the inserts and the screws on the cover.
     printer: taz
     material: roll-4
     settings: {adhesion_type: brim}
@@ -87,9 +87,9 @@ parts:
         profile: taz-workhorse-se/pla-0.20-standard
         files: [bittle_pi_addon/stl/print/starter_plate_screw.stl]
 
-  # Platform
-  - name: Platform cover
-    group: Click-on platform
+  # The pegged cover (click-on version)
+  - name: Pegged cover
+    group: Pegged cover
     description: >-
       The stock Bittle X back cover with 4 teardrop pegs. A click-on add-on goes onto the pegs, slides 7 mm forward and clicks into place, with no screws. Print it on its rear end with tree supports and a 14-line brim.
     printer: taz
@@ -151,8 +151,8 @@ parts:
 docs:
   - name: Build guide
     file: bittle_pi_addon/bittle_pi_addon_guide.pdf
-  - name: Platform spec
-    file: bittle_platform/bittle_platform_spec.pdf
+  - name: Peg interface spec
+    file: bittle_platform/bittle_peg_spec.pdf
 
 # The resin of the resin parts: 80% Anycubic grey and 20% Siraya Tech Tenacious Flex black.
 materials:
@@ -166,7 +166,7 @@ materials:
 # body is the base (no explode), and the amp stays in it (it tilts out under its nubs). The panel slides 5.5 mm to the
 # rear, then the viewer lifts it.
 assemblies:
-  - name: Pi add-on (FDM)
+  - name: Pod (FDM)
     description: >-
       The pod on the cover for screws, with M3 heat-set inserts and M3 screws, the boards and the wires.
     items:
@@ -382,7 +382,7 @@ assemblies:
         file: bittle_pi_addon/stl/assembly/fdm/panel_screws.stl
         color: "#5b5e66"
         explode: [0, 0, 1.02]
-  - name: Pi add-on (resin)
+  - name: Pod (resin)
     description: >-
       The resin parts, with M2.5 nuts glued into the bosses and M2.5 screws.
     items:

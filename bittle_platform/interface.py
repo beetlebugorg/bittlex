@@ -1,6 +1,6 @@
-"""Bittle X platform interface. All numbers for add-on design are here.
+"""The peg interface. All numbers for add-on design are here.
 
-The platform is the stock Petoi Bittle X back cover (Bittle_Cover_with_hole_for_Pi.stl)
+The pegged cover is the stock Petoi Bittle X back cover (Bittle_Cover_with_hole_for_Pi.stl)
 with 4 teardrop pegs on its flat top. On the robot, the cover is turned 180 deg about Y from
 the STL: the Pi slot is at the front left (v3.2; build.py turns the cover meshes).
 Add-ons drop onto the pegs, slide forward, and click.
@@ -31,7 +31,7 @@ LOGO = dict(x=(-9.14, 9.14), z=(-7.80, 7.85), top=25.59)  # raised Petoi logo, 0
 COVER_TURN = [[-1, 0, 0], [0, 1, 0], [0, 0, -1]]             # cover STL -> robot frame (180 deg about Y)
 SLOT = dict(x0=-27.75, x1=-24.25, y0=19.5, z0=-25.75, z1=-11.75)   # Pi slot in the cover top (front left)
 # v3.3: the slot is cut wider toward the center, to x1 of SLOT_WIDE (the user: the BiBoard Dupont plugs did not fit).
-# It is 7.0 wide, the same as the BiBoard notch in the floor of the Pi add-on.
+# It is 7.0 wide, the same as the BiBoard notch in the floor of the pod.
 SLOT_WIDE = dict(SLOT, x1=-20.75)
 # BiBoard 5-pin female header in the slot (GND, +5V, TX2, RX2, ..). Height is a photo estimate.
 HDR = dict(x0=-27.27, x1=-24.73, z0=-25.1, z1=-12.4, top=29.1)
@@ -43,7 +43,7 @@ GROVE_NOTCH = dict(x=(-25.5, -12.5), z=(-38.0, -26.45))
 GROVE_PLUG = dict(x=(-25.0, -13.0), y_top=30.0, z=(-37.0, -27.0))
 
 # --------------------------------------------------------------------------
-# Pegs (part of the platform)
+# Pegs (part of the pegged cover)
 # --------------------------------------------------------------------------
 # v3.0: the add-on slides forward to lock and rearward to come off. A closed add-on cannot slide
 # toward the head (the head is 1.35 mm in front of the lid), but 7 mm to the rear is clear.
@@ -52,7 +52,7 @@ GROVE_PLUG = dict(x=(-25.0, -13.0), y_top=30.0, z=(-37.0, -27.0))
 # direction only: turned 180 deg, the round side of each hole is where the point of the head is.
 # The cover prints standing on its rear end: all the points are down, so the pegs print without overhangs.
 PEGS = [(12.0, -5.5), (12.0, 14.5), (-12.0, -5.5), (-12.0, 14.5)]   # (X, Z) centers: 24 x 20, 4.5 mm behind the cover center
-# (the front drop-in holes stay 0.45 behind the speaker wall of the Pi add-on)
+# (the front drop-in holes stay 0.45 behind the speaker wall of the pod)
 TIP_DEG = 45.0                  # half angle of the teardrop point
 HEAD_TIP = 1.0                  # all the points are toward +Z
 HEAD_TIP_DEG = 30.0             # a long head point: turned 180 deg, about 3 mm of it is over the plate
@@ -107,7 +107,7 @@ MU_PLA = 0.3                    # PLA on PLA friction, for the detent force esti
 # Envelope (checked with the pod; outside this, check the robot yourself)
 # --------------------------------------------------------------------------
 ENVELOPE = dict(
-    z=(-37.8, 56.2),            # front and rear faces of the Pi add-on body
+    z=(-37.8, 56.2),            # front and rear faces of the pod body
     half_w_low=29.6,            # max |X| of the add-on body (flat floor at Y 26.0, over the cover and the shoulders)
     half_w_high=35.6,           # max |X| above Y 36 (a 45 deg chamfer from Y 30): the rear legs swing back past the floor edge
     top=67.2,                   # add-on top; no robot limit, but a high mass makes the robot less stable

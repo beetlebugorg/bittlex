@@ -1,7 +1,7 @@
-"""Bittle X platform: drawings, renders, interface.json, SPEC.md and the PDF.
+"""The pegged cover and the peg interface: drawings, renders, interface.json, SPEC.md and the PDF.
 
 Run build.py first, then:  python docs.py
-README.md and bittle_platform_spec.pdf come from the same content list (CONTENT), so they agree.
+README.md and bittle_peg_spec.pdf come from the same content list (CONTENT), so they agree.
 """
 import datetime
 import json
@@ -23,8 +23,8 @@ import interface as I            # noqa: E402
 import build as B                # noqa: E402
 
 DOC = os.path.join(HERE, "doc")
-TITLE = f"Bittle X Platform v{I.VERSION} - Interface Specification"
-FOOTER = f"Bittle X Platform v{I.VERSION}"
+TITLE = f"Bittle X Pegged Cover v{I.VERSION} - Peg Interface Specification"
+FOOTER = f"Pegged cover v{I.VERSION} - peg interface (unofficial, for the Petoi Bittle X)"
 DATE = datetime.date.today().isoformat()
 CHECKS = json.load(open(os.path.join(HERE, "checks.json")))
 
@@ -85,7 +85,7 @@ def plan_drawing(path):
     a.text(0.6, 0.6, "origin", fontsize=7)
     a.set_xlim(-66, 80); a.set_ylim(-40, 40); a.set_aspect("equal"); a.grid(True, lw=0.3)
     a.set_xlabel("Z (mm)   - = front (head end), + = rear"); a.set_ylabel("X (mm)   + = robot right side")
-    a.set_title("Plan view (from above): platform, pegs, keep-outs")
+    a.set_title("Plan view (from above): pegged cover, pegs, keep-outs")
     plt.tight_layout(); plt.savefig(path, dpi=160); plt.close(fig)
 
 
@@ -214,7 +214,8 @@ def content():
     img = lambda f, w=1.0, cap="": X.append(("img", f, w, cap))
     lst = lambda items: X.append(("list", items))
 
-    p(f"Version {I.VERSION}, {DATE}. The platform is the stock Petoi Bittle X back cover with 4 teardrop pegs on its top. "
+    p(f"Version {I.VERSION}, {DATE}. The pegged cover is the stock Petoi Bittle X back cover with 4 teardrop pegs on its top. "
+      "It is an unofficial add-on interface for the Petoi Bittle X. Petoi did not make it. "
       f"An add-on has a plate with 4 keyholes. Put it on the pegs, slide it {I.SLIDE:g} mm forward, and it clicks. "
       f"To remove it, slide it {I.SLIDE:g} mm rearward and lift it. It comes off closed: the head is not in the way. "
       "The keyholes have the shape of the pegs, so the add-on goes on in one direction only. "
@@ -229,7 +230,7 @@ def content():
       f"It also makes the click travel smaller ({I.DET['travel']:g} mm, was 0.28 mm): the add-on slides on and off with less force. "
       "Reprint the cover and the add-on plate. The pegs do not change. "
       "Version 3.4 adds the screw mount, for a heavy add-on: 4 M2.5 screws at the peg places, in place of the pegs (section 3).")
-    img("iso/platform-light.png", 0.6, "The platform (white) on the robot, with the starter plate on the pegs.")
+    img("iso/platform-light.png", 0.6, "The pegged cover (white) on the robot, with the starter plate on the pegs.")
 
     h("1. Key numbers")
     tbl([["Item", "Value (mm)"],
@@ -311,9 +312,9 @@ def content():
          "(docs.petoi.com/extensible-modules/back-touch-sensor).",
          "The peg roots stop inside the 1.4 mm wall, so the inside of the cover does not change, except at the Grove notch at the front-left edge. "
          "Move the circuit from the stock cover to cover_pegs in the same way as on the stock cover.",
-         "An add-on on the platform covers most of the touch areas. Disable the back touch mode (serial command Xb) "
+         "An add-on on the pegged cover covers most of the touch areas. Disable the back touch mode (serial command Xb) "
          "when an add-on is on the robot.",
-         "For this reason, the platform has no parts under the cover top. A cover that prints flat without supports "
+         "For this reason, the pegged cover has no parts under the cover top. A cover that prints flat without supports "
          "needs pegs held from inside the cover, where the circuit is. A later interface with sockets in a thicker top can avoid this."])
     img("petoi_touch_areas.png", 0.45, "Bittle X V2 touch areas (red boxes). Image: Petoi, docs.petoi.com/extensible-modules/back-touch-sensor.")
 
@@ -441,7 +442,7 @@ def write_pdf(X, path):
         c.restoreState()
 
     SimpleDocTemplate(path, pagesize=A4, leftMargin=15 * mm, rightMargin=15 * mm, topMargin=13 * mm, bottomMargin=14 * mm,
-                      title=TITLE, author="Bittle X platform").build(story, onFirstPage=foot, onLaterPages=foot)
+                      title=TITLE, author="Peg interface").build(story, onFirstPage=foot, onLaterPages=foot)
 
 
 def main(skip_renders=False):
@@ -453,7 +454,7 @@ def main(skip_renders=False):
     open(os.path.join(HERE, "interface.json"), "w").write(compact_json(dict(interface_dict(), checks=rnd(CHECKS))) + "\n")
     X = content()
     write_md(X, os.path.join(HERE, "README.md"))
-    write_pdf(X, os.path.join(HERE, "bittle_platform_spec.pdf"))
+    write_pdf(X, os.path.join(HERE, "bittle_peg_spec.pdf"))
     print("docs ready")
 
 

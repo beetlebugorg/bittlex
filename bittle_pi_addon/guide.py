@@ -89,7 +89,7 @@ def build_steps():
          ["Plug the six mic jumpers onto the mic header. Use 15 cm jumpers on GND and 3V.",
           "Drop the mic into the slots in the post and the ledge on the right wall, near the front.",
           "The port faces the wall. The header is at the front edge, the plugs point into the body."],
-         check="The board sits in both slots. The post, the ledge and a stop hold it.")
+         check="The board is in both slots. The post, the ledge and a stop hold it.")
     step("Amp and speaker lead", AMP, "amp",
          ["Plug the speaker lead into the 2-pin connector at the rear end of the amp.",
           "Plug the flat amp cable into the 5-pin connector at the front end. G is at the top.",
@@ -335,7 +335,7 @@ td.n { white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 
 def page(body, n, cls=""):
-    return (f'<section class="page {cls}">{body}<div class="folio"><span>Bittle X Pi Add-on v{docs.VERSION} · Build guide</span>'
+    return (f'<section class="page {cls}">{body}<div class="folio"><span>Bittle X Pod for Pi Zero v{docs.VERSION} · Build guide</span>'
             f'<span>{n}</span></div></section>')
 
 
@@ -345,9 +345,9 @@ def swatch(c):
 
 def cover(img):
     return (f'<section class="page cover"><div class="art"><img src="{img}"></div><div class="title">'
-            f'<div class="kicker">Build guide</div><h1>Bittle X<br>Pi Add-on</h1>'
+            f'<div class="kicker">Build guide</div><h1>Bittle X Pod<br>for Pi Zero</h1>'
             f'<div class="lead">A Raspberry Pi Zero 2 W with a battery, a speaker and a microphone, in one rounded box '
-            f'that screws to a new back cover of the Petoi Bittle X.</div>'
+            f'that screws to a new back cover of the Petoi Bittle X. It is an unofficial add-on. Petoi did not make it.</div>'
             f'<div class="meta"><div><b>Add-on v{docs.VERSION}</b>{docs.DATE}</div><div><b>4 + 2 screws</b>M3 inserts (FDM) or M2.5 nuts (resin)</div>'
             f'<div><b>{CHECKS["balance"]["mass_g"]:.0f} g</b>with the electronics</div><div><b>No supports</b>for the add-on parts (FDM)</div></div>'
             f'</div><div class="bar"></div></section>')
@@ -462,7 +462,7 @@ def cables(n):
             f'The wires are bonded flat. Keep the cable on edge: do not twist it.</p>'
             f'{cable_card("", ("ph", "PH2.0 5-pin", "into the amp I2S"), amp_rows)}</div>'
             f'<div class="card"><h4>BiBoard jumpers <span class="tag">3 single jumpers</span> <span class="tag o">female → male</span></h4>'
-            f'<p>The female end goes onto the Pi pin. The male end goes into the BiBoard socket, which is female.</p>'
+            f'<p>The female end goes onto the Pi pin. The male end goes into the BiBoard socket. The socket is female.</p>'
             f'{cable_card("", None, uart)}</div>'
             f'<div class="card"><h4>Mic jumpers <span class="tag">6 single jumpers</span> <span class="tag">female → female</span></h4>'
             f'<p>One per mic pin. BCLK and LRCL end in the free female ends of the splices; cut them to length when you make the splices.</p>'
@@ -553,7 +553,7 @@ def build_html(imgs):
     pages.append(wire_table(n))
     pages.append(checks_page(n + 1))
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
-            f'<title>Bittle X Pi Add-on build guide</title><style>{CSS}</style></head><body>{"".join(pages)}</body></html>')
+            f'<title>Bittle X Pod for Pi Zero build guide</title><style>{CSS}</style></head><body>{"".join(pages)}</body></html>')
 
 
 def main(render_images=True):

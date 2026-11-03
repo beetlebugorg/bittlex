@@ -1,4 +1,4 @@
-"""Mesh helpers (numpy + manifold3d + build123d) for the platform build."""
+"""Mesh helpers (numpy + manifold3d + build123d) for the pegged cover build."""
 import math
 import os
 import tempfile

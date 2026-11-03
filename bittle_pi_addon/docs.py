@@ -1,4 +1,4 @@
-"""Bittle X Pi add-on: README.md and the wiring figures. guide.py makes the PDF guide.
+"""Bittle X Pod for Pi Zero: README.md and the wiring figures. guide.py makes the PDF guide.
 
 Run pod.py and render.py first, then:  python docs.py
 """
@@ -13,12 +13,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.dirname(HERE))
 import pod                                   # noqa: E402
-from bittle_platform import docs as PD       # noqa: E402  (writers shared with the platform)
+from bittle_platform import docs as PD       # noqa: E402  (writers shared with the peg interface spec)
 from bittle_platform import interface as PI  # noqa: E402
 
 VERSION = "0.26"
 DATE = datetime.date.today().isoformat()
-TITLE = f"Bittle X Pi Add-on v{VERSION} - Build Guide"
+TITLE = f"Bittle X Pod for Pi Zero v{VERSION} - Build Guide"
 VIEWER = "https://beetlebugorg.github.io/bittlex/viewer/"
 CHECKS = json.load(open(os.path.join(pod.OUT, "checks.json")))
 
@@ -34,7 +34,7 @@ def content():
     lst = lambda items: X.append(("list", items))
 
     SM, NM = pod.SCREW_MOUNT, pod.NUT_MOUNT
-    p(f"Version {VERSION}, {DATE}. A sample add-on for the Bittle X platform v{PI.VERSION} (../bittle_platform). "
+    p(f"Version {VERSION}, {DATE}. It is an unofficial add-on for the Petoi Bittle X. Petoi did not make it. It goes on the robot with the cover for screws (peg interface v{PI.VERSION}, ../bittle_platform). "
       "It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. "
       "The case is one rounded box (the body) and a slide-on top panel. The body screws to a cover for screws, and the cover and the body clip onto "
       "the robot as one unit, in place of the stock cover. Every part goes in from the top. Two screws hold the panel. A dab of glue sets the amp.")
@@ -55,7 +55,7 @@ def content():
       "The old Cura profile \"Bittle X\" (../cura/Bittle_X.curaprofile; 0.20 mm layers) also works for the 0.20 mm files.")
     p("pod_body_screw.3mf has support blockers on the two amp nubs and at the middle of the rear wall. "
       "The nubs print without support, and the tall, narrow support under them fails. Open the 3MF in Cura and turn on support as usual. "
-      "starter_plate_screw.stl is the starter plate of the platform with the same 4 bosses: use it to start an add-on of your own, or to test the inserts or nuts on the cover.")
+      "starter_plate_screw.stl is the starter plate of the peg interface with the same 4 bosses: use it to start an add-on of your own, or to test the inserts or nuts on the cover.")
 
     h("Inserts or nuts")
     p("Each of the 6 bosses holds a threaded part for a screw: 4 in the floor (the cover screws) and 2 on the speaker posts (the panel screws). "
@@ -244,7 +244,7 @@ def content():
          ["stl/screw/", "the screw version in the robot frame, with the screws and the inserts (desktop viewer: --stl stl/screw)"],
          ["stl/plates/", "print plates for the FDM and the resin printer (3MF, STL), plates.json, resin_check.json"],
          ["cad/*.step", "the parts as STEP (from the mesh)"],
-         ["cad/assembly_step.zip", "one STEP file with the robot, the platform and the add-on in place, with named and colored parts"],
+         ["cad/assembly_step.zip", "one STEP file with the robot, the pegged cover and the pod in place, with named and colored parts"],
          ["stl/installed/, stl/models/", "the parts and the electronics in the robot frame"],
          ["pod.py, motion.py, plates.py, render.py, docs.py", "dimensions, build and checks; robot motion; print plates; pictures; this guide"],
          ], [62, 108])
