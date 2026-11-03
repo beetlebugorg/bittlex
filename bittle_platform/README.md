@@ -1,10 +1,10 @@
-# Bittle X Pegged Cover v3.4 - Peg Interface Specification
+# Bittle X Peg Cover v3.4 - Peg Interface Specification
 
-Version 3.4, 2026-11-03. The pegged cover is the stock Petoi Bittle X back cover with 4 teardrop pegs on its top. This is an independent community project. It is not affiliated with or endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC. An add-on has a plate with 4 keyholes. Put it on the pegs, slide it 7 mm forward, and it clicks. To remove it, slide it 7 mm rearward and lift it. It comes off closed: the head is not in the way. The keyholes have the shape of the pegs, so the add-on goes on in one direction only. No tools, glue or tape are necessary. interface.json has all the numbers in machine-readable form.
+Version 3.4, 2026-11-03. The peg cover is the stock Petoi Bittle X back cover with 4 teardrop pegs on its top. This is an independent community project. It is not affiliated with or endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC. An add-on has a plate with 4 keyholes. Put it on the pegs, slide it 7 mm forward, and it clicks. To remove it, slide it 7 mm rearward and lift it. It comes off closed: the head is not in the way. The keyholes have the shape of the pegs, so the add-on goes on in one direction only. No tools, glue or tape are necessary. interface.json has all the numbers in machine-readable form.
 
 Version 3.0 is not compatible with earlier versions: the pegs have a new shape and place, and the slide goes the other way. Version 3.1 adds a notch in the front edge of the cover, left side, for the Grove plug on the BiBoard (the head camera cable). Version 3.2 turns the cover model 180 deg to match the robot: the Pi slot (the BiBoard header) is at the front left, and the notch is on the front left, as on the robot. Reprint the cover: the pegs and the keyholes are the same as in 3.0. Keep add-on parts out of the plug space (GROVE_PLUG, in keepout.stl). Version 3.3 cuts the Pi slot wider toward the center (7 mm, was 3.5 mm): the BiBoard Dupont plugs did not fit. It also makes the click travel smaller (0.2 mm, was 0.28 mm): the add-on slides on and off with less force. Reprint the cover and the add-on plate. The pegs do not change. Version 3.4 adds the screw mount, for a heavy add-on: 4 M2.5 screws at the peg places, in place of the pegs (section 3).
 
-![The pegged cover (white) on the robot, with the starter plate on the pegs.](doc/iso/platform-light.png)
+![The peg cover (white) on the robot, with the starter plate on the pegs.](doc/iso/platform-light.png)
 
 
 ## 1. Key numbers
@@ -39,7 +39,7 @@ Version 3.0 is not compatible with earlier versions: the pegs have a new shape a
 
 ## 3. Screw mount
 
-A heavy add-on can be loose on the pegs. The screw mount holds it with 4 screws. The cover for screws (bittle_pi_addon/stl/print/cover_screw.stl) is the stock cover with no pegs. At each peg place it has a ring (R3.8) from the cover top up to Y 26, the bottom of the add-on plate. An M2.5 x 4 screw goes up through a 2.9 mm hole in the ring from inside the cover. Its head is in a 5.4 mm pocket, 0.8 mm under the plate. The add-on and the cover then clip onto the robot as one unit.
+A heavy add-on can be loose on the pegs. The screw mount holds it with 4 screws. The screw cover (bittle_pi_addon/stl/print/cover_screw.stl) is the stock cover with no pegs. At each peg place it has a ring (R3.8) from the cover top up to Y 26, the bottom of the add-on plate. An M2.5 x 4 screw goes up through a 2.9 mm hole in the ring from inside the cover. Its head is in a 5.4 mm pocket, 0.8 mm under the plate. The add-on and the cover then clip onto the robot as one unit.
 
 1. Put an M2.5 thread at each peg place in your plate: a heat-set insert (FDM) or a glued M2.5 nut (resin). The screw tip is at Y 29.2: the thread must reach it.
 2. Start from bittle_pi_addon/stl/print/starter_plate_screw.stl: the starter plate with 4 insert bosses (3.6 mm holes, 3.9 mm deep).
@@ -90,8 +90,8 @@ Open items: the BiBoard header height is an estimate from photos. The legs, the 
 
 1. On a Bittle X V2, the back touch sensor is a flexible circuit that is glued to the inside of the cover top. It has touch areas on the left, the right, the center and near the tail (docs.petoi.com/extensible-modules/back-touch-sensor).
 2. The peg roots stop inside the 1.4 mm wall, so the inside of the cover does not change, except at the Grove notch at the front-left edge. Move the circuit from the stock cover to cover_pegs in the same way as on the stock cover.
-3. An add-on on the pegged cover covers most of the touch areas. Disable the back touch mode (serial command Xb) when an add-on is on the robot.
-4. For this reason, the pegged cover has no parts under the cover top. A cover that prints flat without supports needs pegs held from inside the cover, where the circuit is. A later interface with sockets in a thicker top can avoid this.
+3. An add-on on the peg cover covers most of the touch areas. Disable the back touch mode (serial command Xb) when an add-on is on the robot.
+4. For this reason, the peg cover has no parts under the cover top. A cover that prints flat without supports needs pegs held from inside the cover, where the circuit is. A later interface with sockets in a thicker top can avoid this.
 
 ![Bittle X V2 touch areas (red boxes). Image: Petoi, docs.petoi.com/extensible-modules/back-touch-sensor.](doc/petoi_touch_areas.png)
 

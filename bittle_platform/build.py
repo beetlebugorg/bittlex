@@ -1,4 +1,4 @@
-"""The pegged cover and the peg interface: build the parts, the keep-out volumes, the checks and the CAD files.
+"""The peg cover and the peg interface: build the parts, the keep-out volumes, the checks and the CAD files.
 
 Run:  python build.py          (then: python docs.py for interface.json, SPEC.md and the PDF)
 Needs: build123d, manifold3d, numpy. Frame and numbers: interface.py.
@@ -48,7 +48,7 @@ def union(shapes):
 
 
 # --------------------------------------------------------------------------
-# Pegged cover parts
+# Peg cover parts
 # --------------------------------------------------------------------------
 def tear_outline(r, n=720, tip=1.0, deg=None):
     """Teardrop outline in plan (X, Z), round part r at (0, 0), point toward Z sign tip (half angle I.TIP_DEG)."""

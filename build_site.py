@@ -22,7 +22,7 @@ PARTS = [
     ("panel", "Top panel (second color)", "Printed", "stl/screw/installed/pod_panel.stl", "#e8641b", (0, 45, 0), None),
     ("body", "Add-on body", "Printed", "stl/screw/installed/pod_body.stl", "#f2f2ef", (0, 10, 0), None),
     ("door", "Door (left wall)", "Printed", "stl/screw/installed/pod_door.stl", "#f2f2ef", (0, 10, 0), None),
-    ("cover", "Cover for screws", "Printed", "stl/screw/installed/cover_screw.stl", "#34363b", (0, 0, 0), None),
+    ("cover", "Screw cover", "Printed", "stl/screw/installed/cover_screw.stl", "#34363b", (0, 0, 0), None),
     ("mount_screws", "Cover screws M3 x 4 (resin: M2.5)", "Hardware", "stl/screw/installed/mount_screws.stl", "#5b5e66", (0, 0, 0), None),
     ("mount_inserts", "Floor inserts M3 or nuts M2.5", "Hardware", "stl/screw/installed/mount_inserts.stl", "#c9a227", (0, 0, 0), None),
     ("panel_screws", "Panel screws M3 x 12 (resin: M2.5)", "Hardware", "stl/screw/installed/panel_screws.stl", "#5b5e66", (0, 0, 0), None),
@@ -60,7 +60,7 @@ DARK_MODELS = ("biboard_header",)
 TAGS = dict(pizero="Pi + PiSugar S", pisugar_s="Pi + PiSugar S", battery="Pi + PiSugar S", sd_card="Pi + PiSugar S", stack_screws="Pi + PiSugar S",
             pi_plugs="Pi header plugs", amp_ns4168="Amp", speaker="Speaker", mic_sph0645="Mic", biboard_header="BiBoard header",
             wires_speaker="Speaker lead", wires_splice="Splices", wires_amp="Amp cable",
-            panel="Top panel", body="Body", door="Door", cover="Cover for screws", mount_screws="Cover screws",
+            panel="Top panel", body="Body", door="Door", cover="Screw cover", mount_screws="Cover screws",
             mount_inserts="Inserts or nuts", panel_screws="Panel screws", panel_inserts="Inserts or nuts")
 
 
@@ -90,7 +90,7 @@ def expand(ids):
     return out
 
 
-# Checks of pod.py and the pegged cover (the forces in the part cards and the steps). Standard library only.
+# Checks of pod.py and the peg cover (the forces in the part cards and the steps). Standard library only.
 CHECKS = json.load(open(os.path.join(ROOT, "stl", "checks.json")))
 ADDON_V = "0.26"
 PLATFORM_V = json.load(open(os.path.join(PROJ, "bittle_platform", "interface.json")))["VERSION"]
@@ -98,7 +98,7 @@ PLATFORM_V = json.load(open(os.path.join(PROJ, "bittle_platform", "interface.jso
 # Text for the part card in the viewer: what the part is, how it attaches, downloads (relative to site/viewer/).
 PF, AF = "../files/platform/", "../files/addon/"
 INFO = {
-    "cover": dict(text="The cover for screws: the stock Petoi back cover with a ring on its flat top at each of the 4 peg places of the pegged cover, "
+    "cover": dict(text="The screw cover: the stock Petoi back cover with a ring on its flat top at each of the 4 peg places of the peg cover, "
                        "24 x 20 mm on the center line. An M3 x 4 screw (M2.5 x 4 for the resin version) goes up through each ring from inside the cover, and its head is in a pocket in the cover wall. "
                        "The Grove notch and the Pi slot are one opening at the front left.",
                   attach="Screw the body to it from inside the cover. Then clip the cover and the body onto the robot as one unit, in place of the stock cover.",
@@ -310,7 +310,7 @@ def main():
 HOME = os.path.join(PROJ, "site")
 LEGAL = ["LICENSE.md", "ATTRIBUTION.md", "LICENSES"]
 PACKAGES = [
-    dict(key="platform", name=f"Pegged cover v{PLATFORM_V}", dir="bittle_platform", zip=f"bittle_platform_v{PLATFORM_V}.zip",
+    dict(key="platform", name=f"Peg cover v{PLATFORM_V}", dir="bittle_platform", zip=f"bittle_platform_v{PLATFORM_V}.zip",
          pdf="bittle_peg_spec.pdf", img="doc/iso/platform-light.png",
          text="The stock Petoi Bittle X back cover with 4 pegs on its top. Add-ons drop onto the pegs, "
               "slide 7 mm forward and click into place. No tools, glue or tape are necessary. "
@@ -460,7 +460,7 @@ footer a { color:inherit; }
   <h1>Pod for Bittle X Robot</h1>
   <p>The 3D model for the Bittle X hardware and software of <a href="https://github.com/LineChef">LineChef</a>
   (<a href="https://github.com/LineChef/BittleX">LineChef/BittleX</a>).</p>
-  <p>A 3D-printed pod for the Petoi Bittle X. It holds a Raspberry Pi Zero 2 W, a PiSugar S battery, an amp, a speaker and a mic. The repository also has a pegged back cover for other add-ons. This is an independent community project. It is not affiliated with or endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC. Download the documents, the print files and the CAD below.</p>
+  <p>A 3D-printed pod for the Petoi Bittle X. It holds a Raspberry Pi Zero 2 W, a PiSugar S battery, an amp, a speaker and a mic. The repository also has a peg cover for other add-ons. This is an independent community project. It is not affiliated with or endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC. Download the documents, the print files and the CAD below.</p>
 </header>
 <a class="viewer" href="viewer/">Open the 3D viewer &rarr;</a>
 {{CARDS}}

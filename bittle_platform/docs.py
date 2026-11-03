@@ -1,4 +1,4 @@
-"""The pegged cover and the peg interface: drawings, renders, interface.json, SPEC.md and the PDF.
+"""The peg cover and the peg interface: drawings, renders, interface.json, SPEC.md and the PDF.
 
 Run build.py first, then:  python docs.py
 README.md and bittle_peg_spec.pdf come from the same content list (CONTENT), so they agree.
@@ -23,8 +23,8 @@ import interface as I            # noqa: E402
 import build as B                # noqa: E402
 
 DOC = os.path.join(HERE, "doc")
-TITLE = f"Bittle X Pegged Cover v{I.VERSION} - Peg Interface Specification"
-FOOTER = f"Pegged cover v{I.VERSION} - peg interface (unofficial, for the Petoi Bittle X)"
+TITLE = f"Bittle X Peg Cover v{I.VERSION} - Peg Interface Specification"
+FOOTER = f"Peg cover v{I.VERSION} - peg interface (unofficial, for the Petoi Bittle X)"
 DATE = datetime.date.today().isoformat()
 CHECKS = json.load(open(os.path.join(HERE, "checks.json")))
 
@@ -85,7 +85,7 @@ def plan_drawing(path):
     a.text(0.6, 0.6, "origin", fontsize=7)
     a.set_xlim(-66, 80); a.set_ylim(-40, 40); a.set_aspect("equal"); a.grid(True, lw=0.3)
     a.set_xlabel("Z (mm)   - = front (head end), + = rear"); a.set_ylabel("X (mm)   + = robot right side")
-    a.set_title("Plan view (from above): pegged cover, pegs, keep-outs")
+    a.set_title("Plan view (from above): peg cover, pegs, keep-outs")
     plt.tight_layout(); plt.savefig(path, dpi=160); plt.close(fig)
 
 
@@ -214,7 +214,7 @@ def content():
     img = lambda f, w=1.0, cap="": X.append(("img", f, w, cap))
     lst = lambda items: X.append(("list", items))
 
-    p(f"Version {I.VERSION}, {DATE}. The pegged cover is the stock Petoi Bittle X back cover with 4 teardrop pegs on its top. "
+    p(f"Version {I.VERSION}, {DATE}. The peg cover is the stock Petoi Bittle X back cover with 4 teardrop pegs on its top. "
       "This is an independent community project. It is not affiliated with or endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC. "
       f"An add-on has a plate with 4 keyholes. Put it on the pegs, slide it {I.SLIDE:g} mm forward, and it clicks. "
       f"To remove it, slide it {I.SLIDE:g} mm rearward and lift it. It comes off closed: the head is not in the way. "
@@ -230,7 +230,7 @@ def content():
       f"It also makes the click travel smaller ({I.DET['travel']:g} mm, was 0.28 mm): the add-on slides on and off with less force. "
       "Reprint the cover and the add-on plate. The pegs do not change. "
       "Version 3.4 adds the screw mount, for a heavy add-on: 4 M2.5 screws at the peg places, in place of the pegs (section 3).")
-    img("iso/platform-light.png", 0.6, "The pegged cover (white) on the robot, with the starter plate on the pegs.")
+    img("iso/platform-light.png", 0.6, "The peg cover (white) on the robot, with the starter plate on the pegs.")
 
     h("1. Key numbers")
     tbl([["Item", "Value (mm)"],
@@ -262,7 +262,7 @@ def content():
     tip = I.MOUNT_Y0 - S["web"] + 4.0
     h("3. Screw mount")
     p("A heavy add-on can be loose on the pegs. The screw mount holds it with 4 screws. "
-      "The cover for screws (bittle_pi_addon/stl/print/cover_screw.stl) is the stock cover with no pegs. "
+      "The screw cover (bittle_pi_addon/stl/print/cover_screw.stl) is the stock cover with no pegs. "
       f"At each peg place it has a ring (R{S['ring_d'] / 2:g}) from the cover top up to Y {I.MOUNT_Y0:g}, the bottom of the add-on plate. "
       f"An {S['screw']} screw goes up through a {S['clr_d']:g} mm hole in the ring from inside the cover. Its head is in a {S['head_d']:g} mm pocket, "
       f"{S['web']:g} mm under the plate. The add-on and the cover then clip onto the robot as one unit.")
@@ -312,9 +312,9 @@ def content():
          "(docs.petoi.com/extensible-modules/back-touch-sensor).",
          "The peg roots stop inside the 1.4 mm wall, so the inside of the cover does not change, except at the Grove notch at the front-left edge. "
          "Move the circuit from the stock cover to cover_pegs in the same way as on the stock cover.",
-         "An add-on on the pegged cover covers most of the touch areas. Disable the back touch mode (serial command Xb) "
+         "An add-on on the peg cover covers most of the touch areas. Disable the back touch mode (serial command Xb) "
          "when an add-on is on the robot.",
-         "For this reason, the pegged cover has no parts under the cover top. A cover that prints flat without supports "
+         "For this reason, the peg cover has no parts under the cover top. A cover that prints flat without supports "
          "needs pegs held from inside the cover, where the circuit is. A later interface with sockets in a thicker top can avoid this."])
     img("petoi_touch_areas.png", 0.45, "Bittle X V2 touch areas (red boxes). Image: Petoi, docs.petoi.com/extensible-modules/back-touch-sensor.")
 

@@ -9,7 +9,7 @@
 > endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC.
 
 A 3D-printed pod for the Petoi Bittle X robot dog. It holds a Raspberry Pi Zero 2 W, a PiSugar S battery, an amp, a speaker and a mic.
-The repository also has a pegged back cover for other add-ons.
+The repository also has a peg cover for other add-ons.
 
 **[Website and 3D viewer](https://beetlebugorg.github.io/bittlex/)** ·
 [Peg interface spec (PDF)](bittle_platform/bittle_peg_spec.pdf) ·
@@ -17,12 +17,12 @@ The repository also has a pegged back cover for other add-ons.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="bittle_platform/doc/iso/platform-dark.png">
-  <img src="bittle_platform/doc/iso/platform-light.png" alt="The pegged cover on the robot, with the starter plate" width="360">
+  <img src="bittle_platform/doc/iso/platform-light.png" alt="The peg cover on the robot, with the starter plate" width="360">
 </picture>
 
-## The pegged cover
+## The peg cover
 
-The pegged cover is the stock Petoi back cover with 4 teardrop pegs on its flat top. It
+The peg cover is the stock Petoi back cover with 4 teardrop pegs on its flat top. It
 goes on the robot in place of the stock cover. The inside of the cover does
 not change, so the BiBoard and the touch sensor fit as before. A notch in the
 front-left edge lets the head camera plug out.
@@ -44,8 +44,8 @@ front-left edge lets the head camera plug out.
 - **Keep-out model.** [`keepout.stl`](bittle_platform/stl/installed/keepout.stl)
   shows the space that an add-on must keep clear: the robot, the peg heads
   and the BiBoard header.
-- **Screw mount.** A heavy add-on can screw to a cover for screws: 4 M2.5
-  screws at the peg places, up from inside the cover. The add-on and the
+- **Screw mount.** A heavy add-on can screw to a screw cover: 4 M3
+  screws at the peg places (M2.5 for a resin print), up from inside the cover. The add-on and the
   cover clip onto the robot as one unit.
 
 ## The pod
@@ -56,7 +56,7 @@ front-left edge lets the head camera plug out.
 </picture>
 
 A Raspberry Pi with a battery, a speaker and a microphone, in one rounded box
-that screws to a cover for screws.
+that screws to a screw cover.
 
 - Raspberry Pi Zero 2 W with a PiSugar S battery (1200 mAh), on its long edge over the robot center, ports up
 - NS4168 I2S amp and a 3 W speaker at the rear, sound out of the rear grille
@@ -92,7 +92,7 @@ M2.5 heat-set inserts, and 4 M2.5 x 4 screws hold it to
 
 | Folder | Content |
 |---|---|
-| [`bittle_platform/`](bittle_platform) | The pegged cover and the peg interface: spec, print files, CAD, build script |
+| [`bittle_platform/`](bittle_platform) | The peg cover and the peg interface: spec, print files, CAD, build script |
 | [`bittle_pi_addon/`](bittle_pi_addon) | The pod: build guide, print files, CAD, build script |
 | [`web/`](web), `build_site.py` | The website and the 3D viewer |
 | [`profiles/`](profiles) | The Cura profiles of the printers, for Printdeck builds |

@@ -1,6 +1,6 @@
 # Pod for Bittle X Robot v0.26 - Build Guide
 
-Version 0.26, 2026-11-03. This is an independent community project. It is not affiliated with or endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC. It goes on the robot with the cover for screws (peg interface v3.4, ../bittle_platform). It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. The case is one rounded box (the body) and a slide-on top panel. The body screws to a cover for screws, and the cover and the body clip onto the robot as one unit, in place of the stock cover. Every part goes in from the top. Two screws hold the panel. A dab of glue sets the amp.
+Version 0.26, 2026-11-03. This is an independent community project. It is not affiliated with or endorsed by Petoi. Bittle and Petoi are trademarks of Petoi LLC. It goes on the robot with the screw cover (peg interface v3.4, ../bittle_platform). It holds a Raspberry Pi Zero 2 W with a PiSugar S (1200 mAh), an NS4168 I2S amp with a 3 W speaker, and an SPH0645 I2S mic. The case is one rounded box (the body) and a slide-on top panel. The body screws to a screw cover, and the cover and the body clip onto the robot as one unit, in place of the stock cover. Every part goes in from the top. Two screws hold the panel. A dab of glue sets the amp.
 
 ![The add-on on the robot: the port windows in the panel. The mic holes are in the right side, near the front.](doc/iso/hero-light.png)
 
@@ -55,7 +55,7 @@ stl/plates/ has every part on one bed, in its print orientation. Each 3MF has on
 
 1. Body (resin): the floor is toward the plate. Put the supports on the floor underside, off the screw holes. Sand the marks flat: the floor is on the cover rings.
 2. Panel (resin): the open side is toward the plate. The top face has no support marks.
-3. Cover (resin): it stands on its rear end. Put the supports on the rear edge only.
+3. Screw cover (resin): it stands on its rear end. Put the supports on the rear edge only.
 4. Door (resin): the outer face is up, tipped 45 deg. The supports go on the inner face and the ears.
 5. The resin check found no cups (trapped resin) in these orientations.
 6. The resin fit (pod.py RESIN_FIT, a best guess; stl/installed/resin/): door gap 0.12 mm, door post gap 0.15 mm, amp slot gap 0.15 mm. The panel has the hook gaps for 0.10 mm layers (0.05 mm).
@@ -81,7 +81,7 @@ Balance. The add-on weighs 114 g (weighed parts; printed parts at 50 % fill). It
 The 3D viewer shows each step with animation: [https://beetlebugorg.github.io/bittlex/viewer/#step=1](https://beetlebugorg.github.io/bittlex/viewer/#step=1). Grooves in the floor are under the amp cable and the mic wire run. The door is a piece of the left wall over the BiBoard plugs. With the panel off, lift the door out: a finger reaches the plugs from the side.
 
 1. Put the 6 inserts or nuts into the bosses: 4 in the floor and 2 on the speaker posts (see Inserts or nuts). ([viewer step 2](https://beetlebugorg.github.io/bittlex/viewer/#step=2))
-2. Put the empty body on the cover for screws, grille to the rear. Put a screw up through each of the 4 rings from inside the cover (M3 x 4 for inserts, M2.5 x 4 for nuts), into the insert or the nut, and tighten it. ([viewer step 3](https://beetlebugorg.github.io/bittlex/viewer/#step=3))
+2. Put the empty body on the screw cover, grille to the rear. Put a screw up through each of the 4 rings from inside the cover (M3 x 4 for inserts, M2.5 x 4 for nuts), into the insert or the nut, and tighten it. ([viewer step 3](https://beetlebugorg.github.io/bittlex/viewer/#step=3))
 3. Remove the stock back cover. Clip the cover and the body onto the robot as one unit. The BiBoard header comes up through the opening in the cover and the notch at the front of the left well. ([viewer step 4](https://beetlebugorg.github.io/bittlex/viewer/#step=4))
 4. Push the speaker down into the two side grooves at the rear, body to the rear. ([viewer step 5](https://beetlebugorg.github.io/bittlex/viewer/#step=5))
 5. Plug the six mic jumpers onto the mic header: 15 cm jumpers on GND and 3V. Drop the mic into the slots in the post and the ledge on the right wall near the front, port to the wall, header at the front. ([viewer step 6](https://beetlebugorg.github.io/bittlex/viewer/#step=6))
@@ -208,7 +208,7 @@ Open items: the BiBoard header height is an estimate (measure it). The speaker s
 | stl/screw/ | the screw version in the robot frame, with the screws and the inserts (desktop viewer: --stl stl/screw) |
 | stl/plates/ | print plates for the FDM and the resin printer (3MF, STL), plates.json, resin_check.json |
 | cad/*.step | the parts as STEP (from the mesh) |
-| cad/assembly_step.zip | one STEP file with the robot, the pegged cover and the pod in place, with named and colored parts |
+| cad/assembly_step.zip | one STEP file with the robot, the peg cover and the pod in place, with named and colored parts |
 | stl/installed/, stl/models/ | the parts and the electronics in the robot frame |
 | pod.py, motion.py, plates.py, render.py, docs.py | dimensions, build and checks; robot motion; print plates; pictures; this guide |
 

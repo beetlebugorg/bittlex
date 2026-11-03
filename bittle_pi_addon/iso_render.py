@@ -29,7 +29,7 @@ import pod                # noqa: E402
 from bittle_platform import interface as PI   # noqa: E402
 
 OUT = os.path.join(HERE, "doc", "iso")
-PLATFORM_OUT = os.path.join(PROJ, "bittle_platform", "doc", "iso")   # the pegged cover figure (job "platform")
+PLATFORM_OUT = os.path.join(PROJ, "bittle_platform", "doc", "iso")   # the peg cover figure (job "platform")
 THEMES = ("light", "dark")
 
 # View directions in the Y-up model frame (X right, Y up, +Z rear). The site uses (1.3, 1.5, 1.0) in its Z-up frame
@@ -67,11 +67,11 @@ def part_table():
         path = os.path.normpath(os.path.join(HERE, src))
         if os.path.exists(path):
             parts[pid] = dict(file=os.path.relpath(path, PROJ), finish=BS.finish(pid, group), tag=BS.tag(pid, label),
-                              transform=tf, explode=ex)
+                              transform=tf, explode=ex, color=color)
     parts["starter_plate"] = dict(file="bittle_platform/stl/installed/starter_plate.stl", finish="print", tag="Starter plate",
                                   transform=None, explode=None)
-    parts["cover_pegs"] = dict(file="bittle_platform/stl/installed/cover_pegs.stl", finish="print", tag="Pegged cover",
-                               transform=None, explode=None)          # the pegged cover figure (the site shows the screw cover)
+    parts["cover_pegs"] = dict(file="bittle_platform/stl/installed/cover_pegs.stl", finish="print", tag="Peg cover",
+                               transform=None, explode=None)          # the peg cover figure (the site shows the screw cover)
     return parts
 
 
@@ -148,6 +148,7 @@ def figure_jobs():
     open_ = ROBOT + ["cover", "body", "door", "biboard_header__header"] + HARDWARE[:2] + ["panel_inserts"] + INSIDE
     return [
         dict(name="hero", show=ALL, dir=ISO, width=1500, height=2000),
+        dict(name="hero-color", show=ALL, dir=ISO, width=1500, height=2000, color=True),   # each part in its own color
         dict(name="exploded", show=ALL, offset=ex, dir=ISO, width=1600, height=2200),
         dict(name="top", show=[k for k in ALL if k not in ROBOT], dir=DIRS["top"], width=1600, height=1300,
              frame=["body", "panel"]),

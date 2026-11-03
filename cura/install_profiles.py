@@ -1,4 +1,4 @@
-"""Write the "Bittle X" Cura profile: one profile for every printed part of the pegged cover and the add-on.
+"""Write the "Bittle X" Cura profile: one profile for every printed part of the peg cover and the add-on.
 
 It writes the base profile (no size compensation) and, for each spool that the tolerance app measured,
 a copy with that spool's compensation ("Bittle X - <spool>"), the same way the tolerance app installs one.

@@ -7,7 +7,7 @@ cover: bittle_pi_addon/doc/cover.png
 generate:
   python: "3.12"
   install: pip install -r requirements.txt
-  # "fast" skips the STEP export of pod.py. The pegged cover build writes its STEP files.
+  # "fast" skips the STEP export of pod.py. The peg cover build writes its STEP files.
   run: python bittle_platform/build.py && python bittle_pi_addon/pod.py fast && python bittle_pi_addon/plates.py
   check: true
 
@@ -44,7 +44,7 @@ parts:
       - name: standard
         profile: taz-workhorse-se/pla-0.20-standard
         files: [bittle_pi_addon/stl/print/pod_panel_screw.stl]
-  - name: Cover (screw)
+  - name: Screw cover
     group: The cover
     description: >-
       The stock Bittle X back cover with no pegs, and a ring at each of the 4 peg places. Four M3 x 4 screws go up through the rings from inside the cover into the inserts in the body floor. The cover and the body then clip onto the robot as one unit. Print it on its rear end with tree supports and a 14-line brim.
@@ -87,9 +87,9 @@ parts:
         profile: taz-workhorse-se/pla-0.20-standard
         files: [bittle_pi_addon/stl/print/starter_plate_screw.stl]
 
-  # The pegged cover (click-on version)
-  - name: Pegged cover
-    group: Pegged cover
+  # The peg cover (click-on version)
+  - name: Peg cover
+    group: Peg cover
     description: >-
       The stock Bittle X back cover with 4 teardrop pegs. A click-on add-on goes onto the pegs, slides 7 mm forward and clicks into place, with no screws. Print it on its rear end with tree supports and a 14-line brim.
     printer: taz
@@ -130,7 +130,7 @@ parts:
     printer: phenom
     profile: peopoly-phenom/abs-like-0.05
     material: Grey standard 80% + Tenacious Flex black 20%
-  - name: Cover (resin)
+  - name: Screw cover (resin)
     group: Resin
     description: >-
       The cover for resin. Four M2.5 x 4 screws go up through it into the nuts in the body floor. It stands on its rear end for the print: put the supports on the rear edge only.
@@ -168,7 +168,7 @@ materials:
 assemblies:
   - name: Pod (FDM)
     description: >-
-      The pod on the cover for screws, with M3 heat-set inserts and M3 screws, the boards and the wires.
+      The pod on the screw cover, with M3 heat-set inserts and M3 screws, the boards and the wires.
     items:
       - part: Pod body (screw) (standard)
         file: bittle_pi_addon/stl/assembly/fdm/pod_body.stl
@@ -180,7 +180,7 @@ assemblies:
         file: bittle_pi_addon/stl/assembly/fdm/panel_inserts.stl
         color: "#c9a227"
         explode: [0, 0.01, 1]
-      - part: Cover (screw) (standard)
+      - part: Screw cover (standard)
         file: bittle_pi_addon/stl/assembly/fdm/cover_screw.stl
         explode: [0, 0, -1]
       - name: Cover screws M3 x 4
@@ -388,7 +388,7 @@ assemblies:
     items:
       - part: Pod body (resin)
         file: bittle_pi_addon/stl/assembly/resin/pod_body.stl
-      - part: Cover (resin)
+      - part: Screw cover (resin)
         file: bittle_pi_addon/stl/assembly/resin/cover_screw.stl
         explode: [0, 0, -1]
       - name: Cover screws M2.5 x 4

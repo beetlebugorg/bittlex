@@ -75,7 +75,7 @@ def build_steps():
           "Resin: put an M2.5 nut into each hex pocket, with a drop of superglue on its edge."],
          note="Page 4 has the hardware, the tools and the steps for each way.", base=["body"])
     step("Screw the body to the cover", ["mount_screws"], "below",
-         ["Put the empty body on the cover for screws, the grille to the rear.",
+         ["Put the empty body on the screw cover, the grille to the rear.",
           "From inside the cover, put a screw up through each of the 4 rings into the insert or the nut: M3 x 4 (FDM) or M2.5 x 4 (resin).",
           "Tighten the 4 screws. The floor is on the rings."])
     step("Clip onto the robot", [], "iso",
@@ -358,7 +358,7 @@ def overview(img, n):
         ("What you build", 2), ("Parts to print", 3), ("Inserts or nuts", 4), ("Electronics and cables", 5), ("Pin maps and hardware", 6),
         ("Assembly", 7), ("Wire table", 7 + n_steps), ("Checks, opening and removal", 8 + n_steps)))
     body = (f'<div class="kicker">Overview</div><h2>What you build</h2>'
-            f'<div class="grid2"><div><p class="lead">The add-on is a body that screws to a cover for screws, and a slide-on top panel with two screws. '
+            f'<div class="grid2"><div><p class="lead">The add-on is a body that screws to a screw cover, and a slide-on top panel with two screws. '
             f'The cover and the body clip onto the robot as one unit, in place of the stock cover. Every part goes into the body from the top, in the order of this guide. '
             f'You need a screwdriver, a soldering iron for the splices (and the inserts of an FDM print), and a dab of glue for the amp.</p>'
             f'<h3>Directions in this guide</h3><p>Front is the head end of the robot. Left and right are the robot\'s left and right. '
@@ -379,7 +379,7 @@ def print_parts(n):
     rows = [("pod_body_screw", "pod_body", "Body", "3mf", "floor on the bed"),
             ("pod_panel_screw", "pod_panel", "Top panel (second color)", "stl", "upside down: top on the bed"),
             ("pod_door", "pod_door", "Door", "stl", "on its top edge, with a brim"),
-            ("cover_screw", "cover_screw", "Cover for screws", "stl", "on its rear end: tree supports, 14-line brim")]
+            ("cover_screw", "cover_screw", "Screw cover", "stl", "on its rear end: tree supports, 14-line brim")]
     tr = "".join(f"<tr><td><b>{t}</b><br><span class='muted'>stl/print/{f}.{x}</span></td><td>{o}</td>"
                  f"<td class='n'>{docs.pod_mass(m)} g</td></tr>" for f, m, t, x, o in rows)
     RF = pod.RESIN_FIT

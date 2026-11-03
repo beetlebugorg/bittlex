@@ -65,7 +65,8 @@ function renderJob(job) {
     const pivot = new THREE.Vector3(...((job.pivot || {})[id] || p.home.getCenter(new THREE.Vector3()).toArray()));
     p.mesh.matrix.copy(placeMatrix(pivot, deg, off)).multiply(p.mirror);
     p.mesh.updateMatrixWorld(true);
-    setLook(p.mesh, p.edges, theme, { finish: p.def.finish, focus: focus.has(id), ghost: ghost.has(id) });
+    setLook(p.mesh, p.edges, theme, { finish: p.def.finish, focus: focus.has(id), ghost: ghost.has(id),
+                                      fill: job.color ? p.def.color : null });   // job.color: each part in its own color
     p.mesh.renderOrder = ghost.has(id) ? 1 : 0;
   }
   // One dashed guide and one tag for each name among the parts that move

@@ -1,6 +1,6 @@
 """The peg interface. All numbers for add-on design are here.
 
-The pegged cover is the stock Petoi Bittle X back cover (Bittle_Cover_with_hole_for_Pi.stl)
+The peg cover is the stock Petoi Bittle X back cover (Bittle_Cover_with_hole_for_Pi.stl)
 with 4 teardrop pegs on its flat top. On the robot, the cover is turned 180 deg about Y from
 the STL: the Pi slot is at the front left (v3.2; build.py turns the cover meshes).
 Add-ons drop onto the pegs, slide forward, and click.
@@ -43,7 +43,7 @@ GROVE_NOTCH = dict(x=(-25.5, -12.5), z=(-38.0, -26.45))
 GROVE_PLUG = dict(x=(-25.0, -13.0), y_top=30.0, z=(-37.0, -27.0))
 
 # --------------------------------------------------------------------------
-# Pegs (part of the pegged cover)
+# Pegs (part of the peg cover)
 # --------------------------------------------------------------------------
 # v3.0: the add-on slides forward to lock and rearward to come off. A closed add-on cannot slide
 # toward the head (the head is 1.35 mm in front of the lid), but 7 mm to the rear is clear.
@@ -95,7 +95,7 @@ KEY_LEAD = 0.4                  # 45 deg chamfer on the top and bottom edges of 
 # build.py detent_force() gives the slide force and the strain.
 # v3.3: travel 0.28 -> 0.20 (the user found the add-on hard to slide on and off).
 DET = dict(beam_w=1.2, slit_w=0.8, arm=7.5, bump_r=1.5, travel=0.20, preload=0.05, free_end=1.2, pad=0.0)   # pad > 0: build.py clamp_pads()
-# Screw mount (v3.4): an alternative to the pegs, for a heavy add-on. The cover for screws (bittle_pi_addon pod.py
+# Screw mount (v3.4): an alternative to the pegs, for a heavy add-on. The screw cover (bittle_pi_addon pod.py
 # build_cover_screw) has no pegs. At each peg place it has a ring from the cover top up to MOUNT_Y0, a clr_d hole and a
 # pocket (head_d) for the screw head, web under MOUNT_Y0. An M2.5 x 4 screw goes up from inside the cover: its head is
 # at Y MOUNT_Y0 - web, and its tip at Y MOUNT_Y0 - web + 4. The add-on plate has a thread (an insert or a nut) there.

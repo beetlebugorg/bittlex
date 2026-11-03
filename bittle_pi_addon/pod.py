@@ -6,7 +6,7 @@ The parts are designed in a mirror of it (X turned over, see MIRROR_X); every ou
 Left and right below are on the robot.
 
 Parts
-  cover_pegs : the pegged cover (bittle_platform/): Petoi cover, unchanged, plus 4 pegs.
+  cover_pegs : the peg cover (bittle_platform/): Petoi cover, unchanged, plus 4 pegs.
   pod_body   : a rounded box (squircle plan, vertical walls, flat floor). The floor is the mount
                plate of the peg interface: teardrop keyholes drop over the pegs 7 mm behind the locked place,
                slide forward, click. To remove it, slide it 7 mm rearward and lift it.
@@ -19,7 +19,7 @@ Parts
                behind its place and slides forward: hooks go under lugs in the front and side walls, and
                a latch tongue at the rear clicks over a rib. Forks under the panel hold the stack,
                the speaker and the amp down. The PiSugar button is under the open port rectangle.
-Order: fit the pegged cover, click the empty body on, put the parts in, plug in the wires, put the
+Order: fit the peg cover, click the empty body on, put the parts in, plug in the wires, put the
 door in, slide the panel on.
 Print: no supports (print_orient() has the orientation of each part).
 """
@@ -41,7 +41,7 @@ OUT = os.path.join(ROOT, "stl")
 
 # Design frame: the robot frame with X turned over (a mirror). On the robot the BiBoard header is at the front left
 # (peg interface v3.2). In the design frame it is at the front right, so the parts keep the sides of rev 0.21. The stack
-# and the amp are turned on the robot; in the design frame that is a mirror of their models (STAND, the amp layout). The pegged cover and the robot come in turned over; main() turns every output back to the robot frame.
+# and the amp are turned on the robot; in the design frame that is a mirror of their models (STAND, the amp layout). The peg cover and the robot come in turned over; main() turns every output back to the robot frame.
 MIRROR_X = np.diag([-1.0, 1, 1, 1])[:3, :]
 
 
@@ -905,7 +905,7 @@ def screw_holes():
 
 
 def build_cover_screw():
-    """The cover for screws (robot frame): the stock cover with no pegs and no logo, a ring under the pod floor at each peg place, a screw hole,
+    """The screw cover (robot frame): the stock cover with no pegs and no logo, a ring under the pod floor at each peg place, a screw hole,
     and a pocket for the screw head from inside. The holes are teardrops (the cover prints on its rear end)."""
     from bittle_platform import build as BP
     S = SCREW_MOUNT
@@ -2573,7 +2573,7 @@ def build_resin():
 
 
 def export_assembly(path, models):
-    """One STEP file with the robot, the pegged cover and the add-on in place: named, colored parts (no wires).
+    """One STEP file with the robot, the peg cover and the add-on in place: named, colored parts (no wires).
     Exact B-rep for the pegs; simplified meshes for the rest (0.05 mm for the add-on, 0.15 mm for the
     robot, the cover and the boards)."""
     from build123d import Compound, Color, export_step
